@@ -1,3 +1,5 @@
+_ref
+
 # Logs
 logs
 *.log
@@ -57,3 +59,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# WebStorm
+.idea
