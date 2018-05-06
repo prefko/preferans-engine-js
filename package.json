@@ -1,6 +1,6 @@
 {
 	"name": "preferans-engine-js",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "nodejs engine for preferans",
 	"engines": {
 		"node": ">=8.9"
@@ -25,7 +25,8 @@
 	},
 	"homepage": "https://github.com/cope/preferans-engine-js#readme",
 	"dependencies": {
-		"lodash": "^4.17.5"
+		"lodash": "^4.17.5",
+		"preferans-deck-js": "^1.0.1"
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",
