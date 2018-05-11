@@ -25,12 +25,12 @@
 	},
 	"homepage": "https://github.com/cope/preferans-engine-js#readme",
 	"dependencies": {
-		"lodash": "^4.17.5",
-		"preferans-deck-js": "^1.0.1"
+		"lodash": "^4.17.10",
+		"preferans-deck-js": "^1.0.2"
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",
-		"mocha": "^5.0.1",
-		"nyc": "^11.4.1"
+		"mocha": "^5.1.1",
+		"nyc": "^11.7.3"
 	}
 }
