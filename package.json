@@ -8,7 +8,7 @@
 	"main": "lib/preferans.js",
 	"scripts": {
 		"test": "nyc --reporter=html mocha",
-		"analyze": "sonarjs -e node_modules/**,coverage/**,coverage/**,.nyc_output/**,_ref/**"
+		"analyze": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**,_ref/**"
 	},
 	"repository": {
 		"type": "git",
