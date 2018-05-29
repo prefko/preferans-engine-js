@@ -7,7 +7,8 @@
 	},
 	"main": "lib/preferans.js",
 	"scripts": {
-		"test": "nyc --reporter=html mocha"
+		"test": "nyc --reporter=html mocha",
+		"analyze": "sonarjs -e node_modules/**,coverage/**,coverage/**,.nyc_output/**,_ref/**"
 	},
 	"repository": {
 		"type": "git",
@@ -31,6 +32,7 @@
 	"devDependencies": {
 		"chai": "^4.1.2",
 		"mocha": "^5.1.1",
-		"nyc": "^11.7.3"
+		"nyc": "^11.7.3",
+		"sonarjs": "^1.0.0"
 	}
 }
