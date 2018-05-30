@@ -7,8 +7,9 @@
 	},
 	"main": "lib/preferans.js",
 	"scripts": {
-		"test": "nyc --reporter=html mocha",
-		"analyze": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**,_ref/**"
+		"test": "nyc --reporter=lcov --reporter=html mocha",
+		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
+		"sonar": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**,_ref/**"
 	},
 	"repository": {
 		"type": "git",
@@ -31,6 +32,7 @@
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",
+		"coveralls": "^3.0.1",
 		"mocha": "^5.1.1",
 		"nyc": "^11.7.3",
 		"sonarjs": "^1.0.0"
