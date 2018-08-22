@@ -6,3 +6,23 @@
 [![npm](https://img.shields.io/npm/dt/preferans-engine-js.svg)](https://www.npmjs.com/package/preferans-engine-js)
 
 preferans game engine
+
+player
+ - username
+ - rating
+ - original username
+ - replacements: []
+
+hand
+ - deal (3x10 + 2)
+ - auction
+ - talon replace
+ - kontras
+ - plays (10x3)
+ - result
+
+game
+ - deck
+ - 3 players
+ - paper
+ - hands
