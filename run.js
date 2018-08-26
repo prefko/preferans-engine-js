@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const _ = require('lodash');
-const Deck = require('preferans-deck-js');
+const _ = require("lodash");
+const Deck = require("preferans-deck-js");
 const Card = Deck.Card;
 // const Pile = Deck.Pile;
 
-let card = new Card('7');
+let card = new Card("7");
 console.log(card.toUnicodeString());
 
 let deck = new Deck();
