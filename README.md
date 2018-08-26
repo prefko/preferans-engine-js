@@ -9,9 +9,8 @@ preferans game engine
 
 player
  - username
- - rating
- - original username
- - replacements: []
+ - original username (optional)
+ - replacements: [] (optional)
 
 hand
  - deal (3x10 + 2)

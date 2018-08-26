@@ -28,7 +28,8 @@
 	"homepage": "https://github.com/cope/preferans-engine-js#readme",
 	"dependencies": {
 		"lodash": "^4.17.10",
-		"preferans-deck-js": "^1.1.3"
+		"preferans-deck-js": "^1.1.3",
+		"preferans-paper-js": "^1.1.3"
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",
