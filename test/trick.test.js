@@ -5,11 +5,11 @@ const Deck = require("preferans-deck-js");
 let Trick = require("../lib/trick");
 const Card = Deck.Card;
 
-let cope7Club = {card: {value: '7', suit: 'club', rank: 7, label: '7club', ppn: 'P', string: '7Club', unicode: '7♣'}, username: 'cope'};
+let cope7Club = {card: {value: "7", suit: "club", rank: 7, label: "7club", ppn: "P", string: "7Club", unicode: "7♣"}, username: "cope"};
 let miljaKSpade = {card: {value: "K", suit: "spade", rank: 14, label: "kspade", ppn: "7", string: "KSpade", unicode: "K♠"}, username: "milja"};
 let milja7Heart = {card: {value: "7", suit: "heart", rank: 7, label: "7heart", ppn: "H", string: "7Heart", unicode: "7♥"}, username: "milja"};
-let mitkoQDiamond = {card: {value: 'Q', suit: 'diamond', rank: 13, label: 'qdiamond', ppn: 'E', string: 'QDiamond', unicode: 'Q♦'}, username: 'mitko'};
-let mitkoQHeart = {card: {value: 'Q', suit: 'heart', rank: 13, label: 'qheart', ppn: 'M', string: 'QHeart', unicode: 'Q♥'}, username: 'mitko'};
+let mitkoQDiamond = {card: {value: "Q", suit: "diamond", rank: 13, label: "qdiamond", ppn: "E", string: "QDiamond", unicode: "Q♦"}, username: "mitko"};
+let mitkoQHeart = {card: {value: "Q", suit: "heart", rank: 13, label: "qheart", ppn: "M", string: "QHeart", unicode: "Q♥"}, username: "mitko"};
 
 describe("Trick tests", () => {
 	it("Trick should exist", () => {
