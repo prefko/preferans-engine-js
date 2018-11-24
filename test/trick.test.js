@@ -11,7 +11,7 @@ let milja7Heart = {card: {value: "7", suit: "heart", rank: 7, label: "7heart", p
 let mitkoQDiamond = {card: {value: 'Q', suit: 'diamond', rank: 13, label: 'qdiamond', ppn: 'E', string: 'QDiamond', unicode: 'Q♦'}, username: 'mitko'};
 let mitkoQHeart = {card: {value: 'Q', suit: 'heart', rank: 13, label: 'qheart', ppn: 'M', string: 'QHeart', unicode: 'Q♥'}, username: 'mitko'};
 
-describe.only("Trick tests", () => {
+describe("Trick tests", () => {
 	it("Trick should exist", () => {
 		expect(Trick).to.exist;
 	});
@@ -23,7 +23,8 @@ describe.only("Trick tests", () => {
 			expect(new Trick().getThird()).to.deep.equal({});
 			expect(new Trick().getTrump()).to.be.null;
 			expect(new Trick().getWinner()).to.be.null;
-			expect(new Trick().print()).to.be.equal("{\"first\":{},\"second\":{},\"third\":{},\"trump\":null}");
+			expect(new Trick().getPPN()).to.be.equal("");
+			expect(new Trick().toString()).to.be.equal("{\"first\":{},\"second\":{},\"third\":{},\"trump\":null}");
 		});
 	});
 
@@ -54,7 +55,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal({});
 			expect(trick.getTrump()).to.be.null;
 			expect(trick.getWinner()).to.be.null;
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{},\"third\":{},\"trump\":null}");
+			expect(trick.getPPN()).to.be.equal("P");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{},\"third\":{},\"trump\":null}");
 		});
 	});
 
@@ -68,7 +70,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal({});
 			expect(trick.getTrump()).to.be.null;
 			expect(trick.getWinner()).to.deep.equal(cope7Club);
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{\"card\":{\"value\":\"K\",\"suit\":\"spade\",\"rank\":14,\"label\":\"kspade\",\"ppn\":\"7\",\"string\":\"KSpade\",\"unicode\":\"K♠\"},\"username\":\"milja\"},\"third\":{},\"trump\":null,\"winner\":\"first\"}");
+			expect(trick.getPPN()).to.be.equal("P7");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{\"card\":\"KSpade\",\"username\":\"milja\"},\"third\":{},\"trump\":null,\"winner\":\"first\"}");
 		});
 	});
 
@@ -83,7 +86,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal(mitkoQDiamond);
 			expect(trick.getTrump()).to.be.null;
 			expect(trick.getWinner()).to.deep.equal(cope7Club);
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{\"card\":{\"value\":\"K\",\"suit\":\"spade\",\"rank\":14,\"label\":\"kspade\",\"ppn\":\"7\",\"string\":\"KSpade\",\"unicode\":\"K♠\"},\"username\":\"milja\"},\"third\":{\"card\":{\"value\":\"Q\",\"suit\":\"diamond\",\"rank\":13,\"label\":\"qdiamond\",\"ppn\":\"E\",\"string\":\"QDiamond\",\"unicode\":\"Q♦\"},\"username\":\"mitko\"},\"trump\":null,\"winner\":\"first\"}");
+			expect(trick.getPPN()).to.be.equal("P7E");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{\"card\":\"KSpade\",\"username\":\"milja\"},\"third\":{\"card\":\"QDiamond\",\"username\":\"mitko\"},\"trump\":null,\"winner\":\"first\"}");
 		});
 	});
 
@@ -106,7 +110,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal({});
 			expect(trick.getTrump()).to.be.equal("heart");
 			expect(trick.getWinner()).to.be.null;
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{},\"third\":{},\"trump\":\"heart\"}");
+			expect(trick.getPPN()).to.be.equal("P");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{},\"third\":{},\"trump\":\"heart\"}");
 		});
 	});
 
@@ -120,7 +125,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal({});
 			expect(trick.getTrump()).to.be.equal("heart");
 			expect(trick.getWinner()).to.deep.equal(cope7Club);
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{\"card\":{\"value\":\"K\",\"suit\":\"spade\",\"rank\":14,\"label\":\"kspade\",\"ppn\":\"7\",\"string\":\"KSpade\",\"unicode\":\"K♠\"},\"username\":\"milja\"},\"third\":{},\"trump\":\"heart\",\"winner\":\"first\"}");
+			expect(trick.getPPN()).to.be.equal("P7");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{\"card\":\"KSpade\",\"username\":\"milja\"},\"third\":{},\"trump\":\"heart\",\"winner\":\"first\"}");
 		});
 	});
 
@@ -134,7 +140,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal({});
 			expect(trick.getTrump()).to.be.equal("heart");
 			expect(trick.getWinner()).to.deep.equal(milja7Heart);
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{\"card\":{\"value\":\"7\",\"suit\":\"heart\",\"rank\":7,\"label\":\"7heart\",\"ppn\":\"H\",\"string\":\"7Heart\",\"unicode\":\"7♥\"},\"username\":\"milja\"},\"third\":{},\"trump\":\"heart\",\"winner\":\"second\"}");
+			expect(trick.getPPN()).to.be.equal("PH");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{\"card\":\"7Heart\",\"username\":\"milja\"},\"third\":{},\"trump\":\"heart\",\"winner\":\"second\"}");
 		});
 	});
 
@@ -149,7 +156,8 @@ describe.only("Trick tests", () => {
 			expect(trick.getThird()).to.deep.equal(mitkoQHeart);
 			expect(trick.getTrump()).to.be.equal("heart");
 			expect(trick.getWinner()).to.deep.equal(mitkoQHeart);
-			expect(trick.print()).to.be.equal("{\"first\":{\"card\":{\"value\":\"7\",\"suit\":\"club\",\"rank\":7,\"label\":\"7club\",\"ppn\":\"P\",\"string\":\"7Club\",\"unicode\":\"7♣\"},\"username\":\"cope\"},\"second\":{\"card\":{\"value\":\"7\",\"suit\":\"heart\",\"rank\":7,\"label\":\"7heart\",\"ppn\":\"H\",\"string\":\"7Heart\",\"unicode\":\"7♥\"},\"username\":\"milja\"},\"third\":{\"card\":{\"value\":\"Q\",\"suit\":\"heart\",\"rank\":13,\"label\":\"qheart\",\"ppn\":\"M\",\"string\":\"QHeart\",\"unicode\":\"Q♥\"},\"username\":\"mitko\"},\"trump\":\"heart\",\"winner\":\"third\"}");
+			expect(trick.getPPN()).to.be.equal("PHM");
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"cope\"},\"second\":{\"card\":\"7Heart\",\"username\":\"milja\"},\"third\":{\"card\":\"QHeart\",\"username\":\"mitko\"},\"trump\":\"heart\",\"winner\":\"third\"}");
 		});
 	});
 
@@ -163,13 +171,31 @@ describe.only("Trick tests", () => {
 		});
 	});
 
-	describe("Trick with corrupted cards", () => {
+	describe("Corrupted Trick tests", () => {
 		let trick = new Trick("heart");
 		trick.first = {card: "-", username: "u"};
 		trick.second = {card: "-", username: "u"};
 		trick.third = {card: "-", username: "u"};
 		it("Trick should throw", () => {
 			expect(() => trick.getWinner()).to.throw();
+		});
+		it("Trick throw invalid card should throw", () => {
+			expect(() => new Trick().throw(new Card("-"), "cope")).to.throw();
+		});
+		it("Trick throw invalid card should throw", () => {
+			expect(() => new Trick().throw({}, "cope")).to.throw();
+		});
+		it("Trick throw card without username should throw", () => {
+			expect(() => new Trick().throw(new Card("M"))).to.throw();
+		});
+	});
+
+	describe("Corrupted Trick toString tests", () => {
+		let trick = new Trick("heart");
+		trick.first = {card: new Card("P")};
+		trick.second = {username: "u"};
+		it("Corrupted Trick toString", () => {
+			expect(trick.toString()).to.be.equal("{\"first\":{\"card\":\"7Club\",\"username\":\"\"},\"second\":{},\"third\":{},\"trump\":\"heart\"}");
 		});
 	});
 

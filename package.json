@@ -27,6 +27,7 @@
 	},
 	"homepage": "https://github.com/cope/preferans-engine-js#readme",
 	"dependencies": {
+		"ajv": "^6.5.5",
 		"lodash": "^4.17.10",
 		"preferans-deck-js": "^1.2.0",
 		"preferans-paper-js": "^1.1.3"
