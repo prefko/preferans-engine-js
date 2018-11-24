@@ -34,12 +34,12 @@ console.log(_validateCard({
 	unicode: '7♣'
 }));
 
-// let card = new Card("7");
-// console.log(card.toUnicodeString());
-//
-// let deck = new Deck();
-// let deal = deck.deal();
-// console.log("Hand 1:", deal.h1.toUnicodeString());
-// console.log("Hand 2:", deal.h2.toUnicodeString());
-// console.log("Hand 3:", deal.h3.toUnicodeString());
-// console.log("Talon:", deal.t.toUnicodeString());
+let card = new Card("7");
+console.log(card.toUnicodeString());
+
+let deck = new Deck();
+let deal = deck.deal();
+console.log("Hand 1:", deal.h1.toUnicodeString());
+console.log("Hand 2:", deal.h2.toUnicodeString());
+console.log("Hand 3:", deal.h3.toUnicodeString());
+console.log("Talon:", deal.t.toUnicodeString());
