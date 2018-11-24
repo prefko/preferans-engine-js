@@ -2,71 +2,46 @@ const _ = require("lodash");
 const expect = require("chai").expect;
 
 let Trick = require("../lib/trick");
-// let Card = require("../lib/card");
-// let __cards = [
-// 	{
-// 		card: new Card({value: 7, suit: "spade"}),
-// 		string: "7Spade",
-// 		unicode: "7♠",
-// 		value: "7",
-// 		suit: "spade",
-// 		rank: 7,
-// 		label: "7spade",
-// 		ppn: "1"
-// 	}, {
-// 		card: new Card(8, "♦"),
-// 		string: "8Diamond",
-// 		unicode: "8♦",
-// 		value: "8",
-// 		suit: "diamond",
-// 		rank: 8,
-// 		label: "8diamond",
-// 		ppn: "A"
-// 	}, {
-// 		card: new Card("X", "h"),
-// 		string: "XHeart",
-// 		unicode: "X♥",
-// 		value: "X",
-// 		suit: "heart",
-// 		rank: 10,
-// 		label: "xheart",
-// 		ppn: "K"
-// 	}, {
-// 		card: new Card(12, "d"),
-// 		string: "JDiamond",
-// 		unicode: "J♦",
-// 		value: "J",
-// 		suit: "diamond",
-// 		rank: 12,
-// 		label: "jdiamond",
-// 		ppn: "D"
-// 	}, {
-// 		card: new Card({value: "13", suit: "club"}),
-// 		string: "QClub",
-// 		unicode: "Q♣",
-// 		value: "Q",
-// 		suit: "club",
-// 		rank: 13,
-// 		label: "qclub",
-// 		ppn: "U"
-// 	}
-// ];
+// console.log(new Trick().print());
 
-describe("Trick tests", function () {
-	it("Trick should exist", function () {
+describe.only("Trick tests", () => {
+	it("Trick should exist", () => {
 		expect(Trick).to.exist;
 	});
 
-	// describe("Bad contructor tests", function () {
-	// 	let fails = [null, "5club", "Ahearts", {value: 16, suit: "♣"}];
-	// 	_.forEach(fails, fail => {
-	// 		it("contructor should fail for value=" + JSON.stringify(fail), function () {
-	// 			expect(() => new Card(fail)).to.throw();
-	// 		});
-	// 		it("contructor should fail for suit=" + JSON.stringify(fail), function () {
-	// 			expect(() => new Card("X", fail)).to.throw();
-	// 		});
-	// 	});
-	// });
+	describe("Contructor tests", () => {
+		it("Pure contructor should return empty positions", () => {
+			expect(new Trick().getFirst()).to.deep.equal({});
+			expect(new Trick().getSecond()).to.deep.equal({});
+			expect(new Trick().getThird()).to.deep.equal({});
+			expect(new Trick().getTrump()).to.be.null;
+			expect(new Trick().getWinner()).to.be.null;
+			expect(new Trick().getWinner()).to.be.null;
+			expect(new Trick().print()).to.be.equal('{"first":{},"second":{},"third":{},"trump":null}');
+		});
+	});
+
+	describe("Bad trump contructor tests", () => {
+		let fails = [1, 2, 3, 4, 5, 6, 11, 16, "z", "Z"];
+		_.forEach(fails, fail => {
+			it("contructor should fail for value=" + JSON.stringify(fail), () => {
+				expect(new Trick(fail).getTrump()).to.be.null;
+			});
+		});
+	});
+
+	describe("Good trump contructor tests", () => {
+		let passes = [
+			"spade", "s", "♠",
+			"diamond", "d", "♦",
+			"heart", "h", "♥",
+			"club", "c", "♣"
+		];
+		_.forEach(passes, pass => {
+			it("contructor should pass for value=" + JSON.stringify(pass), () => {
+				expect(new Trick(pass).getTrump()).to.be.not.null;
+			});
+		});
+	});
 
 });

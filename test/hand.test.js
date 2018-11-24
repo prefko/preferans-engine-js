@@ -3,8 +3,8 @@ const expect = require("chai").expect;
 
 let Hand = require("../lib/hand");
 
-describe("Hand tests", function () {
-	it("Hand should exist", function () {
+describe("Hand tests", () => {
+	it("Hand should exist", () => {
 		expect(Hand).to.exist;
 	});
 });
