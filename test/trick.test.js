@@ -23,7 +23,7 @@ describe.only("Trick tests", () => {
 
 	describe("Bad trump contructor tests", () => {
 		let fails = [1, 2, 3, 4, 5, 6, 11, 16, "z", "Z"];
-		_.forEach(fails, fail => {
+		_.forEach(fails, (fail) => {
 			it("contructor should fail for value=" + JSON.stringify(fail), () => {
 				expect(new Trick(fail).getTrump()).to.be.null;
 			});
@@ -37,7 +37,7 @@ describe.only("Trick tests", () => {
 			"heart", "h", "♥",
 			"club", "c", "♣"
 		];
-		_.forEach(passes, pass => {
+		_.forEach(passes, (pass) => {
 			it("contructor should pass for value=" + JSON.stringify(pass), () => {
 				expect(new Trick(pass).getTrump()).to.be.not.null;
 			});
