@@ -17,7 +17,7 @@ describe.only("Trick tests", () => {
 			expect(new Trick().getTrump()).to.be.null;
 			expect(new Trick().getWinner()).to.be.null;
 			expect(new Trick().getWinner()).to.be.null;
-			expect(new Trick().print()).to.be.equal('{"first":{},"second":{},"third":{},"trump":null}');
+			expect(new Trick().print()).to.be.equal("{\"first\":{},\"second\":{},\"third\":{},\"trump\":null}");
 		});
 	});
 
