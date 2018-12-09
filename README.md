@@ -1,4 +1,10 @@
-# preferans-engine-js
+<p align="center">
+  <a href="http://stojadinovic.net">
+    <img alt="Predrag Stojadinovic" src="https://en.stojadinovic.net/assets/images/logo-128x128-88.jpg" width="100">
+  </a>
+</p>
+
+## preferans-engine-js
 [![build status](https://img.shields.io/travis/cope/preferans-engine-js.svg?branch=master)](https://travis-ci.org/cope/preferans-engine-js)
 [![codacy](https://img.shields.io/codacy/grade/60322e02d8df469893dbb8c0a89e5cc8.svg)](https://www.codacy.com/project/cope/preferans-engine-js/dashboard)
 [![coverage](https://img.shields.io/coveralls/github/cope/preferans-engine-js/master.svg)](https://coveralls.io/github/cope/preferans-engine-js?branch=master)
@@ -6,6 +12,8 @@
 [![npm](https://img.shields.io/npm/dt/preferans-engine-js.svg)](https://www.npmjs.com/package/preferans-engine-js)
 
 preferans game engine
+
+---
 
 player
  - username
