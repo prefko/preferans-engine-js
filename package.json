@@ -5,7 +5,8 @@
 	"engines": {
 		"node": ">=8.9"
 	},
-	"main": "lib/prefEngine.js",
+	"main": "./lib/prefEngine.js",
+	"types": "./lib/prefEngine.d.ts",
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
@@ -18,9 +19,6 @@
 		"latest-interactive": "yarn upgrade-interactive --latest",
 		"latest": "yarn upgrade --latest"
 	},
-	"files": [
-		"lib/**/*"
-	],
 	"nyc": {
 		"include": [
 			"src/**/*.ts"
@@ -59,10 +57,10 @@
 	"dependencies": {
 		"@types/lodash": "^4.14.119",
 		"lodash": "^4.17.10",
-		"preferans-deck-js": "^2.1.0",
-		"preferans-paper-js": "^2.6.0",
-		"preferans-rating-js": "^2.2.0",
-		"preferans-score-js": "^1.1.0"
+		"preferans-deck-js": "^2.2.0",
+		"preferans-paper-js": "^2.7.1",
+		"preferans-rating-js": "^2.3.0",
+		"preferans-score-js": "^1.2.2"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.1.7",

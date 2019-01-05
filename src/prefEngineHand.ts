@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 "use strict";
 
-const _ = require("lodash");
+import * as _ from 'lodash';
 
-class Hand {
+export default class PrefEngineHand {
 
 	constructor(deal) {
 		let {p1, p2, p3, h1, h2, h3, talon} = deal;
@@ -56,5 +56,3 @@ class Hand {
 	}
 
 }
-
-module.exports = Hand;

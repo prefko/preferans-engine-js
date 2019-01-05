@@ -2,12 +2,17 @@
 	"compilerOptions": {
 		"target": "es6",
 		"module": "commonjs",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"sourceMap": true,
 		"declaration": true,
+		"rootDir": "./src",
 		"outDir": "./lib",
 		"strict": true
 	},
 	"include": [
-		"src"
+		"src/**/*"
 	],
 	"exclude": [
 		".idea",

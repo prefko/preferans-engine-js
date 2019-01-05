@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 "use strict";
 
-const _ = require("lodash");
-const Hand = require("./hand");
-const Deck = require("preferans-deck-js");
-const Paper = require("preferans-paper-js");
+import * as _ from 'lodash';
+import PrefEngineHand from "./prefEngineHand";
+import PrefDeck from "preferans-deck-js";
+import PrefPaper from "preferans-paper-js";
+
+// const PrefEngineHand = require("./hand");
+// const PrefDeck = require("preferans-deck-js");
+// const PrefPaper = require("preferans-paper-js");
 
 let DEFAULT_OPTIONS = Object.freeze({
 	bula: 60,
@@ -33,7 +37,7 @@ const next = (g, u) => {
 	return g.p1;
 };
 
-class Game {
+export default class PrefEngine {
 	constructor(config = {}) {
 		let {p1, p2, p3, options = DEFAULT_OPTIONS} = config;
 
@@ -95,5 +99,3 @@ class Game {
 	}
 
 }
-
-module.exports = Game;
