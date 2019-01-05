@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 import {PrefDeckDeal} from "preferans-deck-js";
 
-export default class PrefEngineHand {
+export default class PrefEngineRound {
 
 	constructor(deal: PrefDeckDeal) {
 		let {h1, h2, h3, t} = deal;

@@ -2,7 +2,7 @@
 "use strict";
 
 import * as _ from 'lodash';
-import PrefEngineHand from "./prefEngineHand";
+import PrefEngineRound from "./prefEngineRound";
 import PrefDeck from "preferans-deck-js";
 import PrefPaper from "preferans-paper-js";
 
