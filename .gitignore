@@ -1,5 +1,7 @@
 .sonarlint
 
+lib
+
 _ref
 
 # Logs

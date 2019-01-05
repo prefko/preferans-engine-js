@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"declaration": true,
+		"outDir": "./lib",
+		"strict": true
+	},
+	"include": [
+		"src"
+	],
+	"exclude": [
+		".idea",
+		".sonarlint",
+		".nyc_output",
+		"coverage",
+		"docs",
+		"node_modules",
+		"test"
+	]
+}

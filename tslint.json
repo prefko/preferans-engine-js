@@ -1,0 +1,30 @@
+{
+	"extends": [
+		"tslint:recommended",
+		"tslint-config-prettier"
+	],
+	"rules": {
+		"one-variable-per-declaration": false,
+		"curly": [
+			true,
+			"ignore-same-line"
+		],
+		"max-classes-per-file": [
+			true,
+			5
+		],
+		"interface-over-type-literal": false,
+		"variable-name": [
+			true,
+			"check-format",
+			"allow-leading-underscore"
+		],
+		"ordered-imports": [
+			false,
+			{
+				"named-imports-order": "any"
+			}
+		],
+		"object-literal-sort-keys": false
+	}
+}
