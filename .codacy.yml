@@ -4,5 +4,6 @@ duplication:
     - 'test/**'
     - '**.test.js'
 exclude_paths:
+- 'docs/**'
 - 'node_modules/**'
-- 'run.js'
+- 'run.ts'
