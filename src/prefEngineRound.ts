@@ -3,45 +3,58 @@
 
 import * as _ from 'lodash';
 import {PrefDeckDeal} from "preferans-deck-js";
+import PrefEnginePlayer from "./prefEnginePlayer";
+import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
+
+export enum PrefEngineRoundStage {DEAL, AUCTION, EXCHANGE, DECLARATION, ACCEPTANCE, KONTRA, PLAY, END, JUDGING}
+
+export type PrefEngineRoundStatus = {
+	next: string
+	// ...
+};
 
 export default class PrefEngineRound {
+	private readonly _deal: PrefDeckDeal;
+	private readonly _p1: PrefEnginePlayer;
+	private readonly _p2: PrefEnginePlayer;
+	private readonly _p3: PrefEnginePlayer;
 
-	constructor(deal: PrefDeckDeal) {
-		let {h1, h2, h3, t} = deal;
+	// TODO: add judge and his decision
+	constructor(deal: PrefDeckDeal, p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer) {
+		// let {h1, h2, h3, t} = deal;
 
-		this.deal = deal;
-		this.auction = null;
-		this.replace = null;
-		this.kontras = null;
-		this.plays = [];
-		this.ppn = {
-			deal: deal	// convert to PPN
-			// add rest
-		};
+		this._deal = deal;
+		this._p1 = p1;
+		this._p2 = p2;
+		this._p3 = p3;
 	}
 
-	ppn() {
+	get ppn(): string {
 		// TODO: generate and return ppn
+		return "";
 	}
 
-	// TODO: add judge and his rule
+	get status(): PrefEngineRoundStatus {
+		// TODO:
+		return {next: "cope"};
+	}
 
-	licitacija(username, licitacija) {
+	auction(username, licitacija): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	razmena(username, skart) {
+	exchange(username, skart): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	odabir(username, igra) {
+	declare(username, igra) {
 		// TODO:
 		return this;
 	}
 
-	dolazak(username, doso) {
+	accept(username, doso) {
 		// TODO:
 		return this;
 	}
