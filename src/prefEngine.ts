@@ -3,75 +3,66 @@
 
 import * as _ from 'lodash';
 import PrefEngineRound from "./prefEngineRound";
-import PrefDeck from "preferans-deck-js";
-import PrefPaper from "preferans-paper-js";
+import PrefDeck, {PrefDeckDeal} from "preferans-deck-js";
+import PrefEnginePlayer from "./prefEnginePlayer";
+import PrefScore from "preferans-score-js";
 
-// const PrefEngineHand = require("./hand");
-// const PrefDeck = require("preferans-deck-js");
-// const PrefPaper = require("preferans-paper-js");
-
-let DEFAULT_OPTIONS = Object.freeze({
-	bula: 60,
-	refe: 2,
-	unlimitedRefe: false,
-	playPikOnRefa: false,
-	lastHandDoubleFall: false,
-	lastHandLimitSoup: false,
-	failPikAfterRefas: false,
-	failPikAfterOneUnderZero: false,
-	allowSubAndMortKontras: false
-});
-
-// const valid = (g, u) => u === g.p1 || u === g.p2 || u === g.p3;
-
-const random = (p1, p2, p3) => {
-	let r = _.random(1, 3);
-	if (r === 1) return p1;
-	if (r === 2) return p2;
-	return p3;
+export type PrefEngineOptions = {
+	unlimitedRefe: boolean,
+	playPikOnRefa: boolean,
+	lastHandDoubleFall: boolean,
+	lastHandLimitSoup: boolean,
+	failPikAfterRefas: boolean,
+	failPikAfterOneUnderZero: boolean,
+	allowSubAndMortKontras: boolean
 };
 
-const next = (g, u) => {
-	if (u === g.p1) return g.p2;
-	if (u === g.p2) return g.p3;
-	return g.p1;
+const random = (p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer): PrefEnginePlayer => {
+	let r: number = _.random(1, 3);
+	return r === 1 ? p1 : r === 2 ? p2 : p3;
 };
+
+export enum PrefEngineDealRole {DEALER, LEFT, RIGHT}
 
 export default class PrefEngine {
-	constructor(config = {}) {
-		let {p1, p2, p3, options = DEFAULT_OPTIONS} = config;
+	private _p1: PrefEnginePlayer;
+	private _p2: PrefEnginePlayer;
+	private _p3: PrefEnginePlayer;
+	private readonly _bula: number;
+	private readonly _refas: number;
+	private _deck: PrefDeck;
+	private _score: PrefScore;
+	private _round: PrefEngineRound;
+	private _rounds: PrefEngineRound[];
+	private readonly _options: PrefEngineOptions;
 
-		this.p1 = p1;
-		this.p2 = p2;
-		this.p3 = p3;
-		this.options = options;
+	constructor(p1: string, p2: string, p3: string, bula: number, refas: number, options: PrefEngineOptions) {
+		this._p1 = new PrefEnginePlayer(p1, PrefEngineDealRole.RIGHT);
+		this._p2 = new PrefEnginePlayer(p1, PrefEngineDealRole.LEFT);
+		this._p3 = new PrefEnginePlayer(p1, PrefEngineDealRole.DEALER);
+		this._bula = bula;
+		this._refas = refas;
+		this._options = options;
 
-		this.hands = [];
-		this.deck = new Deck();
-		this.paper = new Paper(this.options.bula, this.options.refe, this.p1.username, this.p2.username, this.p3.username);
+		this._rounds = [];
+		this._deck = new PrefDeck();
+		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
-		this.first = random(this.p1, this.p2, this.p3);
-		this.second = next(this, this.first);
-		this.third = next(this, this.second);
-		this.deal();
+		this._round = new PrefEngineRound(this._deck, this._p1, this._p2, this._p3);
 	}
 
-	deal() {
-		let dealer = this.third;
-		this.third = this.first;
-		this.first = this.second;
-		this.second = dealer;
+	deal(): PrefEngine {
+		let previousDealer = this._third;
+		this._third = this._first;
+		this._first = this._second;
+		this._second = previousDealer;
 
-		this.third = random(this.p1, this.p2, this.p3);
-		this.first = next(this, this.third);
-		this.second = next(this, this.first);
+		this._third = random(this._p1, this._p2, this._p3);
+		this._first = this.next(this._third);
+		this._second = this.next(this._first);
 
-		let deal = this.deck.deal();
-		deal.p1 = this.first;
-		deal.p2 = this.second;
-		deal.p3 = this.third;
-
-		this.hand = new Hand(deal);
+		this._round = new PrefEngineRound(this._deck.deal, this._first, this._second, this._third);
+		return this;
 	}
 
 	bid(username, bid) {
@@ -97,5 +88,11 @@ export default class PrefEngine {
 	throw(username, card) {
 		// TODO: verify stage and user
 	}
+
+	private next(user: string): string {
+		if (user === this._p1) return this._p2;
+		if (user === this._p2) return this._p3;
+		return this._p1;
+	};
 
 }

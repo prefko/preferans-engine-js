@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import {PrefDeckDeal} from "preferans-deck-js";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
+import PrefDeck from "preferans-deck-js";
 
 export enum PrefEngineRoundStage {DEAL, AUCTION, EXCHANGE, DECLARATION, ACCEPTANCE, KONTRA, PLAY, END, JUDGING}
 
@@ -20,10 +21,8 @@ export default class PrefEngineRound {
 	private readonly _p3: PrefEnginePlayer;
 
 	// TODO: add judge and his decision
-	constructor(deal: PrefDeckDeal, p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer) {
-		// let {h1, h2, h3, t} = deal;
-
-		this._deal = deal;
+	constructor(deck: PrefDeck, p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer) {
+		this._deal = deck.shuffle.cut.deal;
 		this._p1 = p1;
 		this._p2 = p2;
 		this._p3 = p3;
