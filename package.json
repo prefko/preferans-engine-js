@@ -12,7 +12,7 @@
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
 		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-		"docs": "typedoc --out docs src",
+		"docs": "typedoc --readme none --out docs src",
 		"test": "nyc mocha -r ts-node/register test/**/*.spec.ts",
 		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
 		"sonar": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**",
