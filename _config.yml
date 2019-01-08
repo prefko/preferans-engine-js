@@ -3,3 +3,6 @@ logo: http://prefko.com/img/logo.gif
 title: preferans-engine-js
 description: preferans game engine
 show_downloads: "true"
+include:
+  - "_*_.html"
+  - "_*_.*.html"
