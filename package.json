@@ -8,6 +8,7 @@
 	"main": "./lib/prefEngine.js",
 	"types": "./lib/prefEngine.d.ts",
 	"scripts": {
+		"all": "yarn build & yarn test & yarn docs",
 		"build": "tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
