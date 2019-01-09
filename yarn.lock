@@ -1237,36 +1237,36 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-preferans-deck-js@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.1.tgz#66c9d4563c3579ddf4502bb0e7ea75ce99da05a8"
+preferans-deck-js@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.2.tgz#aeb8cc9ad936782111c80d9b1e7d0fd3958815d2"
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
 
-preferans-paper-js@^2.7.1, preferans-paper-js@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-2.7.2.tgz#81bfb01c9e3195718e0a0bb811d60d619c71a462"
+preferans-paper-js@^2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-2.7.3.tgz#8ac1c470e25b4c5a187b1d314b1424b055f29ae8"
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
 
-preferans-rating-js@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.0.tgz#dc9c26429521d24c37c4ada08c58636cf88b13db"
+preferans-rating-js@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.2.tgz#71ee1182e91de291e24869051c3bfa30dd1efdf0"
   dependencies:
     "@types/lodash" "^4.14.119"
     "@types/mathjs" "^4.4.4"
     lodash "^4.17.11"
     mathjs "^5.4.0"
 
-preferans-score-js@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.2.tgz#9a9a98f1981720fc313a2689677a329ded29d805"
+preferans-score-js@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.3.tgz#825b8f2cd93a6e22e31a79ac5ca0df740ce500d7"
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
-    preferans-paper-js "^2.7.1"
+    preferans-paper-js "^2.7.3"
 
 prettier@^1.15.3:
   version "1.15.3"
