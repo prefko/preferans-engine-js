@@ -675,8 +675,8 @@ glob@^7.0.0, glob@^7.1.1, glob@^7.1.3:
     path-is-absolute "^1.0.0"
 
 globals@^11.1.0:
-  version "11.9.0"
-  resolved "https://registry.yarnpkg.com/globals/-/globals-11.9.0.tgz#bde236808e987f290768a93d065060d78e6ab249"
+  version "11.10.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-11.10.0.tgz#1e09776dffda5e01816b3bb4077c8b59c24eaa50"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.15"
@@ -1237,9 +1237,9 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-preferans-deck-js@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.0.tgz#ba56a55e06afb04fdba17af871d8c3a602208107"
+preferans-deck-js@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.1.tgz#66c9d4563c3579ddf4502bb0e7ea75ce99da05a8"
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
