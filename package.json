@@ -58,10 +58,10 @@
 	"dependencies": {
 		"@types/lodash": "^4.14.119",
 		"lodash": "^4.17.10",
-		"preferans-deck-js": "^2.2.1",
-		"preferans-paper-js": "^2.7.2",
-		"preferans-rating-js": "^2.3.0",
-		"preferans-score-js": "^1.2.2"
+		"preferans-deck-js": "^2.2.3",
+		"preferans-paper-js": "^2.7.3",
+		"preferans-rating-js": "^2.3.2",
+		"preferans-score-js": "^1.2.3"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.1.7",
@@ -72,11 +72,11 @@
 		"nyc": "^13.0.1",
 		"prettier": "^1.15.3",
 		"sonarjs": "^1.0.0",
-		"source-map-support": "^0.5.9",
+		"source-map-support": "^0.5.10",
 		"ts-node": "^7.0.1",
-		"tslint": "^5.12.0",
+		"tslint": "^5.12.1",
 		"tslint-config-prettier": "^1.17.0",
-		"typedoc": "^0.14.0",
+		"typedoc": "^0.14.1",
 		"typescript": "^3.2.2"
 	}
 }
