@@ -476,11 +476,7 @@ decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-decimal.js@10.0.1:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.0.1.tgz#d04b16b277f0f9af09671cee225c4882e8857c58"
-
-decimal.js@^10.0.0:
+decimal.js@10.0.2, decimal.js@^10.0.0:
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.0.2.tgz#50fd0f9184139f543e5b84c97681534292deb640"
 
@@ -614,9 +610,9 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
-fraction.js@4.0.11:
-  version "4.0.11"
-  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.11.tgz#f82474349f7a198b6ad8d713d65621302a0e6f58"
+fraction.js@4.0.12:
+  version "4.0.12"
+  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.12.tgz#0526d47c65a5fb4854df78bc77f7bec708d7b8c3"
 
 fs-constants@^1.0.0:
   version "1.0.0"
@@ -971,13 +967,13 @@ marked@^0.4.0:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.4.0.tgz#9ad2c2a7a1791f10a852e0112f77b571dce10c66"
 
 mathjs@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-5.4.0.tgz#e456ae00e22e352d078cd5f6d87000d5467be1ee"
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-5.4.1.tgz#c20c8f2909b432bcff89f9ea35079a5bd71e2826"
   dependencies:
     complex.js "2.0.11"
-    decimal.js "10.0.1"
+    decimal.js "10.0.2"
     escape-latex "1.2.0"
-    fraction.js "4.0.11"
+    fraction.js "4.0.12"
     javascript-natural-sort "0.7.1"
     seed-random "2.2.0"
     tiny-emitter "2.0.2"
@@ -1237,9 +1233,15 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+<<<<<<< HEAD
 preferans-deck-js@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.2.tgz#aeb8cc9ad936782111c80d9b1e7d0fd3958815d2"
+=======
+preferans-deck-js@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.3.tgz#0b9792155dfb0cf9415129a8ce493e0cbcbda9d6"
+>>>>>>> ec7269b6eb8236f7b4349cabf52fd5115c7f7f1d
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
@@ -1449,9 +1451,9 @@ sonarjs@^1.0.0:
     unzip-stream "^0.2.1"
     yargs "^10.0.3"
 
-source-map-support@^0.5.6, source-map-support@^0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.9.tgz#41bc953b2534267ea2d605bccfa7bfa3111ced5f"
+source-map-support@^0.5.10, source-map-support@^0.5.6:
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.10.tgz#2214080bc9d51832511ee2bab96e3c2f9353120c"
   dependencies:
     buffer-from "^1.0.0"
     source-map "^0.6.0"
@@ -1650,9 +1652,9 @@ tslint-config-prettier@^1.17.0:
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.17.0.tgz#946ed6117f98f3659a65848279156d87628c33dc"
 
-tslint@^5.12.0:
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.12.0.tgz#47f2dba291ed3d580752d109866fb640768fca36"
+tslint@^5.12.1:
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.12.1.tgz#8cec9d454cf8a1de9b0a26d7bdbad6de362e52c1"
   dependencies:
     babel-code-frame "^6.22.0"
     builtin-modules "^1.1.1"
@@ -1695,9 +1697,9 @@ typedoc-default-themes@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/typedoc-default-themes/-/typedoc-default-themes-0.5.0.tgz#6dc2433e78ed8bea8e887a3acde2f31785bd6227"
 
-typedoc@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.14.0.tgz#f7de2f3f1109b92eeafd6cbff269e28a86c8079e"
+typedoc@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.14.1.tgz#5e659f7a78ccac91547cb2328490665d9c10c4b2"
   dependencies:
     "@types/fs-extra" "^5.0.3"
     "@types/handlebars" "^4.0.38"
