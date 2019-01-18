@@ -110,9 +110,9 @@
   version "9.12.3"
   resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.12.3.tgz#b672cfaac25cbbc634a0fd92c515f66faa18dbca"
 
-"@types/lodash@^4.14.110", "@types/lodash@^4.14.119":
-  version "4.14.119"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.119.tgz#be847e5f4bc3e35e46d041c394ead8b603ad8b39"
+"@types/lodash@^4.14.110", "@types/lodash@^4.14.119", "@types/lodash@^4.14.120":
+  version "4.14.120"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.120.tgz#cf265d06f6c7a710db087ed07523ab8c1a24047b"
 
 "@types/marked@^0.4.0":
   version "0.4.2"
@@ -148,8 +148,8 @@
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-10.0.2.tgz#cc4ea921877874d1261e2c44b89807bc836e1b12"
 
 ajv@^6.5.5:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.6.2.tgz#caceccf474bf3fc3ce3b147443711a24063cc30d"
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.7.0.tgz#e3ce7bb372d6577bb1839f1dfdfcbf5ad2948d96"
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
@@ -717,9 +717,9 @@ he@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
-highlight.js@9.12.0:
-  version "9.12.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.12.0.tgz#e6d9dbe57cbefe60751f02af336195870c90c01e"
+highlight.js@^9.13.1:
+  version "9.13.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.13.1.tgz#054586d53a6863311168488a0f58d6c505ce641e"
 
 hosted-git-info@^2.1.4:
   version "2.7.1"
@@ -1233,15 +1233,9 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-<<<<<<< HEAD
-preferans-deck-js@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.2.tgz#aeb8cc9ad936782111c80d9b1e7d0fd3958815d2"
-=======
-preferans-deck-js@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.3.tgz#0b9792155dfb0cf9415129a8ce493e0cbcbda9d6"
->>>>>>> ec7269b6eb8236f7b4349cabf52fd5115c7f7f1d
+preferans-deck-js@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.4.tgz#c742f6f8838a41511ffd8c8db097c54f6871c978"
   dependencies:
     "@types/lodash" "^4.14.119"
     lodash "^4.17.11"
@@ -1697,9 +1691,9 @@ typedoc-default-themes@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/typedoc-default-themes/-/typedoc-default-themes-0.5.0.tgz#6dc2433e78ed8bea8e887a3acde2f31785bd6227"
 
-typedoc@^0.14.1:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.14.1.tgz#5e659f7a78ccac91547cb2328490665d9c10c4b2"
+typedoc@^0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.14.2.tgz#769f457f4f9e4bdb8b5f3b177c86b6a31d8c3dc3"
   dependencies:
     "@types/fs-extra" "^5.0.3"
     "@types/handlebars" "^4.0.38"
@@ -1710,7 +1704,7 @@ typedoc@^0.14.1:
     "@types/shelljs" "^0.8.0"
     fs-extra "^7.0.0"
     handlebars "^4.0.6"
-    highlight.js "9.12.0"
+    highlight.js "^9.13.1"
     lodash "^4.17.10"
     marked "^0.4.0"
     minimatch "^3.0.0"
@@ -1719,9 +1713,9 @@ typedoc@^0.14.1:
     typedoc-default-themes "^0.5.0"
     typescript "3.2.x"
 
-typescript@3.2.x, typescript@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
+typescript@3.2.x, typescript@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.4.tgz#c585cb952912263d915b462726ce244ba510ef3d"
 
 uglify-js@^3.1.4:
   version "3.4.9"
