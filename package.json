@@ -42,7 +42,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/cope/preferans-engine-js.git"
+		"url": "git+https://github.com/prefko/preferans-engine-js.git"
 	},
 	"keywords": [
 		"engine",
@@ -52,9 +52,9 @@
 	"author": "Predrag Stojadinovic",
 	"license": "Unlicense",
 	"bugs": {
-		"url": "https://github.com/cope/preferans-engine-js/issues"
+		"url": "https://github.com/prefko/preferans-engine-js/issues"
 	},
-	"homepage": "https://github.com/cope/preferans-engine-js#readme",
+	"homepage": "https://github.com/prefko/preferans-engine-js#readme",
 	"dependencies": {
 		"@types/lodash": "^4.14.120",
 		"lodash": "^4.17.10",
