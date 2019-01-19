@@ -2,7 +2,6 @@
 "use strict";
 
 import PrefEngine from "../prefEngine";
-import PrefEnginePlayer from "../prefEnginePlayer";
 
 export enum PrefEngineStage {BIDDING, EXCHANGE, CONTRACT, DECIDE, KONTRA, PLAY, END}
 
@@ -43,16 +42,12 @@ export default abstract class APrefEngineStage {
 		return false;
 	}
 
+	get engine(): PrefEngine {
+		return this._engine;
+	}
+
 	get type(): PrefEngineStage {
 		return this._type;
-	}
-
-	get current(): PrefEnginePlayer {
-		return this._engine.current;
-	}
-
-	get next(): PrefEnginePlayer {
-		return this._engine.next;
 	}
 
 }
