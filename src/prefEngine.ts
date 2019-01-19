@@ -3,13 +3,12 @@
 
 import * as _ from 'lodash';
 import PrefEngineRound from "./prefEngineRound";
-import PrefDeck, {PrefDeckDeal} from "preferans-deck-js";
-import PrefEnginePlayer, {PrefEngineDealRole} from "./prefEnginePlayer";
+import PrefDeck from "preferans-deck-js";
+import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 import {PrefEngineBid} from "./stage/prefEngineStageBidding";
 import {PrefEngineStage} from "./stage/prefEngineStage";
-import prefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
@@ -65,12 +64,12 @@ export default class PrefEngine {
 		this._round = new PrefEngineRound(this);
 	}
 
-	restoreDeck(cards: PrefDeckCard[]): PrefEngine {
+	public restoreDeck(cards: PrefDeckCard[]): PrefEngine {
 		this._deck.restore(cards);
 		return this;
 	}
 
-	deal(): PrefEngine {
+	public deal(): PrefEngine {
 		const tmp = this._dealer;
 		this._dealer = this._firstBid;
 		this._firstBid = this._secondBid;
@@ -91,42 +90,42 @@ export default class PrefEngine {
 		return this;
 	}
 
-	bid(username: string, bid: PrefEngineBid): PrefEngine {
+	public bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
 		this._round
 		return this;
 	}
 
-	exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
+	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
 		// TODO
 		return this;
 	}
 
-	contract(username: string, play): PrefEngine {
+	public contract(username: string, play): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.CONTRACT);
 		// TODO
 		return this;
 	}
 
-	decide(username: string, plays: boolean): PrefEngine {
+	public decide(username: string, plays: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDE);
 		// TODO
 		return this;
 	}
 
-	kontra(username: string, kontra): PrefEngine {
+	public kontra(username: string, kontra): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.KONTRA);
 		// TODO
 		return this;
 	}
 
-	throw(username: string, card: PrefDeckCard): PrefEngine {
+	public throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAY);
 		// TODO

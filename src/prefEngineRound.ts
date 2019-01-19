@@ -3,13 +3,11 @@
 
 import * as _ from 'lodash';
 import {PrefDeckDeal} from "preferans-deck-js";
-import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
-import PrefDeck from "preferans-deck-js";
-import {PrefEngineStage} from "./stage/prefEngineStage";
-import PrefEngineStageBidding, {PrefEngineBid} from "./stage/prefEngineStageBidding";
 import PrefEngine from "./prefEngine";
-import APrefEngineStage from "./stage/prefEngineStage";
+import PrefEnginePlayer from "./prefEnginePlayer";
+import APrefEngineStage, {PrefEngineStage} from "./stage/prefEngineStage";
+import PrefEngineStageBidding, {PrefEngineBid} from "./stage/prefEngineStageBidding";
 
 export type PrefEngineRoundStatus = {
 	next: string
@@ -38,6 +36,36 @@ export default class PrefEngineRound {
 		this._currentStage = this._bidding;
 	}
 
+	public bid(username: string, bid: PrefEngineBid): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
+	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
+	public contract(username: string, play): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
+	public decide(username: string, plays: boolean): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
+	public kontra(username: string, kontra): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
+	public throw(username: string, card: PrefDeckCard): PrefEngineRound {
+		// TODO:
+		return this;
+	}
+
 	get stage(): PrefEngineStage {
 		return this._currentStage.type;
 	}
@@ -50,36 +78,6 @@ export default class PrefEngineRound {
 	get status(): PrefEngineRoundStatus {
 		// TODO:
 		return {next: "cope"};
-	}
-
-	bid(username: string, bid: PrefEngineBid): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	contract(username: string, play): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	decide(username: string, plays: boolean): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	kontra(username: string, kontra): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	throw(username: string, card: PrefDeckCard): PrefEngineRound {
-		// TODO:
-		return this;
 	}
 
 }
