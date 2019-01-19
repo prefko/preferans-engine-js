@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 "use strict";
 
-import {PrefEngineDealRole} from "./prefEngine";
+export enum PrefEngineDealRole {NONE = 0, DEALER, SECOND_BIDDER, FIRST_BIDDER}
 
-export enum PrefEnginePlayerRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
+export enum PrefEnginePlayRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
 
 export default class PrefEnginePlayer {
 	private readonly _starter: string;
-	private readonly _dealRole: PrefEngineDealRole;
 	private readonly _replacements: string[];
 
 	private _username: string;
-	private _playRole: PrefEnginePlayerRole;
+	private _dealRole: PrefEngineDealRole;
+	private _playRole: PrefEnginePlayRole;
 
-	constructor(username: string, dealRole: PrefEngineDealRole) {
+	constructor(username: string) {
 		this._starter = username;
 		this._username = username;
-		this._dealRole = dealRole;
-		this._playRole = PrefEnginePlayerRole.NONE;
+		this._dealRole = PrefEngineDealRole.NONE;
+		this._playRole = PrefEnginePlayRole.NONE;
 		this._replacements = [];
 	}
 
@@ -42,11 +42,15 @@ export default class PrefEnginePlayer {
 		return this._dealRole;
 	}
 
-	get playRole(): PrefEnginePlayerRole {
+	set dealRole(dealRole: PrefEngineDealRole) {
+		this._dealRole = dealRole;
+	}
+
+	get playRole(): PrefEnginePlayRole {
 		return this._playRole;
 	}
 
-	set playRole(playRole: PrefEnginePlayerRole) {
+	set playRole(playRole: PrefEnginePlayRole) {
 		this._playRole = playRole;
 	}
 

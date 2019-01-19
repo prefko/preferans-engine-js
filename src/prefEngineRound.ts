@@ -7,8 +7,6 @@ import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 import PrefDeck from "preferans-deck-js";
 
-export enum PrefEngineRoundStage {DEAL, AUCTION, EXCHANGE, DECLARATION, ACCEPTANCE, KONTRA, PLAY, END, JUDGING}
-
 export type PrefEngineRoundStatus = {
 	next: string
 	// ...
@@ -26,6 +24,8 @@ export default class PrefEngineRound {
 		this._p1 = p1;
 		this._p2 = p2;
 		this._p3 = p3;
+
+		// TODO: start BID stage
 	}
 
 	get ppn(): string {

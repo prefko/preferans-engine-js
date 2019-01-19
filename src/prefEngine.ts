@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 import PrefEngineRound from "./prefEngineRound";
 import PrefDeck, {PrefDeckDeal} from "preferans-deck-js";
-import PrefEnginePlayer from "./prefEnginePlayer";
+import PrefEnginePlayer, {PrefEngineDealRole} from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 
@@ -23,8 +23,6 @@ const random = (p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer
 	return r === 1 ? p1 : r === 2 ? p2 : p3;
 };
 
-export enum PrefEngineDealRole {DEALER, SECOND_BIDDER, FIRST_BIDDER}
-
 export default class PrefEngine {
 	private readonly _bula: number;
 	private readonly _refas: number;
@@ -34,15 +32,20 @@ export default class PrefEngine {
 	private _p2: PrefEnginePlayer;
 	private _p3: PrefEnginePlayer;
 
+	private _current: PrefEnginePlayer;
+	private _dealer: PrefEnginePlayer;
+	private _firstBid: PrefEnginePlayer;
+	private _secondBid: PrefEnginePlayer;
+
 	private _deck: PrefDeck;
 	private _score: PrefScore;
 	private _round: PrefEngineRound;
 	private _rounds: PrefEngineRound[];
 
-	constructor(p1: string, p2: string, p3: string, bula: number, refas: number, options: PrefEngineOptions) {
-		this._p1 = new PrefEnginePlayer(p1, PrefEngineDealRole.FIRST_BIDDER);
-		this._p2 = new PrefEnginePlayer(p1, PrefEngineDealRole.DEALER);
-		this._p3 = new PrefEnginePlayer(p1, PrefEngineDealRole.SECOND_BIDDER);
+	constructor(u1: string, u2: string, u3: string, bula: number, refas: number, options: PrefEngineOptions) {
+		this._p1 = new PrefEnginePlayer(u1);
+		this._p2 = new PrefEnginePlayer(u2);
+		this._p3 = new PrefEnginePlayer(u3);
 		this._bula = bula;
 		this._refas = refas;
 		this._options = options;
@@ -51,7 +54,12 @@ export default class PrefEngine {
 		this._deck = new PrefDeck();
 		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
-		this._round = new PrefEngineRound(this._deck, this._p1, this._p2, this._p3);
+		// First this.deal()
+		this._dealer = this._p3;
+		this._firstBid = this._p1;
+		this._secondBid = this._p2;
+		this._current = this._firstBid;
+		this._round = new PrefEngineRound(this._deck, this._dealer, this._firstBid, this._secondBid);
 	}
 
 	restoreDeck(cards: PrefDeckCard[]): PrefEngine {
@@ -60,12 +68,13 @@ export default class PrefEngine {
 	}
 
 	deal(): PrefEngine {
-		let tmp = this._p3;
-		this._p3 = this._p1;
-		this._p1 = this._p2;
-		this._p2 = tmp;
+		const tmp = this._dealer;
+		this._dealer = this._firstBid;
+		this._firstBid = this._secondBid;
+		this._secondBid = tmp;
 
-		this._round = new PrefEngineRound(this._deck, this._p1, this._p2, this._p3);
+		this._current = this._firstBid;
+		this._round = new PrefEngineRound(this._deck, this._dealer, this._firstBid, this._secondBid);
 		return this;
 	}
 
@@ -93,11 +102,15 @@ export default class PrefEngine {
 		// TODO: verify stage and user
 	}
 
-	private next(p: PrefEnginePlayer): PrefEnginePlayer {
-		if (p.username === this._p1.username) return this._p2;
-		if (p.username === this._p2.username) return this._p3;
-		if (p.username === this._p3.username) return this._p1;
-		throw new Error("PrefEngine::next:Unrecognized user: " + p);
+	get next(): PrefEnginePlayer {
+		// if (this._current.username === this._p1.username) this._current = this._p2;
+		// else if (this._current.username === this._p2.username) this._current = this._p3;
+		// else if (this._current.username === this._p3.username) this._current = this._p1;
+
+		if (this._current === this._p1) this._current = this._p2;
+		else if (this._current === this._p2) this._current = this._p3;
+		else if (this._current === this._p3) this._current = this._p1;
+		return this._current;
 	}
 
 }
