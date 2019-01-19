@@ -102,6 +102,10 @@ export default class PrefEngine {
 		// TODO: verify stage and user
 	}
 
+	get current(): PrefEnginePlayer {
+		return this._current;
+	}
+
 	get next(): PrefEnginePlayer {
 		// if (this._current.username === this._p1.username) this._current = this._p2;
 		// else if (this._current.username === this._p2.username) this._current = this._p3;
