@@ -10,12 +10,13 @@ export default class PrefEnginePlayer {
 	private readonly _dealRole: PrefEngineDealRole;
 	private _playRole: PrefEnginePlayerRole;
 
-	// TODO: private _replacements...
+	private _replacements: string[];
 
 	constructor(username: string, dealRole: PrefEngineDealRole) {
 		this._username = username;
 		this._dealRole = dealRole;
 		this._playRole = PrefEnginePlayerRole.NONE;
+		this._replacements = [];
 	}
 
 	get username(): string {

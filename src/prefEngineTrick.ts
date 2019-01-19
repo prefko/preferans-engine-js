@@ -49,7 +49,7 @@ export default class PrefEngineTrick {
 		throw new Error("PrefEngineTrick::winner:Winner not found: " + this._winner + " [" + this.string + "]");
 	}
 
-	get ppn() {
+	get ppn(): string {
 		let a = this._first ? this._first.card.ppn : "";
 		let b = this._second ? this._second.card.ppn : "";
 		let c = this._third ? this._third.card.ppn : "";
@@ -74,7 +74,7 @@ export default class PrefEngineTrick {
 		return (this._first && this._second) ? true : false;
 	}
 
-	private firstWins() {
+	private firstWins(): boolean {
 		if (!this._first) return false;
 		if (!this._second) return true;
 		let c1 = this._first.card;
@@ -84,7 +84,7 @@ export default class PrefEngineTrick {
 		return c1.beats(c2) && (!c3 || c1.beats(c3));
 	}
 
-	private secondWins() {
+	private secondWins(): boolean {
 		if (!this._first) return false;
 		if (!this._second) return false;
 		let c1 = this._first.card;
@@ -94,7 +94,7 @@ export default class PrefEngineTrick {
 		return !c1.beats(c2) && (!c3 || c2.beats(c3));
 	}
 
-	private thirdWins() {
+	private thirdWins(): boolean {
 		if (!this._first) return false;
 		if (!this._second) return false;
 		if (!this._third) return false;
@@ -105,7 +105,7 @@ export default class PrefEngineTrick {
 		return !c1.beats(c3) && !c2.beats(c3);
 	}
 
-	private throwCard(position: PrefEngineTrickPosition, card: PrefDeckCard, username: string) {
+	private throwCard(position: PrefEngineTrickPosition, card: PrefDeckCard, username: string): boolean {
 		if (!this._first) {
 			this._first = {card, username};
 			return true;
