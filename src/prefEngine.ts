@@ -62,7 +62,7 @@ export default class PrefEngine {
 		this._firstBid = this._p1;
 		this._secondBid = this._p2;
 		this._current = this._firstBid;
-		this._round = new PrefEngineRound(this._deck, this._dealer, this._firstBid, this._secondBid);
+		this._round = new PrefEngineRound(this);
 	}
 
 	restoreDeck(cards: PrefDeckCard[]): PrefEngine {
@@ -77,7 +77,7 @@ export default class PrefEngine {
 		this._secondBid = tmp;
 
 		this._current = this._firstBid;
-		this._round = new PrefEngineRound(this._deck, this._dealer, this._firstBid, this._secondBid);
+		this._round = new PrefEngineRound(this);
 		return this;
 	}
 
@@ -94,43 +94,59 @@ export default class PrefEngine {
 	bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
-		// TODO
+		this._round
 		return this;
 	}
 
-	exchange(username: string, discard1: prefDeckCard, discard2: prefDeckCard) {
+	exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
 		// TODO
 		return this;
 	}
 
-	contract(username: string, play) {
+	contract(username: string, play): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.CONTRACT);
 		// TODO
 		return this;
 	}
 
-	decide(username: string, plays: boolean) {
+	decide(username: string, plays: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDE);
 		// TODO
 		return this;
 	}
 
-	kontra(username: string, kontra) {
+	kontra(username: string, kontra): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.KONTRA);
 		// TODO
 		return this;
 	}
 
-	throw(username: string, card: PrefDeckCard) {
+	throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAY);
 		// TODO
 		return this;
+	}
+
+	get deck(): PrefDeck {
+		return this._deck;
+	}
+
+	get firstPlayer(): PrefEnginePlayer {
+		return this._firstBid;
+	}
+
+	get secondPlayer(): PrefEnginePlayer {
+		return this._secondBid;
+	}
+
+	get thirdPlayer(): PrefEnginePlayer {
+		return this._dealer;
 	}
 
 	get current(): PrefEnginePlayer {

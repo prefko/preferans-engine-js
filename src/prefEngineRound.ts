@@ -7,6 +7,9 @@ import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 import PrefDeck from "preferans-deck-js";
 import {PrefEngineStage} from "./stage/prefEngineStage";
+import PrefEngineStageBidding, {PrefEngineBid} from "./stage/prefEngineStageBidding";
+import PrefEngine from "./prefEngine";
+import APrefEngineStage from "./stage/prefEngineStage";
 
 export type PrefEngineRoundStatus = {
 	next: string
@@ -14,23 +17,29 @@ export type PrefEngineRoundStatus = {
 };
 
 export default class PrefEngineRound {
+	protected _engine: PrefEngine;
 	private readonly _deal: PrefDeckDeal;
 	private readonly _p1: PrefEnginePlayer;
 	private readonly _p2: PrefEnginePlayer;
 	private readonly _p3: PrefEnginePlayer;
 
-	// TODO: add judge and his decision
-	constructor(deck: PrefDeck, p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer) {
-		this._deal = deck.shuffle.cut.deal;
-		this._p1 = p1;
-		this._p2 = p2;
-		this._p3 = p3;
+	private _currentStage: APrefEngineStage;
+	private _bidding: PrefEngineStageBidding;
 
-		// TODO: start BID stage
+	// TODO: add judge and his decision
+	constructor(engine: PrefEngine) {
+		this._engine = engine;
+		this._deal = this._engine.deck.shuffle.cut.deal;
+		this._p1 = this._engine.firstPlayer;
+		this._p2 = this._engine.secondPlayer;
+		this._p3 = this._engine.thirdPlayer;
+
+		this._bidding = new PrefEngineStageBidding(this._engine);
+		this._currentStage = this._bidding;
 	}
 
 	get stage(): PrefEngineStage {
-		// TODO:
+		return this._currentStage.type;
 	}
 
 	get ppn(): string {
@@ -43,32 +52,32 @@ export default class PrefEngineRound {
 		return {next: "cope"};
 	}
 
-	auction(username, licitacija): PrefEngineRound {
+	bid(username: string, bid: PrefEngineBid): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	exchange(username, skart): PrefEngineRound {
+	exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	declare(username, igra) {
+	contract(username: string, play): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	accept(username, doso) {
+	decide(username: string, plays: boolean): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	kontra(username, kontra) {
+	kontra(username: string, kontra): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	throw(username, card) {
+	throw(username: string, card: PrefDeckCard): PrefEngineRound {
 		// TODO:
 		return this;
 	}
