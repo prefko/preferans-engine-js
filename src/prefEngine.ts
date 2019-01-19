@@ -7,6 +7,9 @@ import PrefDeck, {PrefDeckDeal} from "preferans-deck-js";
 import PrefEnginePlayer, {PrefEngineDealRole} from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
+import {PrefEngineBid} from "./stage/prefEngineStageBidding";
+import {PrefEngineStage} from "./stage/prefEngineStage";
+import prefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
@@ -78,28 +81,56 @@ export default class PrefEngine {
 		return this;
 	}
 
-	bid(username, bid) {
-		// TODO: verify stage and user
+	private checkCurrentPlayer(username: string): PrefEngine {
+		if (username !== this._current.username) throw new Error("PrefEngine::checkCurrentPlayer:Wrong player: " + username);
+		return this;
 	}
 
-	exchange(username, discard) {
-		// TODO: verify stage and user
+	private checkCurrentStage(stage: PrefEngineStage): PrefEngine {
+		if (stage !== this._round.stage) throw new Error("PrefEngine::checkCurrentStage:Wrong stage: " + stage);
+		return this;
 	}
 
-	choice(username, play) {
-		// TODO: verify stage and user
+	bid(username: string, bid: PrefEngineBid): PrefEngine {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.BIDDING);
+		// TODO
+		return this;
 	}
 
-	decision(username, plays) {
-		// TODO: verify stage and user
+	exchange(username: string, discard1: prefDeckCard, discard2: prefDeckCard) {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
+		// TODO
+		return this;
 	}
 
-	kontra(username, kontra) {
-		// TODO: verify stage and user
+	contract(username: string, play) {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.CONTRACT);
+		// TODO
+		return this;
 	}
 
-	throw(username, card) {
-		// TODO: verify stage and user
+	decide(username: string, plays: boolean) {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.DECIDE);
+		// TODO
+		return this;
+	}
+
+	kontra(username: string, kontra) {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.KONTRA);
+		// TODO
+		return this;
+	}
+
+	throw(username: string, card: PrefDeckCard) {
+		this.checkCurrentPlayer(username);
+		this.checkCurrentStage(PrefEngineStage.PLAY);
+		// TODO
+		return this;
 	}
 
 	get current(): PrefEnginePlayer {

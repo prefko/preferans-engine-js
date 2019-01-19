@@ -6,6 +6,7 @@ import {PrefDeckDeal} from "preferans-deck-js";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 import PrefDeck from "preferans-deck-js";
+import {PrefEngineStage} from "./stage/prefEngineStage";
 
 export type PrefEngineRoundStatus = {
 	next: string
@@ -26,6 +27,10 @@ export default class PrefEngineRound {
 		this._p3 = p3;
 
 		// TODO: start BID stage
+	}
+
+	get stage(): PrefEngineStage {
+		// TODO:
 	}
 
 	get ppn(): string {
