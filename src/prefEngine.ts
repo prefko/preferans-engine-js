@@ -39,10 +39,10 @@ export default class PrefEngine {
 	private _firstBid: PrefEnginePlayer;
 	private _secondBid: PrefEnginePlayer;
 
-	private _deck: PrefDeck;
+	private readonly _deck: PrefDeck;
 	private _score: PrefScore;
 	private _round: PrefEngineRound;
-	private _rounds: PrefEngineRound[];
+	private readonly _rounds: PrefEngineRound[];
 
 	constructor(u1: string, u2: string, u3: string, bula: number, refas: number, options: PrefEngineOptions) {
 		this._p1 = new PrefEnginePlayer(u1);
@@ -93,42 +93,42 @@ export default class PrefEngine {
 	public bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
-		this._round
+		this._round.bid(username, bid);
 		return this;
 	}
 
 	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
-		// TODO
+		this._round.exchange(username, discard1, discard2);
 		return this;
 	}
 
-	public contract(username: string, play): PrefEngine {
+	public contract(username: string, contract): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.CONTRACT);
-		// TODO
+		this._round.contract(username, contract);
 		return this;
 	}
 
 	public decide(username: string, plays: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDE);
-		// TODO
+		this._round.decide(username, plays);
 		return this;
 	}
 
 	public kontra(username: string, kontra): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.KONTRA);
-		// TODO
+		this._round.kontra(username, kontra);
 		return this;
 	}
 
 	public throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAY);
-		// TODO
+		this._round.throw(username, card);
 		return this;
 	}
 
@@ -161,6 +161,11 @@ export default class PrefEngine {
 		else if (this._current === this._p2) this._current = this._p3;
 		else if (this._current === this._p3) this._current = this._p1;
 		return this._current;
+	}
+
+	get json(): any {
+
+		return this._rounds;
 	}
 
 }

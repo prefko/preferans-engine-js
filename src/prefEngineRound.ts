@@ -46,7 +46,7 @@ export default class PrefEngineRound {
 		return this;
 	}
 
-	public contract(username: string, play): PrefEngineRound {
+	public contract(username: string, contract): PrefEngineRound {
 		// TODO:
 		return this;
 	}
