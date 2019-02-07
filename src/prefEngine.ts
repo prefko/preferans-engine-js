@@ -93,42 +93,42 @@ export default class PrefEngine {
 	public bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
-		this._round.bid(username, bid);
+		this._round.bid(this._current, bid);
 		return this;
 	}
 
 	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
-		this._round.exchange(username, discard1, discard2);
+		this._round.exchange(this._current, discard1, discard2);
 		return this;
 	}
 
 	public contract(username: string, contract): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.CONTRACT);
-		this._round.contract(username, contract);
+		this._round.contract(this._current, contract);
 		return this;
 	}
 
 	public decide(username: string, plays: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDING);
-		this._round.decide(username, plays);
+		this._round.decide(this._current, plays);
 		return this;
 	}
 
 	public kontra(username: string, kontra): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.KONTRA);
-		this._round.kontra(username, kontra);
+		this._round.kontra(this._current, kontra);
 		return this;
 	}
 
 	public throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAYING);
-		this._round.throw(username, card);
+		this._round.throw(this._current, card);
 		return this;
 	}
 
@@ -150,6 +150,18 @@ export default class PrefEngine {
 
 	get current(): PrefEnginePlayer {
 		return this._current;
+	}
+
+	get p1(): PrefEnginePlayer {
+		return this._p1;
+	}
+
+	get p2(): PrefEnginePlayer {
+		return this._p2;
+	}
+
+	get p3(): PrefEnginePlayer {
+		return this._p3;
 	}
 
 	get next(): PrefEnginePlayer {

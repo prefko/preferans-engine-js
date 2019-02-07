@@ -58,10 +58,10 @@
 	"dependencies": {
 		"@types/lodash": "^4.14.120",
 		"lodash": "^4.17.10",
-		"preferans-deck-js": "^2.2.5",
-		"preferans-paper-js": "^2.7.4",
+		"preferans-deck-js": "^2.2.6",
+		"preferans-paper-js": "^2.7.5",
 		"preferans-rating-js": "^2.3.3",
-		"preferans-score-js": "^1.2.3"
+		"preferans-score-js": "^1.2.4"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.1.7",
@@ -77,6 +77,6 @@
 		"tslint": "^5.12.1",
 		"tslint-config-prettier": "^1.18.0",
 		"typedoc": "^0.14.2",
-		"typescript": "^3.3.1"
+		"typescript": "^3.3.3"
 	}
 }

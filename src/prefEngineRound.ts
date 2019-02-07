@@ -23,6 +23,11 @@ export default class PrefEngineRound {
 
 	private _currentStage: APrefEngineStage;
 	private _bidding: PrefEngineStageBidding;
+	// private _exchange: PrefEngineStageExchange;
+	// private _bidding: PrefEngineStageBidding;
+	// private _bidding: PrefEngineStageBidding;
+	// private _bidding: PrefEngineStageBidding;
+	// private _bidding: PrefEngineStageBidding;
 
 	// TODO: add judge and his decision
 	constructor(engine: PrefEngine) {
@@ -36,32 +41,39 @@ export default class PrefEngineRound {
 		this._currentStage = this._bidding;
 	}
 
-	public bid(username: string, bid: PrefEngineBid): PrefEngineRound {
+	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineRound {
+		this._bidding.bid(player, bid);
+
+		if (this._bidding.biddingCompleted) {
+			let winner = this._bidding.highestBidder;
+
+			// TODO: switch to next stage
+		}
+
+		return this;
+	}
+
+	public exchange(player: PrefEnginePlayer, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
+	public contract(player: PrefEnginePlayer, contract): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	public contract(username: string, contract): PrefEngineRound {
+	public decide(player: PrefEnginePlayer, plays: boolean): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	public decide(username: string, plays: boolean): PrefEngineRound {
+	public kontra(player: PrefEnginePlayer, kontra): PrefEngineRound {
 		// TODO:
 		return this;
 	}
 
-	public kontra(username: string, kontra): PrefEngineRound {
-		// TODO:
-		return this;
-	}
-
-	public throw(username: string, card: PrefDeckCard): PrefEngineRound {
+	public throw(player: PrefEnginePlayer, card: PrefDeckCard): PrefEngineRound {
 		// TODO:
 		return this;
 	}

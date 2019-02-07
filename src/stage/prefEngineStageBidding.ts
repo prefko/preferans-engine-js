@@ -39,10 +39,13 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 	}
 
 	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineStageBidding {
+		player.bid = bid;
+
 		let username: string = player.username;
 		this._all.push({username, bid});
 		if (this._max < bid) this._max = bid;
 		this._last = bid;
+
 		return this;
 	}
 
@@ -164,5 +167,25 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 
 		return bids;
 	}
+
+	get highestBidder(): PrefEnginePlayer {
+		let p1 = this._engine.p1;
+		let p2 = this._engine.p2;
+		let p3 = this._engine.p3;
+		return p1.bid > p2.bid
+			? p1.bid > p3.bid ? p1 : p3
+			: p2.bid > p3.bid ? p2 : p3;
+	};
+
+	get biddingCompleted(): boolean {
+		let p1 = this._engine.p1;
+		let p2 = this._engine.p2;
+		let p3 = this._engine.p3;
+		let cnt = 0;
+		if (p1.lastBid === PrefEngineBid.BID_PASS || p1.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
+		if (p2.lastBid === PrefEngineBid.BID_PASS || p2.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
+		if (p3.lastBid === PrefEngineBid.BID_PASS || p3.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
+		return cnt >= 2;
+	};
 
 }
