@@ -113,7 +113,7 @@ export default class PrefEngine {
 
 	public decide(username: string, plays: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(PrefEngineStage.DECIDE);
+		this.checkCurrentStage(PrefEngineStage.DECIDING);
 		this._round.decide(username, plays);
 		return this;
 	}
@@ -127,7 +127,7 @@ export default class PrefEngine {
 
 	public throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(PrefEngineStage.PLAY);
+		this.checkCurrentStage(PrefEngineStage.PLAYING);
 		this._round.throw(username, card);
 		return this;
 	}

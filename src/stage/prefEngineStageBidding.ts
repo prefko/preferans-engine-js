@@ -46,7 +46,7 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		return this;
 	}
 
-	public bidddingStage(): boolean {
+	public isBiddding(): boolean {
 		return true;
 	}
 

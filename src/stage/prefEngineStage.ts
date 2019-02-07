@@ -3,7 +3,7 @@
 
 import PrefEngine from "../prefEngine";
 
-export enum PrefEngineStage {BIDDING, EXCHANGE, CONTRACT, DECIDE, KONTRA, PLAY, END}
+export enum PrefEngineStage {BIDDING, EXCHANGE, CONTRACT, DECIDING, KONTRA, PLAYING, END}
 
 export default abstract class APrefEngineStage {
 	protected _engine: PrefEngine;
@@ -14,31 +14,31 @@ export default abstract class APrefEngineStage {
 		this._type = stage;
 	}
 
-	public bidddingStage(): boolean {
+	public isBiddding(): boolean {
 		return false;
 	}
 
-	public exchangeStage(): boolean {
+	public isExchange(): boolean {
 		return false;
 	}
 
-	public contractStage(): boolean {
+	public isContract(): boolean {
 		return false;
 	}
 
-	public decideStage(): boolean {
+	public isDeciding(): boolean {
 		return false;
 	}
 
-	public kontraStage(): boolean {
+	public isKontra(): boolean {
 		return false;
 	}
 
-	public playStage(): boolean {
+	public isPlaying(): boolean {
 		return false;
 	}
 
-	public endStage(): boolean {
+	public isEnd(): boolean {
 		return false;
 	}
 
