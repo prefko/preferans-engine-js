@@ -4,9 +4,11 @@
 import PrefEngine from "../prefEngine";
 import APrefEngineStage from "./prefEngineStage";
 import PrefEnginePlayer from "../prefEnginePlayer";
-import {PrefEngineBid, PrefEngineKontra, PrefEngineStage} from "../PrefEngineEnums";
+import {PrefEngineBid, PrefEngineContract, PrefEngineKontra, PrefEngineStage} from "../PrefEngineEnums";
 
 export type PrefEnginePlayerKontra = { username: string, kontra: PrefEngineKontra }
+
+const canInvite = (player: PrefEnginePlayer): boolean => !player.isMain() && !player.follows;
 
 export default class PrefEngineStageKontra extends APrefEngineStage {
 	private _all: PrefEnginePlayerKontra[];
@@ -14,7 +16,7 @@ export default class PrefEngineStageKontra extends APrefEngineStage {
 	private _last: PrefEngineKontra;
 
 	constructor(engine: PrefEngine) {
-		super(engine, PrefEngineStage.KONTRA);
+		super(engine, PrefEngineStage.KONTRING);
 
 		this._all = [];
 		this._max = PrefEngineKontra.NO_KONTRA;
@@ -28,16 +30,21 @@ export default class PrefEngineStageKontra extends APrefEngineStage {
 		return this;
 	}
 
-	get options(): PrefEngineKontra[] {
-		let lastKontraMade: PrefEngineKontra = this._engine.current.kontra;
+	get max(): PrefEngineKontra {
+		return this._max;
+	}
 
-		var choices = [];
+	get options(): PrefEngineKontra[] {
+		let player: PrefEnginePlayer = this._engine.current;
+		let lastKontraMade: PrefEngineKontra = player.kontra;
+
+		let isContractSpade = PrefEngineContract.CONTRACT_SPADE === this._engine.round.contract;
+
+		let choices = [];
 		choices.push(PrefEngineKontra.KONTRA_READY);
 		switch (lastKontraMade) {
 			case PrefEngineKontra.NO_KONTRA:
-				if (false === came && false === isContractSpade) {
-					choices.push(PrefEngineKontra.KONTRA_INVITE);
-				}
+				if (canInvite(player) && !isContractSpade) choices.push(PrefEngineKontra.KONTRA_INVITE);
 				choices.push(PrefEngineKontra.KONTRA_KONTRA);
 				break;
 			case PrefEngineKontra.KONTRA_READY:
@@ -47,14 +54,10 @@ export default class PrefEngineStageKontra extends APrefEngineStage {
 				choices.push(PrefEngineKontra.KONTRA_REKONTRA);
 				break;
 			case PrefEngineKontra.KONTRA_REKONTRA:
-				if (true === includeSubAndMort) {
-					choices.push(PrefEngineKontra.KONTRA_SUBKONTRA);
-				}
+				if (this._engine.allowSubAndMortKontras) choices.push(PrefEngineKontra.KONTRA_SUBKONTRA);
 				break;
 			case PrefEngineKontra.KONTRA_SUBKONTRA:
-				if (true === includeSubAndMort) {
-					choices.push(PrefEngineKontra.KONTRA_MORTKONTRA);
-				}
+				if (this._engine.allowSubAndMortKontras) choices.push(PrefEngineKontra.KONTRA_MORTKONTRA);
 				break;
 			case PrefEngineKontra.KONTRA_INVITE:
 			case PrefEngineKontra.KONTRA_MORTKONTRA:
@@ -74,14 +77,14 @@ export default class PrefEngineStageKontra extends APrefEngineStage {
 			: p2.kontra > p3.kontra ? p2 : p3;
 	}
 
-	get kontraCompleted(): boolean {
+	get kontringCompleted(): boolean {
 		let p1 = this._engine.p1;
 		let p2 = this._engine.p2;
 		let p3 = this._engine.p3;
 		let cnt = 0;
-		if (p1.lastBid === PrefEngineBid.BID_PASS || p1.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
-		if (p2.lastBid === PrefEngineBid.BID_PASS || p2.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
-		if (p3.lastBid === PrefEngineBid.BID_PASS || p3.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
+		if (p1.isOutOfKontring(this._max)) cnt++;
+		if (p2.isOutOfKontring(this._max)) cnt++;
+		if (p3.isOutOfKontring(this._max)) cnt++;
 		return cnt >= 2;
 	}
 

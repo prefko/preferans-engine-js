@@ -15,13 +15,13 @@ export default abstract class APrefEngineStage {
 
 	public isBidding = (): boolean => this._type === PrefEngineStage.BIDDING;
 
-	public isExchange = (): boolean => this._type === PrefEngineStage.EXCHANGE;
+	public isExchange = (): boolean => this._type === PrefEngineStage.EXCHANGING;
 
 	public isContract = (): boolean => this._type === PrefEngineStage.CONTRACTING;
 
 	public isDeciding = (): boolean => this._type === PrefEngineStage.DECIDING;
 
-	public isKontra = (): boolean => this._type === PrefEngineStage.KONTRA;
+	public isKontra = (): boolean => this._type === PrefEngineStage.KONTRING;
 
 	public isPlaying = (): boolean => this._type === PrefEngineStage.PLAYING;
 

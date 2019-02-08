@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
-import {PrefEngineBid, PrefEngineContract} from "./PrefEngineEnums";
+import {includes} from 'lodash';
+import {PrefEngineBid, PrefEngineKontra} from "./PrefEngineEnums";
 
 export enum PrefEngineDealRole {NONE = 0, DEALER, SECOND_BIDDER, FIRST_BIDDER}
 
@@ -18,6 +19,8 @@ export default class PrefEnginePlayer {
 	private _bid: PrefEngineBid;
 	private _lastBid: PrefEngineBid;
 	private _follows: boolean;
+	private _kontra: PrefEngineKontra;
+	private _lastKontra: PrefEngineKontra;
 
 	constructor(username: string) {
 		this._starter = username;
@@ -29,6 +32,8 @@ export default class PrefEnginePlayer {
 		this._bid = PrefEngineBid.NO_BID;
 		this._lastBid = PrefEngineBid.NO_BID;
 		this._follows = false;
+		this._kontra = PrefEngineKontra.NO_KONTRA;
+		this._lastKontra = PrefEngineKontra.NO_KONTRA;
 	}
 
 	reset() {
@@ -65,6 +70,11 @@ export default class PrefEnginePlayer {
 		this._follows = plays;
 	}
 
+	set kontra(kontra: PrefEngineKontra) {
+		this._lastKontra = kontra;
+		if (kontra > this._kontra) this._kontra = kontra;
+	}
+
 	get starter(): string {
 		return this._starter;
 	}
@@ -81,12 +91,31 @@ export default class PrefEnginePlayer {
 		return this._playRole;
 	}
 
+	public isMain = (): boolean => this._playRole === PrefEnginePlayRole.MAIN;
+
 	get bid(): PrefEngineBid {
 		return this._bid;
 	}
 
 	get lastBid(): PrefEngineBid {
 		return this._lastBid;
+	}
+
+	get outOfBidding(): boolean {
+		return includes([PrefEngineBid.BID_PASS, PrefEngineBid.BID_YOURS_IS_BETTER], this._lastBid);
+	}
+
+	get kontra(): PrefEngineKontra {
+		return this._kontra;
+	}
+
+	get lastKontra(): PrefEngineKontra {
+		return this._lastKontra;
+	}
+
+	public isOutOfKontring(maxKontra: PrefEngineKontra): boolean {
+		if (maxKontra === PrefEngineKontra.KONTRA_INVITE) return this._kontra === PrefEngineKontra.KONTRA_READY;
+		return includes([PrefEngineKontra.KONTRA_READY, PrefEngineKontra.KONTRA_INVITE], this._lastKontra);
 	}
 
 	get follows(): boolean {

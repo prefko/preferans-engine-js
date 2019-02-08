@@ -37,18 +37,18 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 	}
 
 	get options(): PrefEngineBid[] {
-		let lastBidMade: PrefEngineBid = this._engine.current.bid;
+		let myLastBid: PrefEngineBid = this._engine.current.bid;
 
-		var bids = [];
+		let choices = [];
 		if (this._last >= PrefEngineBid.BID_GAME_BETL) {
-			bids.push(PrefEngineBid.BID_PASS);
+			choices.push(PrefEngineBid.BID_PASS);
 			switch (this._last) {
 				case PrefEngineBid.BID_GAME_BETL:
-					bids.push(PrefEngineBid.BID_GAME_SANS);
-					bids.push(PrefEngineBid.BID_GAME_PREFERANS);
+					choices.push(PrefEngineBid.BID_GAME_SANS);
+					choices.push(PrefEngineBid.BID_GAME_PREFERANS);
 					break;
 				case PrefEngineBid.BID_GAME_SANS:
-					bids.push(PrefEngineBid.BID_GAME_PREFERANS);
+					choices.push(PrefEngineBid.BID_GAME_PREFERANS);
 					break;
 				default:
 					break;
@@ -57,90 +57,90 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		} else if (this._last >= PrefEngineBid.BID_GAME) {
 			switch (this._last) {
 				case PrefEngineBid.BID_GAME:
-					if (lastBidMade === PrefEngineBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
-						bids.push(PrefEngineBid.BID_GAME_SPADE);
-						bids.push(PrefEngineBid.BID_GAME_DIAMOND);
-						bids.push(PrefEngineBid.BID_GAME_HEART);
-						bids.push(PrefEngineBid.BID_GAME_CLUB);
+					if (myLastBid === PrefEngineBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
+						choices.push(PrefEngineBid.BID_GAME_SPADE);
+						choices.push(PrefEngineBid.BID_GAME_DIAMOND);
+						choices.push(PrefEngineBid.BID_GAME_HEART);
+						choices.push(PrefEngineBid.BID_GAME_CLUB);
 
-					} else if (lastBidMade === PrefEngineBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
-						bids.push(PrefEngineBid.BID_PASS);
-						bids = addInitialGameBids(bids);
+					} else if (myLastBid === PrefEngineBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
+						choices.push(PrefEngineBid.BID_PASS);
+						choices = addInitialGameBids(choices);
 
 					} else {  // Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
-						bids.push(PrefEngineBid.BID_PASS);
+						choices.push(PrefEngineBid.BID_PASS);
 					}
 					break;
 				case PrefEngineBid.BID_GAME_SPADE:
-					bids.push(PrefEngineBid.BID_GAME_DIAMOND);
-					bids.push(PrefEngineBid.BID_GAME_HEART);
-					bids.push(PrefEngineBid.BID_GAME_CLUB);
+					choices.push(PrefEngineBid.BID_GAME_DIAMOND);
+					choices.push(PrefEngineBid.BID_GAME_HEART);
+					choices.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
 				case PrefEngineBid.BID_GAME_DIAMOND:
-					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
-					bids.push(PrefEngineBid.BID_GAME_HEART);
-					bids.push(PrefEngineBid.BID_GAME_CLUB);
+					choices.push(PrefEngineBid.BID_YOURS_IS_BETTER);
+					choices.push(PrefEngineBid.BID_GAME_HEART);
+					choices.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
 				case PrefEngineBid.BID_GAME_HEART:
-					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
-					bids.push(PrefEngineBid.BID_GAME_CLUB);
+					choices.push(PrefEngineBid.BID_YOURS_IS_BETTER);
+					choices.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
 				case PrefEngineBid.BID_GAME_CLUB:
-					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
+					choices.push(PrefEngineBid.BID_YOURS_IS_BETTER);
 					break;
 				default:
-					bids.push(PrefEngineBid.BID_PASS);
+					choices.push(PrefEngineBid.BID_PASS);
 					break;
 			}
 
 		} else {
-			bids.push(PrefEngineBid.BID_PASS);
+			choices.push(PrefEngineBid.BID_PASS);
 			switch (this._last) {
 				case PrefEngineBid.NO_BID:
 				case PrefEngineBid.BID_PASS:
-					bids.push(PrefEngineBid.BID_SPADE);
-					bids = addInitialGameBids(bids);
+					choices.push(PrefEngineBid.BID_SPADE);
+					choices = addInitialGameBids(choices);
 					break;
 				case PrefEngineBid.BID_SPADE:
-					bids.push(PrefEngineBid.BID_DIAMOND);
-					bids = addInitialGameBids(bids);
+					choices.push(PrefEngineBid.BID_DIAMOND);
+					choices = addInitialGameBids(choices);
 					break;
 				case PrefEngineBid.BID_DIAMOND:
-					if (lastBidMade === PrefEngineBid.BID_SPADE) bids.push(PrefEngineBid.BID_DIAMOND_MINE);
+					if (myLastBid === PrefEngineBid.BID_SPADE) choices.push(PrefEngineBid.BID_DIAMOND_MINE);
 					else {
-						bids.push(PrefEngineBid.BID_HEART);
-						bids = addInitialGameBids(bids);
+						choices.push(PrefEngineBid.BID_HEART);
+						choices = addInitialGameBids(choices);
 					}
 					break;
 				case PrefEngineBid.BID_DIAMOND_MINE:
-					bids.push(PrefEngineBid.BID_HEART);
+					choices.push(PrefEngineBid.BID_HEART);
 					break;
 				case PrefEngineBid.BID_HEART:
-					bids.push(PrefEngineBid.BID_HEART_MINE);
+					choices.push(PrefEngineBid.BID_HEART_MINE);
 					break;
 				case PrefEngineBid.BID_HEART_MINE:
-					bids.push(PrefEngineBid.BID_CLUB);
+					choices.push(PrefEngineBid.BID_CLUB);
 					break;
 				case PrefEngineBid.BID_CLUB:
-					bids.push(PrefEngineBid.BID_CLUB_MINE);
+					choices.push(PrefEngineBid.BID_CLUB_MINE);
 					break;
 				case PrefEngineBid.BID_CLUB_MINE:
-					bids.push(PrefEngineBid.BID_BETL);
+					choices.push(PrefEngineBid.BID_BETL);
 					break;
 				case PrefEngineBid.BID_BETL:
-					bids.push(PrefEngineBid.BID_BETL_MINE);
+					choices.push(PrefEngineBid.BID_BETL_MINE);
 					break;
 				case PrefEngineBid.BID_BETL_MINE:
-					bids.push(PrefEngineBid.BID_SANS);
+					choices.push(PrefEngineBid.BID_SANS);
 					break;
 				case PrefEngineBid.BID_SANS:
-					bids.push(PrefEngineBid.BID_SANS_MINE);
+					choices.push(PrefEngineBid.BID_SANS_MINE);
 					break;
 				case PrefEngineBid.BID_SANS_MINE:
-					bids.push(PrefEngineBid.BID_PREFERANS);
+					choices.push(PrefEngineBid.BID_PREFERANS);
 					break;
 				case PrefEngineBid.BID_PREFERANS:
-					bids.push(PrefEngineBid.BID_PREFERANS_MINE);
+					choices.push(PrefEngineBid.BID_PREFERANS_MINE);
 					break;
 				case PrefEngineBid.BID_PREFERANS_MINE:
 				default:
@@ -148,7 +148,7 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 			}
 		}
 
-		return bids;
+		return choices;
 	}
 
 	get highestBidder(): PrefEnginePlayer {
@@ -165,9 +165,9 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		let p2 = this._engine.p2;
 		let p3 = this._engine.p3;
 		let cnt = 0;
-		if (p1.lastBid === PrefEngineBid.BID_PASS || p1.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
-		if (p2.lastBid === PrefEngineBid.BID_PASS || p2.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
-		if (p3.lastBid === PrefEngineBid.BID_PASS || p3.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
+		if (p1.outOfBidding) cnt++;
+		if (p2.outOfBidding) cnt++;
+		if (p3.outOfBidding) cnt++;
 		return cnt >= 2;
 	}
 

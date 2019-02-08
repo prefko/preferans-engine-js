@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-export enum PrefEngineStage {BIDDING, EXCHANGE, CONTRACTING, DECIDING, KONTRA, PLAYING, END}
+export enum PrefEngineStage {BIDDING, EXCHANGING, CONTRACTING, DECIDING, KONTRING, PLAYING, END}
 
 export enum PrefEngineBid {
 	NO_BID = -1, BID_PASS = 0,

@@ -7,7 +7,7 @@ import PrefDeck from "preferans-deck-js";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
-import {PrefEngineStage, PrefEngineBid, PrefEngineContract} from "./PrefEngineEnums";
+import {PrefEngineStage, PrefEngineBid, PrefEngineContract, PrefEngineKontra} from "./PrefEngineEnums";
 
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
@@ -107,14 +107,14 @@ export default class PrefEngine {
 	public bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
-		this._round.bid(this._current, bid);
+		this._round.bidding(this._current, bid);
 		return this;
 	}
 
 	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(PrefEngineStage.EXCHANGE);
-		this._round.exchange(this._current, discard1, discard2);
+		this.checkCurrentStage(PrefEngineStage.EXCHANGING);
+		this._round.exchanging(this._current, discard1, discard2);
 		return this;
 	}
 
@@ -128,14 +128,14 @@ export default class PrefEngine {
 	public decide(username: string, follows: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDING);
-		this._round.decide(this._current, follows);
+		this._round.deciding(this._current, follows);
 		return this;
 	}
 
-	public kontra(username: string, kontra): PrefEngine {
+	public kontra(username: string, kontra: PrefEngineKontra): PrefEngine {
 		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(PrefEngineStage.KONTRA);
-		this._round.kontra(this._current, kontra);
+		this.checkCurrentStage(PrefEngineStage.KONTRING);
+		this._round.kontring(this._current, kontra);
 		return this;
 	}
 
@@ -148,6 +148,10 @@ export default class PrefEngine {
 
 	get deck(): PrefDeck {
 		return this._deck;
+	}
+
+	get round(): PrefEngineRound {
+		return this._round;
 	}
 
 	get firstBidPlayer(): PrefEnginePlayer {
@@ -185,6 +189,10 @@ export default class PrefEngine {
 	get next(): PrefEnginePlayer {
 		this._current = nextPlayer(this, this._current);
 		return this._current;
+	}
+
+	get allowSubAndMortKontras(): boolean {
+		return this._options.allowSubAndMortKontras;
 	}
 
 	get json(): any {
