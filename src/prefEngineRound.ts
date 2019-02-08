@@ -144,6 +144,18 @@ export default class PrefEngineRound {
 		if (this._playing.trickFull) {
 			this._engine.currentPlayer = this._playing.winner;
 
+			let mainTricks = this._playing.countTricks(this._mainPlayer);
+			if (isBetl(this._contract) && mainTricks > 0) {
+				// TODO: round finished
+
+			} else {
+				let followersTricks = this._playing.countOthersTricks(this._mainPlayer);
+				if (followersTricks > 4) {
+					// TODO: round finished
+
+				}
+			}
+
 		} else {
 			this._engine.next;
 			if (!this._engine.currentPlayer.isPlaying) this._engine.next;

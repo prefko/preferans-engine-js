@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
+import * as _ from 'lodash';
 import PrefEngine from "../prefEngine";
 import APrefEngineStage from "./prefEngineStage";
 import PrefEnginePlayer from "../prefEnginePlayer";
@@ -45,6 +46,18 @@ export default class PrefEngineStagePlaying extends APrefEngineStage {
 	get winner(): PrefEnginePlayer {
 		if (this._trick) return this._trick.winner;
 		throw new Error("PrefEngineStagePlaying::winner:Trick is invalid." + this._trick);
+	}
+
+	public countTricks(player: PrefEnginePlayer): number {
+		return _.size(_.filter(this._tricks, (trick: PrefEngineTrick) => {
+			return trick.winner === player;
+		}));
+	}
+
+	public countOthersTricks(player: PrefEnginePlayer): number {
+		return _.size(_.filter(this._tricks, (trick: PrefEngineTrick) => {
+			return trick.winner !== player;
+		}));
 	}
 
 }
