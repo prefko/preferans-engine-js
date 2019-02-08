@@ -2,45 +2,30 @@
 "use strict";
 
 import PrefEngine from "../prefEngine";
-
-export enum PrefEngineStage {BIDDING, EXCHANGE, CONTRACT, DECIDING, KONTRA, PLAYING, END}
+import {PrefEngineStage} from "../PrefEngineEnums";
 
 export default abstract class APrefEngineStage {
 	protected _engine: PrefEngine;
 	protected _type: PrefEngineStage;
 
-	constructor(engine: PrefEngine, stage: PrefEngineStage) {
+	protected constructor(engine: PrefEngine, stage: PrefEngineStage) {
 		this._engine = engine;
 		this._type = stage;
 	}
 
-	public isBiddding(): boolean {
-		return false;
-	}
+	public isBidding = (): boolean => this._type === PrefEngineStage.BIDDING;
 
-	public isExchange(): boolean {
-		return false;
-	}
+	public isExchange = (): boolean => this._type === PrefEngineStage.EXCHANGE;
 
-	public isContract(): boolean {
-		return false;
-	}
+	public isContract = (): boolean => this._type === PrefEngineStage.CONTRACT;
 
-	public isDeciding(): boolean {
-		return false;
-	}
+	public isDeciding = (): boolean => this._type === PrefEngineStage.DECIDING;
 
-	public isKontra(): boolean {
-		return false;
-	}
+	public isKontra = (): boolean => this._type === PrefEngineStage.KONTRA;
 
-	public isPlaying(): boolean {
-		return false;
-	}
+	public isPlaying = (): boolean => this._type === PrefEngineStage.PLAYING;
 
-	public isEnd(): boolean {
-		return false;
-	}
+	public isEnd = (): boolean => this._type === PrefEngineStage.END;
 
 	get engine(): PrefEngine {
 		return this._engine;

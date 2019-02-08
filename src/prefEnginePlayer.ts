@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-import {PrefEngineBid} from "./stage/prefEngineStageBidding";
+import {PrefEngineBid} from "./PrefEngineEnums";
 
 export enum PrefEngineDealRole {NONE = 0, DEALER, SECOND_BIDDER, FIRST_BIDDER}
 
@@ -17,6 +17,7 @@ export default class PrefEnginePlayer {
 
 	private _bid: PrefEngineBid;
 	private _lastBid: PrefEngineBid;
+	private _plays: boolean;
 
 	constructor(username: string) {
 		this._starter = username;
@@ -27,6 +28,7 @@ export default class PrefEnginePlayer {
 		this._playRole = PrefEnginePlayRole.NONE;
 		this._bid = PrefEngineBid.NO_BID;
 		this._lastBid = PrefEngineBid.NO_BID;
+		this._plays = false;
 	}
 
 	reset() {
@@ -34,6 +36,7 @@ export default class PrefEnginePlayer {
 		this._playRole = PrefEnginePlayRole.NONE;
 		this._bid = PrefEngineBid.NO_BID;
 		this._lastBid = PrefEngineBid.NO_BID;
+		this._plays = false;
 	}
 
 	set replacement(username: string) {
@@ -56,6 +59,10 @@ export default class PrefEnginePlayer {
 	set bid(bid: PrefEngineBid) {
 		this._lastBid = bid;
 		if (bid > this._bid) this._bid = bid;
+	}
+
+	set plays(plays: boolean) {
+		this._plays = plays;
 	}
 
 	get starter(): string {

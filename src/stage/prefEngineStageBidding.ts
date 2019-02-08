@@ -2,18 +2,9 @@
 "use strict";
 
 import PrefEngine from "../prefEngine";
-import APrefEngineStage, {PrefEngineStage} from "./prefEngineStage";
+import APrefEngineStage from "./prefEngineStage";
 import PrefEnginePlayer from "../prefEnginePlayer";
-
-export enum PrefEngineBid {
-	NO_BID = -1, BID_PASS = 0,
-	BID_PIK = 1, BID_KARO = 2, BID_KARO_MINE = 3, BID_HERC = 4, BID_HERC_MINE = 5, BID_TREF = 6, BID_TREF_MINE = 7,
-	BID_BETL = 8, BID_BETL_MINE = 9, BID_SANS = 10, BID_SANS_MINE = 11, BID_PREFERANS = 12, BID_PREFERANS_MINE = 13,
-
-	BID_GAME = 14, BID_YOURS_IS_BETTER = 15,
-	BID_GAME_PIK = 16, BID_GAME_KARO = 17, BID_GAME_HERC = 18, BID_GAME_TREF = 19,
-	BID_GAME_BETL = 20, BID_GAME_SANS = 21, BID_GAME_PREFERANS = 22
-}
+import {PrefEngineBid, PrefEngineStage} from "../PrefEngineEnums";
 
 export type PrefEnginePlayerBid = { username: string, bid: PrefEngineBid }
 
@@ -41,16 +32,11 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineStageBidding {
 		player.bid = bid;
 
-		let username: string = player.username;
-		this._all.push({username, bid});
+		this._all.push({username: player.username, bid});
 		if (this._max < bid) this._max = bid;
 		this._last = bid;
 
 		return this;
-	}
-
-	public isBiddding(): boolean {
-		return true;
 	}
 
 	get options(): PrefEngineBid[] {
@@ -75,10 +61,10 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 			switch (this._last) {
 				case PrefEngineBid.BID_GAME:
 					if (myLast === PrefEngineBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
-						bids.push(PrefEngineBid.BID_GAME_PIK);
-						bids.push(PrefEngineBid.BID_GAME_KARO);
-						bids.push(PrefEngineBid.BID_GAME_HERC);
-						bids.push(PrefEngineBid.BID_GAME_TREF);
+						bids.push(PrefEngineBid.BID_GAME_SPADE);
+						bids.push(PrefEngineBid.BID_GAME_DIAMOND);
+						bids.push(PrefEngineBid.BID_GAME_HEART);
+						bids.push(PrefEngineBid.BID_GAME_CLUB);
 
 					} else if (myLast === PrefEngineBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
 						bids.push(PrefEngineBid.BID_PASS);
@@ -88,21 +74,21 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 						bids.push(PrefEngineBid.BID_PASS);
 					}
 					break;
-				case PrefEngineBid.BID_GAME_PIK:
-					bids.push(PrefEngineBid.BID_GAME_KARO);
-					bids.push(PrefEngineBid.BID_GAME_HERC);
-					bids.push(PrefEngineBid.BID_GAME_TREF);
+				case PrefEngineBid.BID_GAME_SPADE:
+					bids.push(PrefEngineBid.BID_GAME_DIAMOND);
+					bids.push(PrefEngineBid.BID_GAME_HEART);
+					bids.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
-				case PrefEngineBid.BID_GAME_KARO:
+				case PrefEngineBid.BID_GAME_DIAMOND:
 					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
-					bids.push(PrefEngineBid.BID_GAME_HERC);
-					bids.push(PrefEngineBid.BID_GAME_TREF);
+					bids.push(PrefEngineBid.BID_GAME_HEART);
+					bids.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
-				case PrefEngineBid.BID_GAME_HERC:
+				case PrefEngineBid.BID_GAME_HEART:
 					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
-					bids.push(PrefEngineBid.BID_GAME_TREF);
+					bids.push(PrefEngineBid.BID_GAME_CLUB);
 					break;
-				case PrefEngineBid.BID_GAME_TREF:
+				case PrefEngineBid.BID_GAME_CLUB:
 					bids.push(PrefEngineBid.BID_YOURS_IS_BETTER);
 					break;
 				default:
@@ -115,33 +101,33 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 			switch (this._last) {
 				case PrefEngineBid.NO_BID:
 				case PrefEngineBid.BID_PASS:
-					bids.push(PrefEngineBid.BID_PIK);
+					bids.push(PrefEngineBid.BID_SPADE);
 					bids = addInitialGameBids(bids);
 					break;
-				case PrefEngineBid.BID_PIK:
-					bids.push(PrefEngineBid.BID_KARO);
+				case PrefEngineBid.BID_SPADE:
+					bids.push(PrefEngineBid.BID_DIAMOND);
 					bids = addInitialGameBids(bids);
 					break;
-				case PrefEngineBid.BID_KARO:
-					if (myLast === PrefEngineBid.BID_PIK) bids.push(PrefEngineBid.BID_KARO_MINE);
+				case PrefEngineBid.BID_DIAMOND:
+					if (myLast === PrefEngineBid.BID_SPADE) bids.push(PrefEngineBid.BID_DIAMOND_MINE);
 					else {
-						bids.push(PrefEngineBid.BID_HERC);
+						bids.push(PrefEngineBid.BID_HEART);
 						bids = addInitialGameBids(bids);
 					}
 					break;
-				case PrefEngineBid.BID_KARO_MINE:
-					bids.push(PrefEngineBid.BID_HERC);
+				case PrefEngineBid.BID_DIAMOND_MINE:
+					bids.push(PrefEngineBid.BID_HEART);
 					break;
-				case PrefEngineBid.BID_HERC:
-					bids.push(PrefEngineBid.BID_HERC_MINE);
+				case PrefEngineBid.BID_HEART:
+					bids.push(PrefEngineBid.BID_HEART_MINE);
 					break;
-				case PrefEngineBid.BID_HERC_MINE:
-					bids.push(PrefEngineBid.BID_TREF);
+				case PrefEngineBid.BID_HEART_MINE:
+					bids.push(PrefEngineBid.BID_CLUB);
 					break;
-				case PrefEngineBid.BID_TREF:
-					bids.push(PrefEngineBid.BID_TREF_MINE);
+				case PrefEngineBid.BID_CLUB:
+					bids.push(PrefEngineBid.BID_CLUB_MINE);
 					break;
-				case PrefEngineBid.BID_TREF_MINE:
+				case PrefEngineBid.BID_CLUB_MINE:
 					bids.push(PrefEngineBid.BID_BETL);
 					break;
 				case PrefEngineBid.BID_BETL:
@@ -175,7 +161,7 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		return p1.bid > p2.bid
 			? p1.bid > p3.bid ? p1 : p3
 			: p2.bid > p3.bid ? p2 : p3;
-	};
+	}
 
 	get biddingCompleted(): boolean {
 		let p1 = this._engine.p1;
@@ -186,6 +172,6 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		if (p2.lastBid === PrefEngineBid.BID_PASS || p2.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
 		if (p3.lastBid === PrefEngineBid.BID_PASS || p3.lastBid === PrefEngineBid.BID_YOURS_IS_BETTER) cnt++;
 		return cnt >= 2;
-	};
+	}
 
 }

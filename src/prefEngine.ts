@@ -7,8 +7,7 @@ import PrefDeck from "preferans-deck-js";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
-import {PrefEngineBid} from "./stage/prefEngineStageBidding";
-import {PrefEngineStage} from "./stage/prefEngineStage";
+import {PrefEngineStage, PrefEngineBid} from "./PrefEngineEnums";
 
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
@@ -30,14 +29,15 @@ export default class PrefEngine {
 	private readonly _refas: number;
 	private readonly _options: PrefEngineOptions;
 
-	private _p1: PrefEnginePlayer;
-	private _p2: PrefEnginePlayer;
-	private _p3: PrefEnginePlayer;
+	private readonly _p1: PrefEnginePlayer;
+	private readonly _p2: PrefEnginePlayer;
+	private readonly _p3: PrefEnginePlayer;
+
+	private _dealerPlayer: PrefEnginePlayer;
+	private _firstBidPlayer: PrefEnginePlayer;
+	private _secondBidPlayer: PrefEnginePlayer;
 
 	private _current: PrefEnginePlayer;
-	private _dealer: PrefEnginePlayer;
-	private _firstBid: PrefEnginePlayer;
-	private _secondBid: PrefEnginePlayer;
 
 	private readonly _deck: PrefDeck;
 	private _score: PrefScore;
@@ -57,10 +57,10 @@ export default class PrefEngine {
 		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
 		// First this.deal()
-		this._dealer = this._p3;
-		this._firstBid = this._p1;
-		this._secondBid = this._p2;
-		this._current = this._firstBid;
+		this._dealerPlayer = this._p3;
+		this._firstBidPlayer = this._p1;
+		this._secondBidPlayer = this._p2;
+		this._current = this._firstBidPlayer;
 		this._round = new PrefEngineRound(this);
 	}
 
@@ -70,12 +70,12 @@ export default class PrefEngine {
 	}
 
 	public deal(): PrefEngine {
-		const tmp = this._dealer;
-		this._dealer = this._firstBid;
-		this._firstBid = this._secondBid;
-		this._secondBid = tmp;
+		const tmp = this._dealerPlayer;
+		this._dealerPlayer = this._firstBidPlayer;
+		this._firstBidPlayer = this._secondBidPlayer;
+		this._secondBidPlayer = tmp;
 
-		this._current = this._firstBid;
+		this._current = this._firstBidPlayer;
 		this._round = new PrefEngineRound(this);
 		return this;
 	}
@@ -136,16 +136,20 @@ export default class PrefEngine {
 		return this._deck;
 	}
 
-	get firstPlayer(): PrefEnginePlayer {
-		return this._firstBid;
+	get firstBidPlayer(): PrefEnginePlayer {
+		return this._firstBidPlayer;
 	}
 
-	get secondPlayer(): PrefEnginePlayer {
-		return this._secondBid;
+	get secondBidPlayer(): PrefEnginePlayer {
+		return this._secondBidPlayer;
 	}
 
-	get thirdPlayer(): PrefEnginePlayer {
-		return this._dealer;
+	get dealerPlayer(): PrefEnginePlayer {
+		return this._dealerPlayer;
+	}
+
+	set current(player: PrefEnginePlayer) {
+		this._current = player;
 	}
 
 	get current(): PrefEnginePlayer {
