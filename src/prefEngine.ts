@@ -143,6 +143,17 @@ export default class PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAYING);
 		this._round.throw(this._currentPlayer, card);
+
+		let mainTricks = this._round.mainTricks;
+		let followersTricks = this._round.followersTricks;
+
+		if ((this._round.isBetl && mainTricks > 0) || followersTricks > 4) {
+			this._round.stage = PrefEngineStage.END;
+
+			// TODO: round finished
+
+		}
+
 		return this;
 	}
 
