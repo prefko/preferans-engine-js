@@ -10,6 +10,7 @@ import PrefEngineStageBidding from "./stage/prefEngineStageBidding";
 import PrefEngineStageDeciding from "./stage/PrefEngineStageDeciding";
 import {PrefEngineBid, PrefEngineContract, PrefEngineKontra, PrefEngineStage} from "./PrefEngineEnums";
 import PrefEngineStageKontra from "./stage/prefEngineStageKontra";
+import PrefEngineStagePlaying from "./stage/prefEngineStagePlaying";
 
 export type PrefEngineRoundExchanged = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
@@ -40,7 +41,7 @@ export default class PrefEngineRound {
 	private _bidding: PrefEngineStageBidding;
 	private _decision: PrefEngineStageDeciding;
 	private _kontring: PrefEngineStageKontra;
-	// private _playing: PrefEngineStagePlaying;
+	private _playing: PrefEngineStagePlaying;
 
 	private _contract: PrefEngineContract;
 
@@ -59,8 +60,10 @@ export default class PrefEngineRound {
 		this._bidding = new PrefEngineStageBidding(this._engine);
 		this._decision = new PrefEngineStageDeciding(this._engine);
 		this._kontring = new PrefEngineStageKontra(this._engine);
+		this._playing = new PrefEngineStagePlaying(this._engine);
+
 		this._currentStage = PrefEngineStage.BIDDING;
-		this._engine.current = this._engine.firstBidPlayer;
+		this._engine.currentPlayer = this._engine.firstBidPlayer;
 
 		this._mainPlayer = this._engine.p1;
 		this._rightFollowerPlayer = this._engine.p1;
@@ -77,12 +80,12 @@ export default class PrefEngineRound {
 			this._rightFollowerPlayer = this._engine.nextPlayer(this._mainPlayer);
 			this._leftFollowerPlayer = this._engine.nextPlayer(this._rightFollowerPlayer);
 
-			this._engine.current = this._mainPlayer;
+			this._engine.currentPlayer = this._mainPlayer;
 			this.stage = PrefEngineStage.EXCHANGING;
 
 		} else {
 			this._engine.next;
-			if (this._engine.current.outOfBidding) this._engine.next;
+			if (this._engine.currentPlayer.outOfBidding) this._engine.next;
 		}
 
 		return this;
@@ -98,7 +101,7 @@ export default class PrefEngineRound {
 	public contracting(player: PrefEnginePlayer, contract: PrefEngineContract): PrefEngineRound {
 		if (this.stage !== PrefEngineStage.CONTRACTING) throw new Error("PrefEngineRound::contracting:Round is not in contracting stage but in " + this.stage);
 		this._contract = contract;
-		this._engine.current = this._rightFollowerPlayer;
+		this._engine.currentPlayer = this._rightFollowerPlayer;
 		return this;
 	}
 
@@ -110,7 +113,7 @@ export default class PrefEngineRound {
 
 		if (this._decision.decidingCompleted) {
 			this.stage = PrefEngineStage.KONTRING;
-			this._engine.current = this._rightFollowerPlayer;
+			this._engine.currentPlayer = this._rightFollowerPlayer;
 		}
 
 		return this;
@@ -122,12 +125,12 @@ export default class PrefEngineRound {
 		this._kontring.kontra(player, kontra);
 
 		if (this._kontring.kontringCompleted) {
-			this._engine.current = isLeftFirst(this._contract) ? this._leftFollowerPlayer : this._mainPlayer;
+			this._engine.currentPlayer = isLeftFirst(this._contract) ? this._leftFollowerPlayer : this._mainPlayer;
 			this.stage = PrefEngineStage.PLAYING;
 
 		} else {
 			this._engine.next;
-			if (this._engine.current.isOutOfKontring(this._kontring.max)) this._engine.next;
+			if (this._engine.currentPlayer.isOutOfKontring(this._kontring.max)) this._engine.next;
 		}
 
 		return this;
@@ -135,11 +138,19 @@ export default class PrefEngineRound {
 
 	public throw(player: PrefEnginePlayer, card: PrefDeckCard): PrefEngineRound {
 		if (this.stage !== PrefEngineStage.PLAYING) throw new Error("PrefEngineRound::throw:Round is not in playing stage but in " + this.stage);
-		// TODO:
 
-		this._engine.next;
+		this._playing.throw(player, card);
 
-		// TODO: set next player this._engine.current = ...
+		if (this._playing.trickFull) {
+			this._engine.currentPlayer = this._playing.winner;
+
+		} else {
+			this._engine.next;
+			if (!this._engine.currentPlayer.isPlaying) this._engine.next;
+		}
+
+		// TODO: is round completed?
+
 		return this;
 	}
 

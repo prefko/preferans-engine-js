@@ -66,8 +66,8 @@ export default class PrefEnginePlayer {
 		if (bid > this._bid) this._bid = bid;
 	}
 
-	set follows(plays: boolean) {
-		this._follows = plays;
+	set follows(follows: boolean) {
+		this._follows = follows;
 	}
 
 	set kontra(kontra: PrefEngineKontra) {
@@ -91,7 +91,13 @@ export default class PrefEnginePlayer {
 		return this._playRole;
 	}
 
-	public isMain = (): boolean => this._playRole === PrefEnginePlayRole.MAIN;
+	get isMain(): boolean {
+		return this._playRole === PrefEnginePlayRole.MAIN;
+	}
+
+	get isPlaying(): boolean {
+		return this._kontra >= PrefEngineKontra.KONTRA_INVITE || this.isMain || this.follows;
+	}
 
 	get bid(): PrefEngineBid {
 		return this._bid;

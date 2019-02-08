@@ -47,7 +47,7 @@ export default class PrefEngine {
 	private _firstBidPlayer: PrefEnginePlayer;
 	private _secondBidPlayer: PrefEnginePlayer;
 
-	private _current: PrefEnginePlayer;
+	private _currentPlayer: PrefEnginePlayer;
 
 	private readonly _deck: PrefDeck;
 	private _score: PrefScore;
@@ -70,7 +70,7 @@ export default class PrefEngine {
 		this._dealerPlayer = this._p3;
 		this._firstBidPlayer = this._p1;
 		this._secondBidPlayer = this._p2;
-		this._current = this._firstBidPlayer;
+		this._currentPlayer = this._firstBidPlayer;
 		this._round = new PrefEngineRound(this);
 	}
 
@@ -85,7 +85,7 @@ export default class PrefEngine {
 		this._firstBidPlayer = this._secondBidPlayer;
 		this._secondBidPlayer = tmp;
 
-		this._current = this._firstBidPlayer;
+		this._currentPlayer = this._firstBidPlayer;
 		this._round = new PrefEngineRound(this);
 		return this;
 	}
@@ -95,7 +95,7 @@ export default class PrefEngine {
 	}
 
 	private checkCurrentPlayer(username: string): PrefEngine {
-		if (username !== this._current.username) throw new Error("PrefEngine::checkCurrentPlayer:Wrong player: " + username);
+		if (username !== this._currentPlayer.username) throw new Error("PrefEngine::checkCurrentPlayer:Wrong player: " + username);
 		return this;
 	}
 
@@ -107,42 +107,42 @@ export default class PrefEngine {
 	public bid(username: string, bid: PrefEngineBid): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.BIDDING);
-		this._round.bidding(this._current, bid);
+		this._round.bidding(this._currentPlayer, bid);
 		return this;
 	}
 
 	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.EXCHANGING);
-		this._round.exchanging(this._current, discard1, discard2);
+		this._round.exchanging(this._currentPlayer, discard1, discard2);
 		return this;
 	}
 
 	public contracting(username: string, contract: PrefEngineContract): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.CONTRACTING);
-		this._round.contracting(this._current, contract);
+		this._round.contracting(this._currentPlayer, contract);
 		return this;
 	}
 
 	public decide(username: string, follows: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDING);
-		this._round.deciding(this._current, follows);
+		this._round.deciding(this._currentPlayer, follows);
 		return this;
 	}
 
 	public kontra(username: string, kontra: PrefEngineKontra): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.KONTRING);
-		this._round.kontring(this._current, kontra);
+		this._round.kontring(this._currentPlayer, kontra);
 		return this;
 	}
 
 	public throw(username: string, card: PrefDeckCard): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.PLAYING);
-		this._round.throw(this._current, card);
+		this._round.throw(this._currentPlayer, card);
 		return this;
 	}
 
@@ -166,12 +166,12 @@ export default class PrefEngine {
 		return this._dealerPlayer;
 	}
 
-	set current(player: PrefEnginePlayer) {
-		this._current = player;
+	set currentPlayer(player: PrefEnginePlayer) {
+		this._currentPlayer = player;
 	}
 
-	get current(): PrefEnginePlayer {
-		return this._current;
+	get currentPlayer(): PrefEnginePlayer {
+		return this._currentPlayer;
 	}
 
 	get p1(): PrefEnginePlayer {
@@ -187,8 +187,8 @@ export default class PrefEngine {
 	}
 
 	get next(): PrefEnginePlayer {
-		this._current = nextPlayer(this, this._current);
-		return this._current;
+		this._currentPlayer = nextPlayer(this, this._currentPlayer);
+		return this._currentPlayer;
 	}
 
 	get allowSubAndMortKontras(): boolean {

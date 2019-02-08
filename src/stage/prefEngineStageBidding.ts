@@ -17,27 +17,27 @@ const addInitialGameBids = (bids: PrefEngineBid[]): PrefEngineBid[] => {
 };
 
 export default class PrefEngineStageBidding extends APrefEngineStage {
-	private _all: PrefEnginePlayerBid[];
+	private _bids: PrefEnginePlayerBid[];
 	private _max: PrefEngineBid;
 	private _last: PrefEngineBid;
 
 	constructor(engine: PrefEngine) {
 		super(engine, PrefEngineStage.BIDDING);
 
-		this._all = [];
+		this._bids = [];
 		this._max = PrefEngineBid.NO_BID;
 		this._last = PrefEngineBid.NO_BID;
 	}
 
 	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineStageBidding {
-		this._all.push({username: player.username, bid});
+		this._bids.push({username: player.username, bid});
 		if (this._max < bid) this._max = bid;
 		this._last = bid;
 		return this;
 	}
 
 	get options(): PrefEngineBid[] {
-		let myLastBid: PrefEngineBid = this._engine.current.bid;
+		let myLastBid: PrefEngineBid = this._engine.currentPlayer.bid;
 
 		let choices = [];
 		if (this._last >= PrefEngineBid.BID_GAME_BETL) {

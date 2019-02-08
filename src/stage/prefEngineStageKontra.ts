@@ -8,23 +8,23 @@ import {PrefEngineBid, PrefEngineContract, PrefEngineKontra, PrefEngineStage} fr
 
 export type PrefEnginePlayerKontra = { username: string, kontra: PrefEngineKontra }
 
-const canInvite = (player: PrefEnginePlayer): boolean => !player.isMain() && !player.follows;
+const canInvite = (player: PrefEnginePlayer): boolean => !player.isMain && !player.follows;
 
 export default class PrefEngineStageKontra extends APrefEngineStage {
-	private _all: PrefEnginePlayerKontra[];
+	private _kontras: PrefEnginePlayerKontra[];
 	private _max: PrefEngineKontra;
 	private _last: PrefEngineKontra;
 
 	constructor(engine: PrefEngine) {
 		super(engine, PrefEngineStage.KONTRING);
 
-		this._all = [];
+		this._kontras = [];
 		this._max = PrefEngineKontra.NO_KONTRA;
 		this._last = PrefEngineKontra.NO_KONTRA;
 	}
 
 	public kontra(player: PrefEnginePlayer, kontra: PrefEngineKontra): PrefEngineStageKontra {
-		this._all.push({username: player.username, kontra});
+		this._kontras.push({username: player.username, kontra});
 		if (this._max < kontra) this._max = kontra;
 		this._last = kontra;
 		return this;
@@ -35,7 +35,7 @@ export default class PrefEngineStageKontra extends APrefEngineStage {
 	}
 
 	get options(): PrefEngineKontra[] {
-		let player: PrefEnginePlayer = this._engine.current;
+		let player: PrefEnginePlayer = this._engine.currentPlayer;
 		let lastKontraMade: PrefEngineKontra = player.kontra;
 
 		let isContractSpade = PrefEngineContract.CONTRACT_SPADE === this._engine.round.contract;
