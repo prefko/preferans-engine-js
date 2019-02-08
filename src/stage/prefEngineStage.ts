@@ -17,7 +17,7 @@ export default abstract class APrefEngineStage {
 
 	public isExchange = (): boolean => this._type === PrefEngineStage.EXCHANGE;
 
-	public isContract = (): boolean => this._type === PrefEngineStage.CONTRACT;
+	public isContract = (): boolean => this._type === PrefEngineStage.CONTRACTING;
 
 	public isDeciding = (): boolean => this._type === PrefEngineStage.DECIDING;
 

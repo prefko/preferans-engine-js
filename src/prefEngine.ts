@@ -7,7 +7,7 @@ import PrefDeck from "preferans-deck-js";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefScore from "preferans-score-js";
 import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
-import {PrefEngineStage, PrefEngineBid} from "./PrefEngineEnums";
+import {PrefEngineStage, PrefEngineBid, PrefEngineContract} from "./PrefEngineEnums";
 
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
@@ -118,17 +118,17 @@ export default class PrefEngine {
 		return this;
 	}
 
-	public contract(username: string, contract): PrefEngine {
+	public contracting(username: string, contract: PrefEngineContract): PrefEngine {
 		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(PrefEngineStage.CONTRACT);
-		this._round.contract(this._current, contract);
+		this.checkCurrentStage(PrefEngineStage.CONTRACTING);
+		this._round.contracting(this._current, contract);
 		return this;
 	}
 
-	public decide(username: string, plays: boolean): PrefEngine {
+	public decide(username: string, follows: boolean): PrefEngine {
 		this.checkCurrentPlayer(username);
 		this.checkCurrentStage(PrefEngineStage.DECIDING);
-		this._round.decide(this._current, plays);
+		this._round.decide(this._current, follows);
 		return this;
 	}
 

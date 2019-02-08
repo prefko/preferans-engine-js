@@ -36,9 +36,13 @@ export default class PrefEngineRound {
 	// private _kontra: PrefEngineStageKontra;
 	// private _playing: PrefEngineStagePlaying;
 
+	private _contract: PrefEngineContract;
+
 	// TODO: add judge and his decision
 	constructor(engine: PrefEngine) {
 		this._engine = engine;
+		this._contract = PrefEngineContract.NO_CONTRACT;
+
 		this._deal = this._engine.deck.shuffle.cut.deal;
 		this._p1 = this._engine.firstBidPlayer;
 		this._p2 = this._engine.secondBidPlayer;
@@ -57,7 +61,8 @@ export default class PrefEngineRound {
 	}
 
 	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.BIDDING) return this;
+		if (this.stage !== PrefEngineStage.BIDDING) throw new Error("PrefEngineRound::bid:Round is not in bidding stage but in " + this.stage);
+		player.bid = bid;
 		this._bidding.bid(player, bid);
 		this._engine.next;
 
@@ -73,34 +78,34 @@ export default class PrefEngineRound {
 	}
 
 	public exchange(player: PrefEnginePlayer, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.EXCHANGE) return this;
+		if (this.stage !== PrefEngineStage.EXCHANGE) throw new Error("PrefEngineRound::exchange:Round is not in exchange stage but in " + this.stage);
 		this._reject = {discard1, discard2};
-		this.stage = PrefEngineStage.CONTRACT;
+		this.stage = PrefEngineStage.CONTRACTING;
 		return this;
 	}
 
-	public contract(player: PrefEnginePlayer, contract: PrefEngineContract): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.CONTRACT) return this;
-		// TODO:
-
+	public contracting(player: PrefEnginePlayer, contract: PrefEngineContract): PrefEngineRound {
+		if (this.stage !== PrefEngineStage.CONTRACTING) throw new Error("PrefEngineRound::contracting:Round is not in contracting stage but in " + this.stage);
+		this._contract = contract;
 		this._engine.current = this._rightFollowerPlayer;
 		return this;
 	}
 
-	public decide(player: PrefEnginePlayer, decision: boolean): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.DECIDING) return this;
-		this._decision.decide(player, decision);
+	public decide(player: PrefEnginePlayer, follows: boolean): PrefEngineRound {
+		if (this.stage !== PrefEngineStage.DECIDING) throw new Error("PrefEngineRound::decide:Round is not in deciding stage but in " + this.stage);
+		player.follows = follows;
+		this._decision.decide(player, follows);
 		this._engine.next;
 
 		if (this._decision.decidingCompleted) {
 			this.stage = PrefEngineStage.KONTRA;
-			this._engine.current = this._engine.firstBidPlayer;
+			this._engine.current = this._rightFollowerPlayer;
 		}
 		return this;
 	}
 
 	public kontra(player: PrefEnginePlayer, kontra): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.KONTRA) return this;
+		if (this.stage !== PrefEngineStage.KONTRA) throw new Error("PrefEngineRound::kontra:Round is not in kontra stage but in " + this.stage);
 		// TODO:
 
 		this._engine.next;
@@ -110,7 +115,7 @@ export default class PrefEngineRound {
 	}
 
 	public throw(player: PrefEnginePlayer, card: PrefDeckCard): PrefEngineRound {
-		if (this.stage !== PrefEngineStage.PLAYING) return this;
+		if (this.stage !== PrefEngineStage.PLAYING) throw new Error("PrefEngineRound::throw:Round is not in playing stage but in " + this.stage);
 		// TODO:
 
 		this._engine.next;
@@ -121,6 +126,10 @@ export default class PrefEngineRound {
 
 	set stage(stage: PrefEngineStage) {
 		this._currentStage = stage;
+	}
+
+	set contract(contract: PrefEngineContract) {
+		this._contract = contract;
 	}
 
 	get stage(): PrefEngineStage {
@@ -135,6 +144,10 @@ export default class PrefEngineRound {
 	get status(): PrefEngineRoundStatus {
 		// TODO:
 		return {next: "cope"};
+	}
+
+	get contract(): PrefEngineContract {
+		return this._contract;
 	}
 
 }

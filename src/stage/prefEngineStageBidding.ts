@@ -30,17 +30,14 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 	}
 
 	public bid(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineStageBidding {
-		player.bid = bid;
-
 		this._all.push({username: player.username, bid});
 		if (this._max < bid) this._max = bid;
 		this._last = bid;
-
 		return this;
 	}
 
 	get options(): PrefEngineBid[] {
-		let myLast: PrefEngineBid = this._engine.current.bid;
+		let lastBidMade: PrefEngineBid = this._engine.current.bid;
 
 		var bids = [];
 		if (this._last >= PrefEngineBid.BID_GAME_BETL) {
@@ -60,13 +57,13 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 		} else if (this._last >= PrefEngineBid.BID_GAME) {
 			switch (this._last) {
 				case PrefEngineBid.BID_GAME:
-					if (myLast === PrefEngineBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
+					if (lastBidMade === PrefEngineBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
 						bids.push(PrefEngineBid.BID_GAME_SPADE);
 						bids.push(PrefEngineBid.BID_GAME_DIAMOND);
 						bids.push(PrefEngineBid.BID_GAME_HEART);
 						bids.push(PrefEngineBid.BID_GAME_CLUB);
 
-					} else if (myLast === PrefEngineBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
+					} else if (lastBidMade === PrefEngineBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
 						bids.push(PrefEngineBid.BID_PASS);
 						bids = addInitialGameBids(bids);
 
@@ -109,7 +106,7 @@ export default class PrefEngineStageBidding extends APrefEngineStage {
 					bids = addInitialGameBids(bids);
 					break;
 				case PrefEngineBid.BID_DIAMOND:
-					if (myLast === PrefEngineBid.BID_SPADE) bids.push(PrefEngineBid.BID_DIAMOND_MINE);
+					if (lastBidMade === PrefEngineBid.BID_SPADE) bids.push(PrefEngineBid.BID_DIAMOND_MINE);
 					else {
 						bids.push(PrefEngineBid.BID_HEART);
 						bids = addInitialGameBids(bids);

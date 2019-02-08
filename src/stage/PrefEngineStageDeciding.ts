@@ -17,9 +17,8 @@ export default class PrefEngineStageDeciding extends APrefEngineStage {
 		this._decisions = [];
 	}
 
-	public decide(player: PrefEnginePlayer, decision: boolean): PrefEngineStageDeciding {
-		player.plays = decision;
-		this._decisions.push({username: player.username, decision});
+	public decide(player: PrefEnginePlayer, follows: boolean): PrefEngineStageDeciding {
+		this._decisions.push({username: player.username, decision: follows});
 		return this;
 	}
 
