@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 "use strict";
 
+import {size} from 'lodash';
 import PrefEngine from "../prefEngine";
 import APrefEngineStage from "./prefEngineStage";
 import PrefEnginePlayer from "../prefEnginePlayer";
-import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
-import {PrefEngineBid, PrefEngineStage} from "../PrefEngineEnums";
+import {PrefEngineStage} from "../PrefEngineEnums";
 
 export type PrefEnginePlayerDecision = { username: string, decision: boolean }
 
@@ -24,7 +24,7 @@ export default class PrefEngineStageDeciding extends APrefEngineStage {
 	}
 
 	get decidingCompleted(): boolean {
-		return _.size(this._decisions) === 2;
+		return size(this._decisions) === 2;
 	}
 
 }

@@ -24,6 +24,16 @@ const random = (p1: PrefEnginePlayer, p2: PrefEnginePlayer, p3: PrefEnginePlayer
 	return r === 1 ? p1 : r === 2 ? p2 : p3;
 };
 
+const nextPlayer = (e: PrefEngine, p: PrefEnginePlayer): PrefEnginePlayer => {
+	// if (p.username === e.p1.username) return e.p2;
+	// else if (p.username === e.p2.username) return e.p3;
+	// else if (p.username === e.p3.username) return e.p1;
+	if (p === e.p1) return e.p2;
+	else if (p === e.p2) return e.p3;
+	else if (p === e.p3) return e.p1;
+	else throw new Error("PrefEngine::_next:Wrong player: " + p.username);
+};
+
 export default class PrefEngine {
 	private readonly _bula: number;
 	private readonly _refas: number;
@@ -78,6 +88,10 @@ export default class PrefEngine {
 		this._current = this._firstBidPlayer;
 		this._round = new PrefEngineRound(this);
 		return this;
+	}
+
+	public nextPlayer(player: PrefEnginePlayer): PrefEnginePlayer {
+		return nextPlayer(this, player);
 	}
 
 	private checkCurrentPlayer(username: string): PrefEngine {
@@ -169,13 +183,7 @@ export default class PrefEngine {
 	}
 
 	get next(): PrefEnginePlayer {
-		// if (this._current.username === this._p1.username) this._current = this._p2;
-		// else if (this._current.username === this._p2.username) this._current = this._p3;
-		// else if (this._current.username === this._p3.username) this._current = this._p1;
-
-		if (this._current === this._p1) this._current = this._p2;
-		else if (this._current === this._p2) this._current = this._p3;
-		else if (this._current === this._p3) this._current = this._p1;
+		this._current = nextPlayer(this, this._current);
 		return this._current;
 	}
 
