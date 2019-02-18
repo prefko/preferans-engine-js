@@ -54,10 +54,10 @@ export default class PrefEngine {
 	private _round: PrefEngineRound;
 	private readonly _rounds: PrefEngineRound[];
 
-	constructor(u1: string, u2: string, u3: string, bula: number, refas: number, options: PrefEngineOptions) {
-		this._p1 = new PrefEnginePlayer(u1);
-		this._p2 = new PrefEnginePlayer(u2);
-		this._p3 = new PrefEnginePlayer(u3);
+	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefEngineOptions) {
+		this._p1 = new PrefEnginePlayer(username1);
+		this._p2 = new PrefEnginePlayer(username2);
+		this._p3 = new PrefEnginePlayer(username3);
 		this._bula = bula;
 		this._refas = refas;
 		this._options = options;
