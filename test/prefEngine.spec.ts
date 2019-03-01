@@ -1,10 +1,10 @@
-const _ = require("lodash");
-const expect = require("chai").expect;
+import * as _ from "lodash";
+import {expect} from 'chai';
 
-let Game = require("../lib/game");
+import PrefEngine from "../src/prefEngine";
 
 describe("Game tests", () => {
 	it("Game should exist", () => {
-		expect(Game).to.exist;
+		expect(PrefEngine).to.exist;
 	});
 });
