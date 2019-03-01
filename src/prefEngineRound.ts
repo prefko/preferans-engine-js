@@ -55,7 +55,9 @@ export default class PrefEngineRound {
 		this._p2 = this._engine.secondBidPlayer;
 		this._p3 = this._engine.dealerPlayer;
 
-		// TODO: set cards to players!
+		this._p1.cards = this._deal.h1;
+		this._p2.cards = this._deal.h2;
+		this._p3.cards = this._deal.h3;
 
 		this._bidding = new PrefEngineStageBidding(this._engine);
 		this._decision = new PrefEngineStageDeciding(this._engine);

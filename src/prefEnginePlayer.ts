@@ -3,6 +3,7 @@
 
 import {includes} from 'lodash';
 import {PrefEngineBid, PrefEngineKontra} from "./PrefEngineEnums";
+import PrefDeckPile from "preferans-deck-js/lib/prefDeckPile";
 
 export enum PrefEngineDealRole {NONE = 0, DEALER, SECOND_BIDDER, FIRST_BIDDER}
 
@@ -16,6 +17,8 @@ export default class PrefEnginePlayer {
 	private _dealRole: PrefEngineDealRole;
 	private _playRole: PrefEnginePlayRole;
 
+	private _cards: PrefDeckPile;
+
 	private _bid: PrefEngineBid;
 	private _lastBid: PrefEngineBid;
 	private _follows: boolean;
@@ -26,6 +29,8 @@ export default class PrefEnginePlayer {
 		this._starter = username;
 		this._username = username;
 		this._replacements = [];
+
+		this._cards = new PrefDeckPile([]);
 
 		this._dealRole = PrefEngineDealRole.NONE;
 		this._playRole = PrefEnginePlayRole.NONE;
@@ -59,6 +64,10 @@ export default class PrefEnginePlayer {
 
 	set playRole(playRole: PrefEnginePlayRole) {
 		this._playRole = playRole;
+	}
+
+	set cards(hand: PrefDeckPile) {
+		this._cards = new PrefDeckPile(hand.cards);
 	}
 
 	set bid(bid: PrefEngineBid) {
@@ -99,6 +108,10 @@ export default class PrefEnginePlayer {
 		return this._kontra >= PrefEngineKontra.KONTRA_INVITE || this.isMain || this.follows;
 	}
 
+	get cards(): PrefDeckPile {
+		return this._cards;
+	}
+
 	get bid(): PrefEngineBid {
 		return this._bid;
 	}
@@ -119,13 +132,13 @@ export default class PrefEnginePlayer {
 		return this._lastKontra;
 	}
 
+	get follows(): boolean {
+		return this._follows;
+	}
+
 	public isOutOfKontring(maxKontra: PrefEngineKontra): boolean {
 		if (maxKontra === PrefEngineKontra.KONTRA_INVITE) return this._kontra === PrefEngineKontra.KONTRA_READY;
 		return includes([PrefEngineKontra.KONTRA_READY, PrefEngineKontra.KONTRA_INVITE], this._lastKontra);
-	}
-
-	get follows(): boolean {
-		return this._follows;
 	}
 
 }
