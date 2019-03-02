@@ -1,5 +1,5 @@
 <a href="http://stojadinovic.net">
-  <img alt="Predrag Stojadinovic" src="https://en.stojadinovic.net/assets/images/logo-128x128-88.jpg" width="100">
+  <img alt="Predrag Stojadinovic" src="https://avatars0.githubusercontent.com/u/46445292?s=200" width="100">
 </a>
 
 # preferans-engine-js
