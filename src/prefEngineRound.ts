@@ -33,9 +33,9 @@ export default class PrefEngineRound {
 	private readonly _p2: PrefEnginePlayer;
 	private readonly _p3: PrefEnginePlayer;
 
-	private _mainPlayer: PrefEnginePlayer;
-	private _rightFollowerPlayer: PrefEnginePlayer;
-	private _leftFollowerPlayer: PrefEnginePlayer;
+	private _mainPlayer!: PrefEnginePlayer;
+	private _rightFollowerPlayer!: PrefEnginePlayer;
+	private _leftFollowerPlayer!: PrefEnginePlayer;
 
 	private _currentStage: PrefEngineStage;
 	private _bidding: PrefEngineStageBidding;
@@ -67,9 +67,9 @@ export default class PrefEngineRound {
 		this._currentStage = PrefEngineStage.BIDDING;
 		this._engine.currentPlayer = this._engine.firstBidPlayer;
 
-		this._mainPlayer = this._engine.p1;
-		this._rightFollowerPlayer = this._engine.p1;
-		this._leftFollowerPlayer = this._engine.p1;
+		// this._mainPlayer = this._engine.p1;
+		// this._rightFollowerPlayer = this._engine.p1;
+		// this._leftFollowerPlayer = this._engine.p1;
 	}
 
 	public bidding(player: PrefEnginePlayer, bid: PrefEngineBid): PrefEngineRound {

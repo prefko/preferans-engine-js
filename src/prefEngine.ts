@@ -47,11 +47,11 @@ export default class PrefEngine {
 	private _firstBidPlayer: PrefEnginePlayer;
 	private _secondBidPlayer: PrefEnginePlayer;
 
-	private _currentPlayer: PrefEnginePlayer;
+	private _currentPlayer!: PrefEnginePlayer;
 
 	private readonly _deck: PrefDeck;
 	private _score: PrefScore;
-	private _round: PrefEngineRound;
+	private _round!: PrefEngineRound;
 	private readonly _rounds: PrefEngineRound[];
 
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefEngineOptions) {
@@ -67,11 +67,10 @@ export default class PrefEngine {
 		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
 		// First this.deal()
-		this._dealerPlayer = this._p3;
-		this._firstBidPlayer = this._p1;
-		this._secondBidPlayer = this._p2;
-		this._currentPlayer = this._firstBidPlayer;
-		this._round = new PrefEngineRound(this);
+		this._dealerPlayer = this._p1;
+		this._firstBidPlayer = this._p2;
+		this._secondBidPlayer = this._p3;
+		this.deal();
 	}
 
 	public restoreDeck(cards: PrefDeckCard[]): PrefEngine {
