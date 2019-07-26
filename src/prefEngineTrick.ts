@@ -124,10 +124,12 @@ export default class PrefEngineTrick {
 		}
 		if (position === PrefEngineTrickPosition.SECOND && !this._second) {
 			this._second = { player, card };
+			if (this.full) this.calculateWinner();
 			return true;
 		}
 		if (this._players === 3 && position === PrefEngineTrickPosition.THIRD && !this._third) {
 			this._third = { player, card };
+			this.calculateWinner();
 			return true;
 		}
 		return false;

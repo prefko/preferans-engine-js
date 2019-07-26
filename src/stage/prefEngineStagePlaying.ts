@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 
 import * as _ from 'lodash';
-import PrefEngine from "../prefEngine";
-import APrefEngineStage from "./prefEngineStage";
-import PrefEnginePlayer from "../prefEnginePlayer";
-import {PrefEngineStage} from "../PrefEngineEnums";
-import PrefDeckCard, {PrefDeckCardSuit} from "preferans-deck-js/lib/prefDeckCard";
-import PrefEngineTrick from "../prefEngineTrick";
+import PrefEngine from '../prefEngine';
+import APrefEngineStage from './prefEngineStage';
+import PrefEnginePlayer from '../prefEnginePlayer';
+import { PrefEngineStage } from '../PrefEngineEnums';
+import PrefDeckCard, { PrefDeckCardSuit } from 'preferans-deck-js/lib/prefDeckCard';
+import PrefEngineTrick from '../prefEngineTrick';
 
 export default class PrefEngineStagePlaying extends APrefEngineStage {
 	private _tricks: PrefEngineTrick[];
@@ -34,7 +34,6 @@ export default class PrefEngineStagePlaying extends APrefEngineStage {
 	public throw(player: PrefEnginePlayer, card: PrefDeckCard): PrefEngineStagePlaying {
 		if (!this._trick) this._trick = new PrefEngineTrick(this._players, this._trump);
 		this._trick.throw(player, card);
-		if (this._trick.full) this._trick.winner;
 		return this;
 	}
 
@@ -45,7 +44,7 @@ export default class PrefEngineStagePlaying extends APrefEngineStage {
 
 	get winner(): PrefEnginePlayer {
 		if (this._trick) return this._trick.winner;
-		throw new Error("PrefEngineStagePlaying::winner:Trick is invalid." + this._trick);
+		throw new Error('PrefEngineStagePlaying::winner:Trick is invalid.');
 	}
 
 	public countTricks(player: PrefEnginePlayer): number {
