@@ -7,7 +7,7 @@ import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
 import PrefEngine from "./prefEngine";
 import PrefEnginePlayer from "./prefEnginePlayer";
 import PrefEngineStageBidding from "./stage/prefEngineStageBidding";
-import PrefEngineStageDeciding from "./stage/PrefEngineStageDeciding";
+import PrefEngineStageDeciding from "./stage/prefEngineStageDeciding";
 import {PrefEngineBid, PrefEngineContract, PrefEngineKontra, PrefEngineStage} from "./PrefEngineEnums";
 import PrefEngineStageKontra from "./stage/prefEngineStageKontra";
 import PrefEngineStagePlaying from "./stage/prefEngineStagePlaying";
