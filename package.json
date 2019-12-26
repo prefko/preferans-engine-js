@@ -1,6 +1,6 @@
 {
 	"name": "preferans-engine-js",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "nodejs engine for preferans",
 	"engines": {
 		"node": ">=8.9"
@@ -57,7 +57,7 @@
 	"homepage": "https://github.com/prefko/preferans-engine-js#readme",
 	"dependencies": {
 		"@types/lodash": "^4.14.136",
-		"lodash": "^4.17.15",
+		"lodash": "^4.2.1",
 		"preferans-deck-js": "^2.2.6",
 		"preferans-paper-js": "^2.7.5",
 		"preferans-rating-js": "^2.3.3",
