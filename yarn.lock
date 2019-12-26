@@ -1344,21 +1344,21 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-preferans-deck-js@^2.2.6:
+preferans-deck-js@*:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.6.tgz#da8791914d9f6feeecf1ceec302e292bb8c879ca"
   dependencies:
     "@types/lodash" "^4.14.120"
     lodash "^4.17.11"
 
-preferans-paper-js@^2.7.5:
+preferans-paper-js@*, preferans-paper-js@^2.7.5:
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-2.7.5.tgz#537aa7ee920285f250cfd9cb17295086a34353da"
   dependencies:
     "@types/lodash" "^4.14.120"
     lodash "^4.17.11"
 
-preferans-rating-js@^2.3.3:
+preferans-rating-js@*:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.3.tgz#d1c8905349e5e6e16c9063c759ae351729a5eeeb"
   dependencies:
@@ -1367,7 +1367,7 @@ preferans-rating-js@^2.3.3:
     lodash "^4.17.11"
     mathjs "^5.4.2"
 
-preferans-score-js@^1.2.4:
+preferans-score-js@*:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.4.tgz#31e6b3093b9b2c32e1979dc3f3e53d5b4855ba3e"
   dependencies:
