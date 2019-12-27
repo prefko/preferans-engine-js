@@ -88,7 +88,7 @@
   version "4.14.136"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.136.tgz#413e85089046b865d960c9ff1d400e04c31ab60f"
 
-"@types/lodash@^4.14.136":
+"@types/lodash@^4.14.136", "@types/lodash@^4.14.149":
   version "4.14.149"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
 
@@ -1344,12 +1344,13 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-preferans-deck-js@*:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.6.tgz#da8791914d9f6feeecf1ceec302e292bb8c879ca"
+preferans-deck-js@>=2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.2.7.tgz#36407b8a35b4b74fbe5e712ac0c8a5f817253625"
+  integrity sha512-JEebZamAMUmvzVLHunDtU80HOSBJMaP2HuzmOYy5y4qmTnYfwYxOsxCARLJjpHoReKcwzX3mFBiXnN/YbdvmDg==
   dependencies:
-    "@types/lodash" "^4.14.120"
-    lodash "^4.17.11"
+    "@types/lodash" "^4.14.149"
+    lodash "^4.17.15"
 
 preferans-paper-js@*, preferans-paper-js@^2.7.5:
   version "2.7.5"
