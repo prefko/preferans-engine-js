@@ -2,7 +2,7 @@
 'use strict';
 
 import PrefDeckCard, { PrefDeckCardSuit } from 'preferans-deck-js/lib/prefDeckCard';
-import PrefEnginePlayer from './prefEnginePlayer';
+import PrefPlayer from './prefPlayer';
 
 const playerString = (p: PrefEngineTrickPlayer | null): {} | { card: string, username: string } => (p && p.card && p.player)
 	? { card: p.card.label, username: p.player.username }
@@ -10,9 +10,9 @@ const playerString = (p: PrefEngineTrickPlayer | null): {} | { card: string, use
 
 export enum PrefEngineTrickPosition {FIRST, SECOND, THIRD}
 
-export type PrefEngineTrickPlayer = { player: PrefEnginePlayer, card: PrefDeckCard };
+export type PrefEngineTrickPlayer = { player: PrefPlayer, card: PrefDeckCard };
 
-export default class PrefEngineTrick {
+export default class PrefTrick {
 	private readonly _players: 2 | 3;
 	private readonly _trump: PrefDeckCardSuit | null;
 
@@ -26,11 +26,11 @@ export default class PrefEngineTrick {
 		this._trump = trump ? trump : null;
 	}
 
-	public throw(player: PrefEnginePlayer, card: PrefDeckCard): PrefEngineTrick {
+	public throw(player: PrefPlayer, card: PrefDeckCard): PrefTrick {
 		if (this.throwCard(PrefEngineTrickPosition.FIRST, player, card)) return this;
 		else if (this.throwCard(PrefEngineTrickPosition.SECOND, player, card)) return this;
 		else if (this.throwCard(PrefEngineTrickPosition.THIRD, player, card)) return this;
-		throw new Error('PrefEngineTrick::throw:Trick is already full:[' + this.string + ']');
+		throw new Error('PrefTrick::throw:Trick is already full:[' + this.string + ']');
 	}
 
 	get first(): PrefDeckCard | null {
@@ -49,10 +49,10 @@ export default class PrefEngineTrick {
 		return this._trump;
 	}
 
-	get winner(): PrefEnginePlayer {
+	get winner(): PrefPlayer {
 		if (!this._winner) this.calculateWinner();
 		if (this._winner) return this._winner.player;
-		throw new Error('PrefEngineTrick::winner:Winner not found: [' + this.string + ']');
+		throw new Error('PrefTrick::winner:Winner not found: [' + this.string + ']');
 	}
 
 	get ppn(): string {
@@ -117,7 +117,7 @@ export default class PrefEngineTrick {
 		return !c1.beats(c3) && !c2.beats(c3);
 	}
 
-	private throwCard(position: PrefEngineTrickPosition, player: PrefEnginePlayer, card: PrefDeckCard): boolean {
+	private throwCard(position: PrefEngineTrickPosition, player: PrefPlayer, card: PrefDeckCard): boolean {
 		if (position === PrefEngineTrickPosition.FIRST && !this._first) {
 			this._first = { player, card };
 			return true;
@@ -135,13 +135,13 @@ export default class PrefEngineTrick {
 		return false;
 	}
 
-	private calculateWinner(): PrefEngineTrick {
+	private calculateWinner(): PrefTrick {
 		this._winner = null;
 		if (this.full) {
 			if (this.firstWins()) this._winner = this._first;
 			else if (this.secondWins()) this._winner = this._second;
 			else if (this._players === 3 && this.thirdWins()) this._winner = this._third;
-			throw new Error('PrefEngine::calculateWinner: Unable to calculate winner! [' + this.string + ']');
+			throw new Error('PrefGame::calculateWinner: Unable to calculate winner! [' + this.string + ']');
 		}
 		return this;
 	}

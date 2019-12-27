@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+'use strict';
+
+import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
+import { EPrefBid, EPrefContract } from './PrefGameEnums';
+
+export type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
+
+const suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
+
+	// TODO:
+
+	return [];
+};
+
+export default class PrefHandCheck {
+	private _hand: PrefDeckPile;
+	private _rest: PrefDeckPile;
+
+	private _suggestions: PrefHandSuggestion[];
+
+	constructor(hand: PrefDeckPile, rest: PrefDeckPile) {
+		this._hand = new PrefDeckPile(hand.cards);
+		this._rest = new PrefDeckPile(rest.cards);
+
+		this._suggestions = suggest(hand, rest);
+	}
+
+}

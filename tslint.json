@@ -1,7 +1,8 @@
 {
 	"extends": [
 		"tslint:recommended",
-		"tslint-config-prettier"
+		"tslint-config-prettier",
+		"tslint-no-unused-expression-chai"
 	],
 	"rules": {
 		"one-variable-per-declaration": false,
