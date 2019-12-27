@@ -60,7 +60,7 @@
 		"lodash": "^4.2.1",
 		"preferans-deck-js": "*",
 		"preferans-paper-js": "*",
-		"preferans-rating-js": "*",
+		"preferans-rating-js": ">=2.3.4",
 		"preferans-score-js": "*"
 	},
 	"devDependencies": {
