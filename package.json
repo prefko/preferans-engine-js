@@ -1,6 +1,6 @@
 {
 	"name": "preferans-engine-js",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"description": "nodejs engine for preferans",
 	"engines": {
 		"node": ">=8.9"
@@ -76,7 +76,7 @@
 		"ts-node": "^8.3.0",
 		"tslint": "^5.18.0",
 		"tslint-config-prettier": "^1.18.0",
-		"typedoc": "^0.15.0",
+		"typedoc": "^0.15.6",
 		"typescript": "^3.5.3"
 	}
 }
