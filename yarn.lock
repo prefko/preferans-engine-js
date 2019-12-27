@@ -88,7 +88,7 @@
   version "4.14.136"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.136.tgz#413e85089046b865d960c9ff1d400e04c31ab60f"
 
-"@types/lodash@^4.14.136":
+"@types/lodash@^4.14.136", "@types/lodash@^4.14.149":
   version "4.14.149"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
 
@@ -1351,7 +1351,7 @@ preferans-deck-js@*:
     "@types/lodash" "^4.14.120"
     lodash "^4.17.11"
 
-preferans-paper-js@*, preferans-paper-js@^2.7.5:
+preferans-paper-js@*:
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-2.7.5.tgz#537aa7ee920285f250cfd9cb17295086a34353da"
   dependencies:
@@ -1367,13 +1367,14 @@ preferans-rating-js@*:
     lodash "^4.17.11"
     mathjs "^5.4.2"
 
-preferans-score-js@*:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.4.tgz#31e6b3093b9b2c32e1979dc3f3e53d5b4855ba3e"
+preferans-score-js@>=1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.8.tgz#2f9d8908141cb1024e07ef55242d2ad554787de4"
+  integrity sha512-bcXYakqIOYwDMMS/JwiTb8s6iutdNXZFtxKBv4fDBd+ZUCmnJLl0K/07TWcaVNycN3ZWMLTkn2HF2tHQE8EysQ==
   dependencies:
-    "@types/lodash" "^4.14.120"
-    lodash "^4.17.11"
-    preferans-paper-js "^2.7.5"
+    "@types/lodash" "^4.14.149"
+    lodash "^4.17.15"
+    preferans-paper-js "*"
 
 prettier@^1.18.2:
   version "1.19.1"
