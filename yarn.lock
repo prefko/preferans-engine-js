@@ -88,13 +88,14 @@
   version "4.14.136"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.136.tgz#413e85089046b865d960c9ff1d400e04c31ab60f"
 
-"@types/lodash@^4.14.136":
+"@types/lodash@^4.14.136", "@types/lodash@^4.14.149":
   version "4.14.149"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
 
-"@types/mathjs@^5.0.0":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@types/mathjs/-/mathjs-5.0.1.tgz#b98e163ea396b4f27bec20ee25ffb8fe9e656af8"
+"@types/mathjs@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mathjs/-/mathjs-6.0.2.tgz#fb77aff0adcd75cf9df358ae8891e239c7ca4203"
+  integrity sha512-VXRnT6ozA8k5i3xyv8WpwarNCsIwV6Z5Cuz5bPuj9pqr5jOo3rZk/tRWdHBCmC0KMchH8OBYPC72p4ftyMXK1Q==
   dependencies:
     decimal.js "^10.0.0"
 
@@ -1032,9 +1033,10 @@ marked@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
 
-mathjs@^5.4.2:
-  version "5.10.3"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-5.10.3.tgz#e998885f932ea8886db8b40f7f5b199f89b427f1"
+mathjs@^6.2.5:
+  version "6.2.5"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-6.2.5.tgz#8e7f5717a4083100fcfcc72087887aa94d4b29df"
+  integrity sha512-PT3YHsXvKGkSu4GdvniaPx/e4WygEchWZn5FuOowboNGNnEmZ+kASN9ldRVPFPNhyf5MQkzbFNvMuBxkcPD6CQ==
   dependencies:
     complex.js "2.0.11"
     decimal.js "10.2.0"
@@ -1043,7 +1045,7 @@ mathjs@^5.4.2:
     javascript-natural-sort "0.7.1"
     seed-random "2.2.0"
     tiny-emitter "2.1.0"
-    typed-function "1.1.0"
+    typed-function "1.1.1"
 
 mem@^1.1.0:
   version "1.1.0"
@@ -1358,14 +1360,15 @@ preferans-paper-js@*, preferans-paper-js@^2.7.5:
     "@types/lodash" "^4.14.120"
     lodash "^4.17.11"
 
-preferans-rating-js@*:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.3.tgz#d1c8905349e5e6e16c9063c759ae351729a5eeeb"
+preferans-rating-js@>=2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.4.tgz#3a925fc4161b4f7ef95255cc2b58323c138f2bb2"
+  integrity sha512-At3Xqb0Jv/lYsx05vtnFOso4KMNgCXehikYNjEYvFoFdJtsMYuxnzCnlrShQUwNrbou+1j9w3eOWd0NgugNR3w==
   dependencies:
-    "@types/lodash" "^4.14.120"
-    "@types/mathjs" "^5.0.0"
-    lodash "^4.17.11"
-    mathjs "^5.4.2"
+    "@types/lodash" "^4.14.149"
+    "@types/mathjs" "^6.0.2"
+    lodash "^4.17.15"
+    mathjs "^6.2.5"
 
 preferans-score-js@*:
   version "1.2.4"
@@ -1848,9 +1851,10 @@ type-detect@^4.0.0, type-detect@^4.0.5:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
 
-typed-function@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.1.0.tgz#ea149706e0fb42aca1791c053a6d94ccd6c4fdcb"
+typed-function@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.1.1.tgz#a1316187ec3628c9e219b91ca96918660a10138e"
+  integrity sha512-RbN7MaTQBZLJYzDENHPA0nUmWT0Ex80KHItprrgbTPufYhIlTePvCXZxyQK7wgn19FW5bnuaBIKcBb5mRWjB1Q==
 
 typedoc-default-themes@^0.6.2:
   version "0.6.2"
