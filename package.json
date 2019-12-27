@@ -1,6 +1,6 @@
 {
 	"name": "preferans-engine-js",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "nodejs engine for preferans",
 	"engines": {
 		"node": ">=8.9"

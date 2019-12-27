@@ -17,21 +17,39 @@ preferans game engine
 
 ---
 
-player
- - username
- - original username (optional)
- - replacements: [] (optional)
+##### engine
+* deck
+* score (3 papers)
+* 3 **players**
+* **hands** []
 
-hand
- - deal (3x10 + 2)
- - auction
- - talon replace
- - kontras
- - plays (10x3)
- - result
+##### player
+* position (1,2,3)
+* user
+* *starter (optional)*
+* *replacements: [userid, from-hand, to-hand] (optional)*
+* currentPlay
+  * lepeza
+  * dealRole
+  * playRole
+  * bid
+  * lastBid
+  * follows
+  * kontra
+  * lastKontra
 
-game
- - deck
- - 3 players
- - paper
- - hands
+##### deal
+* dealOrder
+* dealerPlayer: *ref player*
+* firstPlayer: *ref player*
+* secondPlayer: *ref player*
+* cards (3 x 10)
+* talon
+* auctions
+* discarded
+* contract
+* accepted: []
+* kontra
+* value
+* throws
+* summary
