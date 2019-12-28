@@ -11,8 +11,9 @@ export enum PrefEnginePlayRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
 
 export default class PrefPlayer {
 	private readonly _starter: string;
-	private readonly _replacements: string[];
+	private readonly _replacements: string[] = [];
 
+	private _position: number;
 	private _username: string;
 	private _dealRole: PrefEngineDealRole;
 	private _playRole: PrefEnginePlayRole;
@@ -25,10 +26,11 @@ export default class PrefPlayer {
 	private _kontra: EPrefKontra;
 	private _lastKontra: EPrefKontra;
 
-	constructor(username: string) {
+	constructor(position: number, username: string) {
+		this._position = position;
+
 		this._starter = username;
 		this._username = username;
-		this._replacements = [];
 
 		this._cards = new PrefDeckPile([]);
 
@@ -57,6 +59,14 @@ export default class PrefPlayer {
 	set replacement(username: string) {
 		this._username = username;
 		if (this._starter !== username) this._replacements.push(username);
+	}
+
+	set position(position: number) {
+		this._position = position;
+	}
+
+	get position(): number {
+		return this._position;
 	}
 
 	set username(username: string) {

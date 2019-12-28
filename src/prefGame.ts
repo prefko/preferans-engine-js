@@ -19,21 +19,6 @@ export type PrefEngineOptions = {
 	allowSubAndMortKontras: boolean
 };
 
-const random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
-	const r: number = _.random(1, 3);
-	return r === 1 ? p1 : r === 2 ? p2 : p3;
-};
-
-const nextPlayer = (e: PrefGame, p: PrefPlayer): PrefPlayer => {
-	// if (p.username === e.p1.username) return e.p2;
-	// else if (p.username === e.p2.username) return e.p3;
-	// else if (p.username === e.p3.username) return e.p1;
-	if (p === e.p1) return e.p2;
-	else if (p === e.p2) return e.p3;
-	else if (p === e.p3) return e.p1;
-	else throw new Error('PrefGame::_next:Wrong player: ' + p.username);
-};
-
 export default class PrefGame {
 	private readonly _bula: number;
 	private readonly _refas: number;
@@ -55,9 +40,9 @@ export default class PrefGame {
 	private readonly _rounds: PrefRound[];
 
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefEngineOptions) {
-		this._p1 = new PrefPlayer(username1);
-		this._p2 = new PrefPlayer(username2);
-		this._p3 = new PrefPlayer(username3);
+		this._p1 = new PrefPlayer(1, username1);
+		this._p2 = new PrefPlayer(2, username2);
+		this._p3 = new PrefPlayer(3, username3);
 		this._bula = bula;
 		this._refas = refas;
 		this._options = options;
@@ -90,7 +75,10 @@ export default class PrefGame {
 	}
 
 	public nextPlayer(player: PrefPlayer): PrefPlayer {
-		return nextPlayer(this, player);
+		if (player.position === 1) return this.p2;
+		else if (player.position === 2) return this.p3;
+		else if (player.position === 3) return this.p1;
+		else throw new Error('PrefGame::nextPlayer:Wrong player position: ' + player.username + ':' + player.position);
 	}
 
 	public bid(username: string, bid: EPrefBid): PrefGame {
@@ -197,7 +185,7 @@ export default class PrefGame {
 	}
 
 	get next(): PrefPlayer {
-		this._currentPlayer = nextPlayer(this, this._currentPlayer);
+		this._currentPlayer = this._currentPlayer.nextPlayer;
 		return this._currentPlayer;
 	}
 

@@ -1364,8 +1364,8 @@ preferans-rating-js@*:
     mathjs "^6.2.5"
 
 preferans-score-js@*:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.8.tgz#2f9d8908141cb1024e07ef55242d2ad554787de4"
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.9.tgz#c5bda7ed055fb4c0f0598efea680cd295bec4032"
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
