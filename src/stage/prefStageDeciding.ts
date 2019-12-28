@@ -12,10 +12,12 @@ export type PrefEnginePlayerDecision = { username: string, decision: boolean }
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: PrefEnginePlayerDecision[];
 
-	constructor(engine: PrefGame) {
-		super(engine, EPrefStage.DECIDING);
+	constructor(game: PrefGame) {
+		super(game);
 		this._decisions = [];
 	}
+
+	public isDeciding = (): boolean => true;
 
 	public decide(player: PrefPlayer, follows: boolean): PrefStageDeciding {
 		this._decisions.push({ username: player.username, decision: follows });

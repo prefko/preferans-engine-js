@@ -14,6 +14,7 @@ export default class PrefPlayer {
 	private readonly _replacements: string[] = [];
 
 	private _position: number;
+	private _nextPlayer!: PrefPlayer;
 	private _username: string;
 	private _dealRole: PrefEngineDealRole;
 	private _playRole: PrefEnginePlayRole;
@@ -59,6 +60,14 @@ export default class PrefPlayer {
 	set replacement(username: string) {
 		this._username = username;
 		if (this._starter !== username) this._replacements.push(username);
+	}
+
+	set nextPlayer(player: PrefPlayer) {
+		this._nextPlayer = player;
+	}
+
+	get nextPlayer(): PrefPlayer {
+		return this._nextPlayer;
 	}
 
 	set position(position: number) {

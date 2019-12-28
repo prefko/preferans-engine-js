@@ -15,13 +15,15 @@ export default class PrefStageKontra extends APrefStage {
 	private _max: EPrefKontra;
 	private _last: EPrefKontra;
 
-	constructor(engine: PrefGame) {
-		super(engine, EPrefStage.KONTRING);
+	constructor(game: PrefGame) {
+		super(game);
 
 		this._kontras = [];
 		this._max = EPrefKontra.NO_KONTRA;
 		this._last = EPrefKontra.NO_KONTRA;
 	}
+
+	public isKontring = (): boolean => true;
 
 	public kontra(player: PrefPlayer, kontra: EPrefKontra): PrefStageKontra {
 		this._kontras.push({ username: player.username, kontra });
@@ -35,10 +37,10 @@ export default class PrefStageKontra extends APrefStage {
 	}
 
 	get options(): EPrefKontra[] {
-		let player: PrefPlayer = this._engine.currentPlayer;
+		let player: PrefPlayer = this._game.player;
 		let lastKontraMade: EPrefKontra = player.kontra;
 
-		let isContractSpade = EPrefContract.CONTRACT_SPADE === this._engine.round.contract;
+		let isContractSpade = EPrefContract.CONTRACT_SPADE === this._game.round.contract;
 
 		let choices = [];
 		choices.push(EPrefKontra.KONTRA_READY);
@@ -54,10 +56,10 @@ export default class PrefStageKontra extends APrefStage {
 				choices.push(EPrefKontra.KONTRA_REKONTRA);
 				break;
 			case EPrefKontra.KONTRA_REKONTRA:
-				if (this._engine.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_SUBKONTRA);
+				if (this._game.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_SUBKONTRA);
 				break;
 			case EPrefKontra.KONTRA_SUBKONTRA:
-				if (this._engine.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_MORTKONTRA);
+				if (this._game.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_MORTKONTRA);
 				break;
 			case EPrefKontra.KONTRA_INVITE:
 			case EPrefKontra.KONTRA_MORTKONTRA:
@@ -69,18 +71,18 @@ export default class PrefStageKontra extends APrefStage {
 	}
 
 	get highestKontrar(): PrefPlayer {
-		let p1 = this._engine.p1;
-		let p2 = this._engine.p2;
-		let p3 = this._engine.p3;
+		let p1 = this._game.p1;
+		let p2 = this._game.p2;
+		let p3 = this._game.p3;
 		return p1.kontra > p2.kontra
 			? p1.kontra > p3.kontra ? p1 : p3
 			: p2.kontra > p3.kontra ? p2 : p3;
 	}
 
 	get kontringCompleted(): boolean {
-		let p1 = this._engine.p1;
-		let p2 = this._engine.p2;
-		let p3 = this._engine.p3;
+		let p1 = this._game.p1;
+		let p2 = this._game.p2;
+		let p3 = this._game.p3;
 		let cnt = 0;
 		if (p1.isOutOfKontring(this._max)) cnt++;
 		if (p2.isOutOfKontring(this._max)) cnt++;

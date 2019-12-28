@@ -15,13 +15,15 @@ export default class PrefStagePlaying extends APrefStage {
 	private _trump: PrefDeckCardSuit | null;
 	private _trick: PrefTrick | null;
 
-	constructor(engine: PrefGame) {
-		super(engine, EPrefStage.PLAYING);
+	constructor(game: PrefGame) {
+		super(game);
 		this._tricks = [];
 		this._trump = null;
 		this._trick = null;
 		this._players = 3;
 	}
+
+	public isPlaying = (): boolean => true;
 
 	set players(count: 2 | 3) {
 		this._players = count;

@@ -21,13 +21,15 @@ export default class PrefStageBidding extends APrefStage {
 	private _max: EPrefBid;
 	private _last: EPrefBid;
 
-	constructor(engine: PrefGame) {
-		super(engine, EPrefStage.BIDDING);
+	constructor(game: PrefGame) {
+		super(game);
 
 		this._bids = [];
 		this._max = EPrefBid.NO_BID;
 		this._last = EPrefBid.NO_BID;
 	}
+
+	public isBidding = (): boolean => true;
 
 	public bid(player: PrefPlayer, bid: EPrefBid): PrefStageBidding {
 		this._bids.push({ username: player.username, bid });
@@ -37,7 +39,7 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	get options(): EPrefBid[] {
-		let myLastBid: EPrefBid = this._engine.currentPlayer.bid;
+		const myLastBid: EPrefBid = this._game.player.bid;
 
 		let choices = [];
 		if (this._last >= EPrefBid.BID_GAME_BETL) {
@@ -152,18 +154,18 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	get highestBidder(): PrefPlayer {
-		let p1 = this._engine.p1;
-		let p2 = this._engine.p2;
-		let p3 = this._engine.p3;
+		const p1 = this._game.p1;
+		const p2 = this._game.p2;
+		const p3 = this._game.p3;
 		return p1.bid > p2.bid
 			? p1.bid > p3.bid ? p1 : p3
 			: p2.bid > p3.bid ? p2 : p3;
 	}
 
 	get biddingCompleted(): boolean {
-		let p1 = this._engine.p1;
-		let p2 = this._engine.p2;
-		let p3 = this._engine.p3;
+		const p1 = this._game.p1;
+		const p2 = this._game.p2;
+		const p3 = this._game.p3;
 		let cnt = 0;
 		if (p1.outOfBidding) cnt++;
 		if (p2.outOfBidding) cnt++;
