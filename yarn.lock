@@ -1363,9 +1363,10 @@ preferans-rating-js@*:
     lodash "^4.17.15"
     mathjs "^6.2.5"
 
-preferans-score-js@*:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.8.tgz#2f9d8908141cb1024e07ef55242d2ad554787de4"
+preferans-score-js@>=1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.2.9.tgz#c5bda7ed055fb4c0f0598efea680cd295bec4032"
+  integrity sha512-Fmp+62696RM83E8b1zzcCRDMrV7Xb1tr7QYvcfsFQWJKghW8g6LzBtzuoNZwizccBa1+mk/gY5L3cxmQrdU04w==
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
