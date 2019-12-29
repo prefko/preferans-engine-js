@@ -9,9 +9,11 @@ import PrefPlayer from './prefPlayer';
 import PrefStageBidding from './stage/prefStageBidding';
 import PrefStageDeciding from './stage/prefStageDeciding';
 import { EPrefBid, EPrefContract, EPrefKontra, EPrefStage } from './PrefGameEnums';
-import PrefStageKontra from './stage/prefStageKontra';
+import PrefStageKontring from './stage/prefStageKontring';
 import PrefStagePlaying from './stage/prefStagePlaying';
 import APrefStage from './stage/prefStage';
+import PrefStageExchanging from './stage/prefStageExchanging';
+import PrefStageContracting from './stage/prefStageContracting';
 
 export type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
@@ -27,8 +29,10 @@ const _isLeftFirst = (contract: EPrefContract): boolean => _isSans(contract) || 
 
 export default class PrefRound {
 	protected _game: PrefGame;
+
+	private readonly _id: number;
 	private readonly _deal: PrefDeckDeal;
-	private _reject: PrefRoundDiscarded | null = null;
+	private _reject!: PrefRoundDiscarded;
 
 	private _mainPlayer!: PrefPlayer;
 	private _rightFollower!: PrefPlayer;
@@ -36,8 +40,10 @@ export default class PrefRound {
 
 	private _stage: APrefStage;
 	private _bidding: PrefStageBidding;
-	private _decision: PrefStageDeciding;
-	private _kontring: PrefStageKontra;
+	private _exchanging: PrefStageExchanging;
+	private _contracting: PrefStageContracting;
+	private _deciding: PrefStageDeciding;
+	private _kontring: PrefStageKontring;
 	private _playing: PrefStagePlaying;
 
 	private _contract: EPrefContract;
@@ -45,6 +51,7 @@ export default class PrefRound {
 	// TODO: add judge and his decision
 	constructor(game: PrefGame, id: number) {
 		this._game = game;
+		this._id = id;
 		this._contract = EPrefContract.NO_CONTRACT;
 
 		this._deal = this._game.deck.shuffle.cut.deal;
@@ -52,10 +59,12 @@ export default class PrefRound {
 		this._game.secondPlayer.cards = this._deal.h2;
 		this._game.dealerPlayer.cards = this._deal.h3;
 
-		this._bidding = new PrefStageBidding(this._game);
-		this._decision = new PrefStageDeciding(this._game);
-		this._kontring = new PrefStageKontra(this._game);
-		this._playing = new PrefStagePlaying(this._game);
+		this._bidding = new PrefStageBidding(game);
+		this._exchanging = new PrefStageExchanging(game);
+		this._contracting = new PrefStageContracting(game);
+		this._deciding = new PrefStageDeciding(game);
+		this._kontring = new PrefStageKontring(game);
+		this._playing = new PrefStagePlaying(game);
 
 		this._stage = this._bidding;
 		this._game.player = this._game.firstPlayer;
@@ -74,7 +83,7 @@ export default class PrefRound {
 
 			// TODO: handle sans!
 			this._game.player = this._mainPlayer;
-			this._stage = EPrefStage.EXCHANGING;
+			this._stage = this._exchanging;
 
 		} else {
 			this._game.nextPlayer();
@@ -87,7 +96,7 @@ export default class PrefRound {
 	public exchange(player: PrefPlayer, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
 		if (!this._stage.isExchanging()) throw new Error('PrefRound::exchange:Round is not in exchange stage but in ' + this.stage);
 		this._reject = { discard1, discard2 };
-		this._stage = EPrefStage.CONTRACTING;
+		this._stage = this._contracting;
 		return this;
 	}
 
@@ -95,17 +104,18 @@ export default class PrefRound {
 		if (!this._stage.isContracting()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this.stage);
 		this._contract = contract;
 		this._game.player = this._rightFollower;
+		this._stage = this._deciding;
 		return this;
 	}
 
 	public deciding(player: PrefPlayer, follows: boolean): PrefRound {
 		if (!this._stage.isDeciding()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this.stage);
 		player.follows = follows;
-		this._decision.decide(player, follows);
+		this._deciding.decide(player, follows);
 		this._game.nextPlayer();
 
-		if (this._decision.decidingCompleted) {
-			this._stage = EPrefStage.KONTRING;
+		if (this._deciding.decidingCompleted) {
+			this._stage = this._kontring;
 			this._game.player = this._rightFollower;
 		}
 
@@ -119,7 +129,7 @@ export default class PrefRound {
 
 		if (this._kontring.kontringCompleted) {
 			this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._mainPlayer;
-			this._stage = EPrefStage.PLAYING;
+			this._stage = this._playing;
 
 		} else {
 			this._game.nextPlayer();
@@ -143,6 +153,10 @@ export default class PrefRound {
 		}
 
 		return this;
+	}
+
+	get id(): number {
+		return this._id;
 	}
 
 	get mainTricks(): number {

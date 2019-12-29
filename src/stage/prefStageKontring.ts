@@ -10,7 +10,7 @@ export type PrefEnginePlayerKontra = { username: string, kontra: EPrefKontra }
 
 const canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
 
-export default class PrefStageKontra extends APrefStage {
+export default class PrefStageKontring extends APrefStage {
 	private _kontras: PrefEnginePlayerKontra[];
 	private _max: EPrefKontra;
 	private _last: EPrefKontra;
@@ -25,7 +25,7 @@ export default class PrefStageKontra extends APrefStage {
 
 	public isKontring = (): boolean => true;
 
-	public kontra(player: PrefPlayer, kontra: EPrefKontra): PrefStageKontra {
+	public kontra(player: PrefPlayer, kontra: EPrefKontra): PrefStageKontring {
 		this._kontras.push({ username: player.username, kontra });
 		if (this._max < kontra) this._max = kontra;
 		this._last = kontra;

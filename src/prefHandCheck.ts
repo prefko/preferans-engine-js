@@ -6,7 +6,7 @@ import { EPrefBid, EPrefContract } from './PrefGameEnums';
 
 export type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
 
-const suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
+const _suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
 
 	// TODO:
 
@@ -23,7 +23,7 @@ export default class PrefHandCheck {
 		this._hand = new PrefDeckPile(hand.cards);
 		this._rest = new PrefDeckPile(rest.cards);
 
-		this._suggestions = suggest(hand, rest);
+		this._suggestions = _suggest(hand, rest);
 	}
 
 }

@@ -14,6 +14,10 @@ const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => 
 	return r === 1 ? p1 : r === 2 ? p2 : p3;
 };
 
+const _checkPlayer = (game: PrefGame, username: string): void => {
+	if (username !== game.player.username) throw new Error('PrefGame::checkCurrentPlayer:Wrong player: ' + username);
+};
+
 export type PrefEngineOptions = {
 	unlimitedRefe: boolean,
 	playPikOnRefa: boolean,
@@ -79,56 +83,60 @@ export default class PrefGame {
 		this._firstPlayer = this._dealerPlayer.nextPlayer;
 		this._secondPlayer = this._firstPlayer.nextPlayer;
 
+		let id = 1;
+		if (this._round) id = this._round.id + 1;
+
 		this._player = this._firstPlayer;
-		this._round = new PrefRound(this);
+		this._round = new PrefRound(this, id);
 		return this;
 	}
 
 	public bid(username: string, bid: EPrefBid): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.BIDDING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isBidding()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 		this._round.bid(this._player, bid);
 		return this;
 	}
 
 	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.EXCHANGING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isExchanging()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 		this._round.exchange(this._player, discard1, discard2);
 		return this;
 	}
 
 	public contracting(username: string, contract: EPrefContract): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.CONTRACTING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isContracting()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 		this._round.contracting(this._player, contract);
 		return this;
 	}
 
 	public decide(username: string, follows: boolean): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.DECIDING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isDeciding()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 		this._round.deciding(this._player, follows);
 		return this;
 	}
 
 	public kontra(username: string, kontra: EPrefKontra): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.KONTRING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isKontring()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 		this._round.kontring(this._player, kontra);
 		return this;
 	}
 
 	public throw(username: string, card: PrefDeckCard): PrefGame {
-		this.checkCurrentPlayer(username);
-		this.checkCurrentStage(EPrefStage.PLAYING);
+		_checkPlayer(this, username);
+		if (!this._round.stage.isPlaying()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
 		this._round.throw(this._player, card);
 
 		const mainTricks = this._round.mainTricks;
 		const followersTricks = this._round.followersTricks;
 
 		if ((this._round.isBetl && mainTricks > 0) || followersTricks > 4) {
-			this._round.stage = EPrefStage.END;
+			this._round.stage.isEnding();
 
 			// TODO: round finished
 
@@ -139,16 +147,6 @@ export default class PrefGame {
 
 	public nextPlayer(): PrefGame {
 		this._player = this._player.nextPlayer;
-		return this;
-	}
-
-	private checkCurrentPlayer(username: string): PrefGame {
-		if (username !== this._player.username) throw new Error('PrefGame::checkCurrentPlayer:Wrong player: ' + username);
-		return this;
-	}
-
-	private checkCurrentStage(stage: EPrefStage): PrefGame {
-		if (stage !== this._round.stage) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + stage);
 		return this;
 	}
 

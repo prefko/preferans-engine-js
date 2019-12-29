@@ -4,7 +4,7 @@
 import PrefDeckCard, { PrefDeckCardSuit } from 'preferans-deck-js/lib/prefDeckCard';
 import PrefPlayer from './prefPlayer';
 
-const playerString = (p: PrefEngineTrickPlayer | null): {} | { card: string, username: string } => (p && p.card && p.player)
+const _playerJsonOrEmpty = (p: PrefEngineTrickPlayer): {} | { card: string, username: string } => (p && p.card && p.player)
 	? { card: p.card.label, username: p.player.username }
 	: {};
 
@@ -14,16 +14,16 @@ export type PrefEngineTrickPlayer = { player: PrefPlayer, card: PrefDeckCard };
 
 export default class PrefTrick {
 	private readonly _players: 2 | 3;
-	private readonly _trump: PrefDeckCardSuit | null;
+	private readonly _trump!: PrefDeckCardSuit;
 
-	private _first: PrefEngineTrickPlayer | null = null;
-	private _second: PrefEngineTrickPlayer | null = null;
-	private _third: PrefEngineTrickPlayer | null = null;
+	private _first!: PrefEngineTrickPlayer;
+	private _second!: PrefEngineTrickPlayer;
+	private _third!: PrefEngineTrickPlayer;
 	private _winner: PrefEngineTrickPlayer | null = null;
 
-	constructor(players: 2 | 3, trump?: PrefDeckCardSuit | null) {
+	constructor(players: 2 | 3, trump?: PrefDeckCardSuit) {
 		this._players = players;
-		this._trump = trump ? trump : null;
+		if (trump) this._trump = trump;
 	}
 
 	public throw(player: PrefPlayer, card: PrefDeckCard): PrefTrick {
@@ -45,7 +45,7 @@ export default class PrefTrick {
 		return this._third ? this._third.card : null;
 	}
 
-	get trump(): PrefDeckCardSuit | null {
+	get trump(): PrefDeckCardSuit {
 		return this._trump;
 	}
 
@@ -62,18 +62,18 @@ export default class PrefTrick {
 		return a + b + c;
 	}
 
-	get object(): any {
+	get json(): any {
 		return {
-			first: playerString(this._first),
-			second: playerString(this._second),
-			third: playerString(this._third),
+			first: _playerJsonOrEmpty(this._first),
+			second: _playerJsonOrEmpty(this._second),
+			third: _playerJsonOrEmpty(this._third),
 			trump: this._trump,
 			winner: this._winner,
 		};
 	}
 
 	get string(): string {
-		return JSON.stringify(this.object);
+		return JSON.stringify(this.json);
 	}
 
 	get full(): boolean {

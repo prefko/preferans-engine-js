@@ -12,14 +12,12 @@ import PrefTrick from '../prefTrick';
 export default class PrefStagePlaying extends APrefStage {
 	private _tricks: PrefTrick[];
 	private _players: 2 | 3;
-	private _trump: PrefDeckCardSuit | null;
-	private _trick: PrefTrick | null;
+	private _trump!: PrefDeckCardSuit;
+	private _trick!: PrefTrick;
 
 	constructor(game: PrefGame) {
 		super(game);
 		this._tricks = [];
-		this._trump = null;
-		this._trick = null;
 		this._players = 3;
 	}
 
@@ -50,15 +48,11 @@ export default class PrefStagePlaying extends APrefStage {
 	}
 
 	public countTricks(player: PrefPlayer): number {
-		return _.size(_.filter(this._tricks, (trick: PrefTrick) => {
-			return trick.winner === player;
-		}));
+		return _.size(_.filter(this._tricks, (trick: PrefTrick) => trick.winner === player));
 	}
 
 	public countOthersTricks(player: PrefPlayer): number {
-		return _.size(_.filter(this._tricks, (trick: PrefTrick) => {
-			return trick.winner !== player;
-		}));
+		return _.size(_.filter(this._tricks, (trick: PrefTrick) => trick.winner !== player));
 	}
 
 }
