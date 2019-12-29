@@ -5,6 +5,7 @@ import PrefGame from '../prefGame';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
 import { EPrefBid } from '../PrefGameEnums';
+import { includes } from 'lodash';
 
 export type PrefEnginePlayerBid = { username: string, bid: EPrefBid }
 
@@ -31,11 +32,33 @@ export default class PrefStageBidding extends APrefStage {
 
 	public isBidding = (): boolean => true;
 
-	public bid(player: PrefPlayer, bid: EPrefBid): PrefStageBidding {
-		this._bids.push({ username: player.username, bid });
+	public bid(player: PrefPlayer): PrefStageBidding {
+		const { username, bid } = player;
+		this._bids.push({ username, bid });
 		if (this._max < bid) this._max = bid;
 		this._last = bid;
 		return this;
+	}
+
+	get isGameBid(): boolean {
+		return this._max >= EPrefBid.BID_GAME;
+	}
+
+	get highestBidder(): PrefPlayer {
+		const p1 = this._game.p1;
+		const p2 = this._game.p2;
+		const p3 = this._game.p3;
+		return (p1.bid > p2.bid)
+			? (p1.bid > p3.bid ? p1 : p3)
+			: (p2.bid > p3.bid ? p2 : p3);
+	}
+
+	get biddingCompleted(): boolean {
+		let cnt = 0;
+		if (this._game.p1.outOfBidding) cnt++;
+		if (this._game.p2.outOfBidding) cnt++;
+		if (this._game.p3.outOfBidding) cnt++;
+		return cnt >= 2;
 	}
 
 	get options(): EPrefBid[] {
@@ -151,26 +174,6 @@ export default class PrefStageBidding extends APrefStage {
 		}
 
 		return choices;
-	}
-
-	get highestBidder(): PrefPlayer {
-		const p1 = this._game.p1;
-		const p2 = this._game.p2;
-		const p3 = this._game.p3;
-		return p1.bid > p2.bid
-			? p1.bid > p3.bid ? p1 : p3
-			: p2.bid > p3.bid ? p2 : p3;
-	}
-
-	get biddingCompleted(): boolean {
-		const p1 = this._game.p1;
-		const p2 = this._game.p2;
-		const p3 = this._game.p3;
-		let cnt = 0;
-		if (p1.outOfBidding) cnt++;
-		if (p2.outOfBidding) cnt++;
-		if (p3.outOfBidding) cnt++;
-		return cnt >= 2;
 	}
 
 }

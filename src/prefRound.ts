@@ -74,20 +74,21 @@ export default class PrefRound {
 		if (!this._stage.isBidding()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage);
 
 		player.bid = bid;
-		this._bidding.bid(player, bid);
+		this._bidding.bid(player);
 
 		if (this._bidding.biddingCompleted) {
 			this._mainPlayer = this._bidding.highestBidder;
 			this._rightFollower = this._mainPlayer.nextPlayer;
 			this._leftFollower = this._rightFollower.nextPlayer;
 
-			// TODO: handle sans!
 			this._game.player = this._mainPlayer;
-			this._stage = this._exchanging;
+			this._stage = this._bidding.isGameBid ?
+				this._contracting :
+				this._exchanging;
 
 		} else {
-			this._game.nextPlayer();
-			if (this._game.player.outOfBidding) this._game.nextPlayer();
+			this._game.next();
+			if (this._game.player.outOfBidding) this._game.next();
 		}
 
 		return this;
@@ -110,9 +111,12 @@ export default class PrefRound {
 
 	public deciding(player: PrefPlayer, follows: boolean): PrefRound {
 		if (!this._stage.isDeciding()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this.stage);
+
 		player.follows = follows;
 		this._deciding.decide(player, follows);
-		this._game.nextPlayer();
+
+		this._game.next();
+		if (this._game.player.isMain) this._game.next();
 
 		if (this._deciding.decidingCompleted) {
 			this._stage = this._kontring;
@@ -128,12 +132,12 @@ export default class PrefRound {
 		this._kontring.kontra(player, kontra);
 
 		if (this._kontring.kontringCompleted) {
-			this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._mainPlayer;
+			this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._game.firstPlayer;
 			this._stage = this._playing;
 
 		} else {
-			this._game.nextPlayer();
-			if (this._game.player.isOutOfKontring(this._kontring.max)) this._game.nextPlayer();
+			this._game.next();
+			if (this._game.player.isOutOfKontring(this._kontring.max)) this._game.next();
 		}
 
 		return this;
@@ -144,12 +148,13 @@ export default class PrefRound {
 
 		this._playing.throw(player, card);
 
+		// TODO: move this to Playing and check for play end!
 		if (this._playing.trickFull) {
 			this._game.player = this._playing.winner;
 
 		} else {
-			this._game.nextPlayer();
-			if (!this._game.player.isPlaying) this._game.nextPlayer();
+			this._game.next();
+			if (!this._game.player.isPlaying) this._game.next();
 		}
 
 		return this;

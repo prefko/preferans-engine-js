@@ -145,7 +145,7 @@ export default class PrefGame {
 		return this;
 	}
 
-	public nextPlayer(): PrefGame {
+	public next(): PrefGame {
 		this._player = this._player.nextPlayer;
 		return this;
 	}
@@ -188,11 +188,6 @@ export default class PrefGame {
 
 	get p3(): PrefPlayer {
 		return this._p3;
-	}
-
-	get next(): PrefPlayer {
-		this._player = this._player.nextPlayer;
-		return this._player;
 	}
 
 	get allowSubAndMortKontras(): boolean {
