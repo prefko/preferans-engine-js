@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-export enum EPrefStage {BIDDING, EXCHANGING, CONTRACTING, DECIDING, KONTRING, PLAYING, END}
-
 export enum EPrefBid {
 	NO_BID = -1, BID_PASS = 0,
 	BID_SPADE = 1, BID_DIAMOND = 2, BID_DIAMOND_MINE = 3, BID_HEART = 4, BID_HEART_MINE = 5, BID_CLUB = 6, BID_CLUB_MINE = 7,

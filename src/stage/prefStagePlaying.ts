@@ -5,12 +5,11 @@ import * as _ from 'lodash';
 import PrefGame from '../prefGame';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
-import { EPrefStage } from '../PrefGameEnums';
 import PrefDeckCard, { PrefDeckCardSuit } from 'preferans-deck-js/lib/prefDeckCard';
 import PrefTrick from '../prefTrick';
 
 export default class PrefStagePlaying extends APrefStage {
-	private _tricks: PrefTrick[];
+	private readonly _tricks: PrefTrick[];
 	private _players: 2 | 3;
 	private _trump!: PrefDeckCardSuit;
 	private _trick!: PrefTrick;

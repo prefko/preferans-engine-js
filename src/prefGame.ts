@@ -7,7 +7,7 @@ import PrefDeck from 'preferans-deck-js';
 import PrefPlayer from './prefPlayer';
 import PrefScore from 'preferans-score-js';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
-import { EPrefStage, EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
+import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);

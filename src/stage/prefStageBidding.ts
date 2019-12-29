@@ -4,11 +4,11 @@
 import PrefGame from '../prefGame';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
-import { EPrefBid, EPrefStage } from '../PrefGameEnums';
+import { EPrefBid } from '../PrefGameEnums';
 
 export type PrefEnginePlayerBid = { username: string, bid: EPrefBid }
 
-const addInitialGameBids = (bids: EPrefBid[]): EPrefBid[] => {
+const _addInitialGameBids = (bids: EPrefBid[]): EPrefBid[] => {
 	bids.push(EPrefBid.BID_GAME);
 	bids.push(EPrefBid.BID_GAME_BETL);
 	bids.push(EPrefBid.BID_GAME_SANS);
@@ -67,7 +67,7 @@ export default class PrefStageBidding extends APrefStage {
 
 					} else if (myLastBid === EPrefBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
 						choices.push(EPrefBid.BID_PASS);
-						choices = addInitialGameBids(choices);
+						choices = _addInitialGameBids(choices);
 
 					} else {  // Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
 						choices.push(EPrefBid.BID_PASS);
@@ -101,17 +101,17 @@ export default class PrefStageBidding extends APrefStage {
 				case EPrefBid.NO_BID:
 				case EPrefBid.BID_PASS:
 					choices.push(EPrefBid.BID_SPADE);
-					choices = addInitialGameBids(choices);
+					choices = _addInitialGameBids(choices);
 					break;
 				case EPrefBid.BID_SPADE:
 					choices.push(EPrefBid.BID_DIAMOND);
-					choices = addInitialGameBids(choices);
+					choices = _addInitialGameBids(choices);
 					break;
 				case EPrefBid.BID_DIAMOND:
 					if (myLastBid === EPrefBid.BID_SPADE) choices.push(EPrefBid.BID_DIAMOND_MINE);
 					else {
 						choices.push(EPrefBid.BID_HEART);
-						choices = addInitialGameBids(choices);
+						choices = _addInitialGameBids(choices);
 					}
 					break;
 				case EPrefBid.BID_DIAMOND_MINE:

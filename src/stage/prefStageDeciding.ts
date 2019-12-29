@@ -5,7 +5,6 @@ import { size } from 'lodash';
 import PrefGame from '../prefGame';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
-import { EPrefStage } from '../PrefGameEnums';
 
 export type PrefEnginePlayerDecision = { username: string, decision: boolean }
 

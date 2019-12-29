@@ -8,7 +8,7 @@ import PrefGame from './prefGame';
 import PrefPlayer from './prefPlayer';
 import PrefStageBidding from './stage/prefStageBidding';
 import PrefStageDeciding from './stage/prefStageDeciding';
-import { EPrefBid, EPrefContract, EPrefKontra, EPrefStage } from './PrefGameEnums';
+import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
 import PrefStageKontring from './stage/prefStageKontring';
 import PrefStagePlaying from './stage/prefStagePlaying';
 import APrefStage from './stage/prefStage';

@@ -4,11 +4,11 @@
 import PrefGame from '../prefGame';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
-import { EPrefBid, EPrefContract, EPrefKontra, EPrefStage } from '../PrefGameEnums';
+import { EPrefContract, EPrefKontra } from '../PrefGameEnums';
 
 export type PrefEnginePlayerKontra = { username: string, kontra: EPrefKontra }
 
-const canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
+const _canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
 
 export default class PrefStageKontring extends APrefStage {
 	private _kontras: PrefEnginePlayerKontra[];
@@ -37,16 +37,16 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	get options(): EPrefKontra[] {
-		let player: PrefPlayer = this._game.player;
-		let lastKontraMade: EPrefKontra = player.kontra;
+		const player: PrefPlayer = this._game.player;
+		const lastKontraMade: EPrefKontra = player.kontra;
 
-		let isContractSpade = EPrefContract.CONTRACT_SPADE === this._game.round.contract;
+		const isContractSpade = EPrefContract.CONTRACT_SPADE === this._game.round.contract;
 
-		let choices = [];
+		const choices = [];
 		choices.push(EPrefKontra.KONTRA_READY);
 		switch (lastKontraMade) {
 			case EPrefKontra.NO_KONTRA:
-				if (canInvite(player) && !isContractSpade) choices.push(EPrefKontra.KONTRA_INVITE);
+				if (_canInvite(player) && !isContractSpade) choices.push(EPrefKontra.KONTRA_INVITE);
 				choices.push(EPrefKontra.KONTRA_KONTRA);
 				break;
 			case EPrefKontra.KONTRA_READY:
@@ -71,18 +71,18 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	get highestKontrar(): PrefPlayer {
-		let p1 = this._game.p1;
-		let p2 = this._game.p2;
-		let p3 = this._game.p3;
+		const p1 = this._game.p1;
+		const p2 = this._game.p2;
+		const p3 = this._game.p3;
 		return p1.kontra > p2.kontra
 			? p1.kontra > p3.kontra ? p1 : p3
 			: p2.kontra > p3.kontra ? p2 : p3;
 	}
 
 	get kontringCompleted(): boolean {
-		let p1 = this._game.p1;
-		let p2 = this._game.p2;
-		let p3 = this._game.p3;
+		const p1 = this._game.p1;
+		const p2 = this._game.p2;
+		const p3 = this._game.p3;
 		let cnt = 0;
 		if (p1.isOutOfKontring(this._max)) cnt++;
 		if (p2.isOutOfKontring(this._max)) cnt++;
