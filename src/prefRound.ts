@@ -12,8 +12,9 @@ import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
 import PrefStageKontring from './stage/prefStageKontring';
 import PrefStagePlaying from './stage/prefStagePlaying';
 import APrefStage from './stage/prefStage';
-import PrefStageExchanging from './stage/prefStageExchanging';
+import PrefStageDiscarding from './stage/prefStageDiscarding';
 import PrefStageContracting from './stage/prefStageContracting';
+import PrefStageEnding from './stage/prefStageEnding';
 
 export type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
@@ -32,19 +33,20 @@ export default class PrefRound {
 
 	private readonly _id: number;
 	private readonly _deal: PrefDeckDeal;
-	private _reject!: PrefRoundDiscarded;
+	private _discarded!: PrefRoundDiscarded;
 
 	private _mainPlayer!: PrefPlayer;
 	private _rightFollower!: PrefPlayer;
 	private _leftFollower!: PrefPlayer;
 
-	private _stage: APrefStage;
-	private _bidding: PrefStageBidding;
-	private _exchanging: PrefStageExchanging;
-	private _contracting: PrefStageContracting;
-	private _deciding: PrefStageDeciding;
-	private _kontring: PrefStageKontring;
-	private _playing: PrefStagePlaying;
+	private _stage!: APrefStage;
+	private readonly _biddingStage: PrefStageBidding;
+	private readonly _exchangingStage: PrefStageDiscarding;
+	private readonly _contractingStage: PrefStageContracting;
+	private readonly _decidingStage: PrefStageDeciding;
+	private readonly _kontringStage: PrefStageKontring;
+	private readonly _playingStage: PrefStagePlaying;
+	private readonly _endingStage: PrefStageEnding;
 
 	private _contract: EPrefContract;
 
@@ -59,103 +61,110 @@ export default class PrefRound {
 		this._game.secondPlayer.cards = this._deal.h2;
 		this._game.dealerPlayer.cards = this._deal.h3;
 
-		this._bidding = new PrefStageBidding(game);
-		this._exchanging = new PrefStageExchanging(game);
-		this._contracting = new PrefStageContracting(game);
-		this._deciding = new PrefStageDeciding(game);
-		this._kontring = new PrefStageKontring(game);
-		this._playing = new PrefStagePlaying(game);
+		this._biddingStage = new PrefStageBidding(this);
+		this._exchangingStage = new PrefStageDiscarding(this);
+		this._contractingStage = new PrefStageContracting(this);
+		this._decidingStage = new PrefStageDeciding(this);
+		this._kontringStage = new PrefStageKontring(this);
+		this._playingStage = new PrefStagePlaying(this);
+		this._endingStage = new PrefStageEnding(this);
 
-		this._stage = this._bidding;
+		this.toBidding();
+	}
+
+	public toBidding() {
+		this._stage = this._biddingStage;
 		this._game.player = this._game.firstPlayer;
 	}
 
-	public bid(player: PrefPlayer, bid: EPrefBid): PrefRound {
-		if (!this._stage.isBidding()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage);
-
-		player.bid = bid;
-		this._bidding.bid(player);
-
-		if (this._bidding.biddingCompleted) {
-			this._mainPlayer = this._bidding.highestBidder;
-			this._rightFollower = this._mainPlayer.nextPlayer;
-			this._leftFollower = this._rightFollower.nextPlayer;
-
-			this._game.player = this._mainPlayer;
-			this._stage = this._bidding.isGameBid ?
-				this._contracting :
-				this._exchanging;
-
-		} else {
-			this._game.next();
-			if (this._game.player.outOfBidding) this._game.next();
-		}
-
-		return this;
+	public toExchanging() {
+		this._stage = this._exchangingStage;
+		this.setupHighestBidder();
 	}
 
-	public exchange(player: PrefPlayer, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
-		if (!this._stage.isExchanging()) throw new Error('PrefRound::exchange:Round is not in exchange stage but in ' + this.stage);
-		this._reject = { discard1, discard2 };
-		this._stage = this._contracting;
-		return this;
+	public toContracting() {
+		this._stage = this._contractingStage;
+		this.setupHighestBidder();
 	}
 
-	public contracting(player: PrefPlayer, contract: EPrefContract): PrefRound {
-		if (!this._stage.isContracting()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this.stage);
-		this._contract = contract;
+	public toDeciding() {
+		this._stage = this._decidingStage;
 		this._game.player = this._rightFollower;
-		this._stage = this._deciding;
-		return this;
 	}
 
-	public deciding(player: PrefPlayer, follows: boolean): PrefRound {
-		if (!this._stage.isDeciding()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this.stage);
-
-		player.follows = follows;
-		this._deciding.decide(player, follows);
-
-		this._game.next();
-		if (this._game.player.isMain) this._game.next();
-
-		if (this._deciding.decidingCompleted) {
-			this._stage = this._kontring;
-			this._game.player = this._rightFollower;
-		}
-
-		return this;
+	public toKontring() {
+		this._stage = this._kontringStage;
+		this._game.player = this._rightFollower;
 	}
 
-	public kontring(player: PrefPlayer, kontra: EPrefKontra): PrefRound {
-		if (!this._stage.isKontring()) throw new Error('PrefRound::kontra:Round is not in kontra stage but in ' + this.stage);
+	public toPlaying() {
+		this._stage = this._playingStage;
+		this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._game.firstPlayer;
+	}
 
-		this._kontring.kontra(player, kontra);
+	public toEnding() {
+		this._stage = this._endingStage;
+		// TODO: calculate score...
+	}
 
-		if (this._kontring.kontringCompleted) {
-			this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._game.firstPlayer;
-			this._stage = this._playing;
+	public playerBids(bid: EPrefBid): PrefRound {
+		if (!this._stage.isBiddingStage()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage);
 
-		} else {
-			this._game.next();
-			if (this._game.player.isOutOfKontring(this._kontring.max)) this._game.next();
-		}
+		this._game.player.bid = bid;
+		this._biddingStage.bid(this._game.player);
 
 		return this;
 	}
 
-	public throw(player: PrefPlayer, card: PrefDeckCard): PrefRound {
-		if (!this._stage.isPlaying()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this.stage);
+	public playerDiscarded(discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
+		if (!this._stage.isDiscardingStage()) throw new Error('PrefRound::exchange:Round is not in exchange stage but in ' + this._stage);
 
-		this._playing.throw(player, card);
+		this._discarded = { discard1, discard2 };
+		this.toContracting();
 
-		// TODO: move this to Playing and check for play end!
-		if (this._playing.trickFull) {
-			this._game.player = this._playing.winner;
+		return this;
+	}
 
-		} else {
-			this._game.next();
-			if (!this._game.player.isPlaying) this._game.next();
-		}
+	public playerContracted(contract: EPrefContract): PrefRound {
+		if (!this._stage.isContractingStage()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this._stage);
+
+		this._contract = contract;
+		this.toDeciding();
+
+		return this;
+	}
+
+	public playerDecided(follows: boolean): PrefRound {
+		if (!this._stage.isDecidingStage()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this._stage);
+
+		this._game.player.follows = follows;
+		this._decidingStage.playerDecided(this._game.player);
+
+		return this;
+	}
+
+	public playerKontred(kontra: EPrefKontra): PrefRound {
+		if (!this._stage.isKontringStage()) throw new Error('PrefRound::kontra:Round is not in kontra stage but in ' + this._stage);
+
+		this._kontringStage.playerKontred(this._game.player, kontra);
+
+		return this;
+	}
+
+	public playerThrows(card: PrefDeckCard): PrefRound {
+		if (!this._stage.isPlayingStage()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this._stage);
+
+		this._playingStage.throw(this._game.player, card);
+
+		return this;
+	}
+
+	public setupHighestBidder(): PrefRound {
+		this._mainPlayer = this._biddingStage.highestBidder;
+		this._rightFollower = this._mainPlayer.nextPlayer;
+		this._leftFollower = this._rightFollower.nextPlayer;
+
+		this._game.player = this._mainPlayer;
 
 		return this;
 	}
@@ -164,28 +173,32 @@ export default class PrefRound {
 		return this._id;
 	}
 
-	get mainTricks(): number {
-		return this._playing.countTricks(this._mainPlayer);
-	}
-
-	get followersTricks(): number {
-		return this._playing.countOthersTricks(this._mainPlayer);
-	}
-
-	get isBetl(): boolean {
-		return _isBetl(this._contract);
+	get game(): PrefGame {
+		return this._game;
 	}
 
 	get stage(): APrefStage {
 		return this._stage;
 	}
 
-	set contract(contract: EPrefContract) {
-		this._contract = contract;
+	get biddingOptions(): EPrefBid[] {
+		return this._biddingStage.options;
 	}
 
 	get contract(): EPrefContract {
 		return this._contract;
+	}
+
+	get mainTricks(): number {
+		return this._playingStage.countTricks(this._mainPlayer);
+	}
+
+	get followersTricks(): number {
+		return this._playingStage.countOthersTricks(this._mainPlayer);
+	}
+
+	get isBetl(): boolean {
+		return _isBetl(this._contract);
 	}
 
 	get ppn(): string {

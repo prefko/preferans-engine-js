@@ -4,12 +4,12 @@
 import PrefRound from '../prefRound';
 import APrefStage from './prefStage';
 
-export default class PrefStageContracting extends APrefStage {
+export default class PrefStageEnding extends APrefStage {
 
 	constructor(round: PrefRound) {
 		super(round);
 	}
 
-	public isContractingStage = (): boolean => true;
+	public isEndingStage = (): boolean => true;
 
 }

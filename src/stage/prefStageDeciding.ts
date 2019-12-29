@@ -2,24 +2,32 @@
 'use strict';
 
 import { size } from 'lodash';
-import PrefGame from '../prefGame';
+import PrefRound from '../prefRound';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
 
-export type PrefEnginePlayerDecision = { username: string, decision: boolean }
+export type PrefEnginePlayerDecision = { username: string, follows: boolean }
 
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: PrefEnginePlayerDecision[];
 
-	constructor(game: PrefGame) {
-		super(game);
+	constructor(round: PrefRound) {
+		super(round);
 		this._decisions = [];
 	}
 
-	public isDeciding = (): boolean => true;
+	public isDecidingStage = (): boolean => true;
 
-	public decide(player: PrefPlayer, follows: boolean): PrefStageDeciding {
-		this._decisions.push({ username: player.username, decision: follows });
+	public playerDecided(player: PrefPlayer): PrefStageDeciding {
+		this._decisions.push({ username: player.username, follows: player.follows });
+
+		if (!this.decidingCompleted) {
+			this.game.nextDeciding();
+
+		} else {
+			this.round.toKontring();
+		}
+
 		return this;
 	}
 

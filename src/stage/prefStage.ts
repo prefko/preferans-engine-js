@@ -2,24 +2,28 @@
 'use strict';
 
 import PrefGame from '../prefGame';
+import PrefRound from '../prefRound';
 
 export default abstract class APrefStage {
-	protected _game: PrefGame;
+	protected _round: PrefRound;
 
-	protected constructor(game: PrefGame) {
-		this._game = game;
+	protected constructor(round: PrefRound) {
+		this._round = round;
 	}
 
-	public isBidding = (): boolean => false;
-	public isExchanging = (): boolean => false;
-	public isContracting = (): boolean => false;
-	public isDeciding = (): boolean => false;
-	public isKontring = (): boolean => false;
-	public isPlaying = (): boolean => false;
-	public isEnding = (): boolean => false;
+	public isBiddingStage = (): boolean => false;
+	public isDiscardingStage = (): boolean => false;
+	public isContractingStage = (): boolean => false;
+	public isDecidingStage = (): boolean => false;
+	public isKontringStage = (): boolean => false;
+	public isPlayingStage = (): boolean => false;
+	public isEndingStage = (): boolean => false;
 
-	// public isExchange = (): boolean => true;
-	// public isContract = (): boolean => true;
-	// public isEnd = (): boolean => true;
+	get round(): PrefRound {
+		return this._round;
+	}
 
+	get game(): PrefGame {
+		return this._round.game;
+	}
 }

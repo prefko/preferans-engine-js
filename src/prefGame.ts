@@ -91,52 +91,57 @@ export default class PrefGame {
 		return this;
 	}
 
-	public bid(username: string, bid: EPrefBid): PrefGame {
+	public playerBids(username: string, bid: EPrefBid): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isBidding()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-		this._round.bid(this._player, bid);
+		if (!this._round.stage.isBiddingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
+		this._round.playerBids(bid);
 		return this;
 	}
 
-	public exchange(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
+	public playerDiscarded(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isExchanging()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-		this._round.exchange(this._player, discard1, discard2);
+		if (!this._round.stage.isDiscardingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
+		this._round.playerDiscarded(discard1, discard2);
 		return this;
 	}
 
-	public contracting(username: string, contract: EPrefContract): PrefGame {
+	public playerContracted(username: string, contract: EPrefContract): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isContracting()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-		this._round.contracting(this._player, contract);
+		if (!this._round.stage.isContractingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
+		this._round.playerContracted(contract);
 		return this;
 	}
 
-	public decide(username: string, follows: boolean): PrefGame {
+	public playerDecided(username: string, follows: boolean): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isDeciding()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-		this._round.deciding(this._player, follows);
+		if (!this._round.stage.isDecidingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
+		this._round.playerDecided(follows);
 		return this;
 	}
 
-	public kontra(username: string, kontra: EPrefKontra): PrefGame {
+	public playerKontred(username: string, kontra: EPrefKontra): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isKontring()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-		this._round.kontring(this._player, kontra);
+		if (!this._round.stage.isKontringStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+
+		this._round.playerKontred(kontra);
 		return this;
 	}
 
-	public throw(username: string, card: PrefDeckCard): PrefGame {
+	public playerThrows(username: string, card: PrefDeckCard): PrefGame {
 		_checkPlayer(this, username);
-		if (!this._round.stage.isPlaying()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
+		if (!this._round.stage.isPlayingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.throw(this._player, card);
+		this._round.playerThrows(card);
 
 		const mainTricks = this._round.mainTricks;
 		const followersTricks = this._round.followersTricks;
 
 		if ((this._round.isBetl && mainTricks > 0) || followersTricks > 4) {
-			this._round.stage.isEnding();
+			this._round.stage.isEndingStage();
 
 			// TODO: round finished
 
@@ -147,6 +152,30 @@ export default class PrefGame {
 
 	public next(): PrefGame {
 		this._player = this._player.nextPlayer;
+		return this;
+	}
+
+	public nextBidding(): PrefGame {
+		this.next();
+		if (this._player.outOfBidding) this.next();
+		return this;
+	}
+
+	public nextDeciding(): PrefGame {
+		this.next();
+		if (this._player.isMain) this.next();
+		return this;
+	}
+
+	public nextKontring(kontra: EPrefKontra): PrefGame {
+		this.next();
+		if (this._player.isOutOfKontring(kontra)) this.next();
+		return this;
+	}
+
+	public nextPlaying(): PrefGame {
+		this.next();
+		if (!this._player.isPlaying) this.next();
 		return this;
 	}
 
