@@ -12,4 +12,8 @@ export default class PrefStageDiscarding extends APrefStage {
 
 	public isDiscardingStage = (): boolean => true;
 
+	get name(): string {
+		return 'Discarding';
+	}
+
 }

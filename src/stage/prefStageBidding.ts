@@ -41,16 +41,20 @@ export default class PrefStageBidding extends APrefStage {
 		this._bids.push({ id, username, bid });
 
 		if (!this.biddingCompleted) {
-			this.game.nextBidding();
+			this.game.nextBiddingPlayer();
 
 		} else {
-			this.round.toExchanging();
+			this.round.toDiscarding();
 			if (this.isGameBid) {
 				this.round.toContracting();
 			}
 		}
 
 		return this;
+	}
+
+	get name(): string {
+		return 'Bidding';
 	}
 
 	get bids(): PrefPlayerBid[] {

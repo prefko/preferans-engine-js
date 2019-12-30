@@ -12,4 +12,8 @@ export default class PrefStageEnding extends APrefStage {
 
 	public isEndingStage = (): boolean => true;
 
+	get name(): string {
+		return 'Ending';
+	}
+
 }

@@ -31,13 +31,17 @@ export default class PrefStageKontring extends APrefStage {
 		this._last = kontra;
 
 		if (!this.kontringCompleted) {
-			this.game.nextKontring(this.max);
+			this.game.nextKontringPlayer(this.max);
 
 		} else {
 			this.round.toPlaying();
 		}
 
 		return this;
+	}
+
+	get name(): string {
+		return 'Kontring';
 	}
 
 	get max(): EPrefKontra {

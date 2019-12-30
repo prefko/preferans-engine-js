@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { PrefDeckDeal } from 'preferans-deck-js';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 import PrefGame from './prefGame';
-import PrefPlayer from './prefPlayer';
+import PrefPlayer, { PrefPlayerDealRole, PrefPlayerPlayRole } from './prefPlayer';
 import PrefStageBidding from './stage/prefStageBidding';
 import PrefStageDeciding from './stage/prefStageDeciding';
 import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
@@ -33,7 +33,9 @@ export default class PrefRound {
 
 	private readonly _id: number;
 	private readonly _deal: PrefDeckDeal;
+
 	private _discarded!: PrefRoundDiscarded;
+	private _contract!: EPrefContract;
 
 	private _mainPlayer!: PrefPlayer;
 	private _rightFollower!: PrefPlayer;
@@ -41,20 +43,17 @@ export default class PrefRound {
 
 	private _stage!: APrefStage;
 	private readonly _biddingStage: PrefStageBidding;
-	private readonly _exchangingStage: PrefStageDiscarding;
+	private readonly _discardingStage: PrefStageDiscarding;
 	private readonly _contractingStage: PrefStageContracting;
 	private readonly _decidingStage: PrefStageDeciding;
 	private readonly _kontringStage: PrefStageKontring;
 	private readonly _playingStage: PrefStagePlaying;
 	private readonly _endingStage: PrefStageEnding;
 
-	private _contract: EPrefContract;
-
 	// TODO: add judge and his decision
 	constructor(game: PrefGame, id: number) {
 		this._game = game;
 		this._id = id;
-		this._contract = EPrefContract.NO_CONTRACT;
 
 		this._deal = this._game.deck.shuffle.cut.deal;
 		this._game.firstPlayer.cards = this._deal.h1;
@@ -62,7 +61,7 @@ export default class PrefRound {
 		this._game.dealerPlayer.cards = this._deal.h3;
 
 		this._biddingStage = new PrefStageBidding(this);
-		this._exchangingStage = new PrefStageDiscarding(this);
+		this._discardingStage = new PrefStageDiscarding(this);
 		this._contractingStage = new PrefStageContracting(this);
 		this._decidingStage = new PrefStageDeciding(this);
 		this._kontringStage = new PrefStageKontring(this);
@@ -77,38 +76,8 @@ export default class PrefRound {
 		this._game.player = this._game.firstPlayer;
 	}
 
-	public toExchanging() {
-		this._stage = this._exchangingStage;
-		this.setupHighestBidder();
-	}
-
-	public toContracting() {
-		this._stage = this._contractingStage;
-		this.setupHighestBidder();
-	}
-
-	public toDeciding() {
-		this._stage = this._decidingStage;
-		this._game.player = this._rightFollower;
-	}
-
-	public toKontring() {
-		this._stage = this._kontringStage;
-		this._game.player = this._rightFollower;
-	}
-
-	public toPlaying() {
-		this._stage = this._playingStage;
-		this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._game.firstPlayer;
-	}
-
-	public toEnding() {
-		this._stage = this._endingStage;
-		// TODO: calculate score...
-	}
-
 	public playerBids(bid: EPrefBid): PrefRound {
-		if (!this._stage.isBiddingStage()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage);
+		if (!this._stage.isBiddingStage()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage.name);
 
 		this._game.player.bid = bid;
 		this._biddingStage.bid(this._game.player);
@@ -116,8 +85,13 @@ export default class PrefRound {
 		return this;
 	}
 
+	public toDiscarding() {
+		this._stage = this._discardingStage;
+		this.setupHighestBidder();
+	}
+
 	public playerDiscarded(discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
-		if (!this._stage.isDiscardingStage()) throw new Error('PrefRound::exchange:Round is not in exchange stage but in ' + this._stage);
+		if (!this._stage.isDiscardingStage()) throw new Error('PrefRound::discarding:Round is not in discarding stage but in ' + this._stage.name);
 
 		this._discarded = { discard1, discard2 };
 		this.toContracting();
@@ -125,8 +99,13 @@ export default class PrefRound {
 		return this;
 	}
 
+	public toContracting() {
+		this._stage = this._contractingStage;
+		this.setupHighestBidder();
+	}
+
 	public playerContracted(contract: EPrefContract): PrefRound {
-		if (!this._stage.isContractingStage()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this._stage);
+		if (!this._stage.isContractingStage()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this._stage.name);
 
 		this._contract = contract;
 		this.toDeciding();
@@ -134,8 +113,13 @@ export default class PrefRound {
 		return this;
 	}
 
+	public toDeciding() {
+		this._stage = this._decidingStage;
+		this._game.player = this._rightFollower;
+	}
+
 	public playerDecided(follows: boolean): PrefRound {
-		if (!this._stage.isDecidingStage()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this._stage);
+		if (!this._stage.isDecidingStage()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this._stage.name);
 
 		this._game.player.follows = follows;
 		this._decidingStage.playerDecided(this._game.player);
@@ -143,26 +127,54 @@ export default class PrefRound {
 		return this;
 	}
 
+	public toKontring() {
+		this._stage = this._kontringStage;
+		this._game.player = this._rightFollower;
+	}
+
 	public playerKontred(kontra: EPrefKontra): PrefRound {
-		if (!this._stage.isKontringStage()) throw new Error('PrefRound::kontra:Round is not in kontra stage but in ' + this._stage);
+		if (!this._stage.isKontringStage()) throw new Error('PrefRound::kontra:Round is not in kontra stage but in ' + this._stage.name);
 
 		this._kontringStage.playerKontred(this._game.player, kontra);
 
 		return this;
 	}
 
+	public toPlaying() {
+		this._stage = this._playingStage;
+		this._game.player = _isLeftFirst(this._contract) ? this._leftFollower : this._game.firstPlayer;
+	}
+
 	public playerThrows(card: PrefDeckCard): PrefRound {
-		if (!this._stage.isPlayingStage()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this._stage);
+		if (!this._stage.isPlayingStage()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this._stage.name);
 
 		this._playingStage.throw(this._game.player, card);
 
 		return this;
 	}
 
-	public setupHighestBidder(): PrefRound {
+	public toEnding() {
+		this._stage = this._endingStage;
+
+		this._mainPlayer.dealRole = PrefPlayerDealRole.NONE;
+		this._rightFollower.dealRole = PrefPlayerDealRole.NONE;
+		this._leftFollower.dealRole = PrefPlayerDealRole.NONE;
+
+		this._mainPlayer.playRole = PrefPlayerPlayRole.NONE;
+		this._rightFollower.playRole = PrefPlayerPlayRole.NONE;
+		this._leftFollower.playRole = PrefPlayerPlayRole.NONE;
+
+		// TODO: calculate score...
+	}
+
+	private setupHighestBidder(): PrefRound {
 		this._mainPlayer = this._biddingStage.highestBidder;
 		this._rightFollower = this._mainPlayer.nextPlayer;
 		this._leftFollower = this._rightFollower.nextPlayer;
+
+		this._mainPlayer.playRole = PrefPlayerPlayRole.MAIN;
+		this._rightFollower.playRole = PrefPlayerPlayRole.RIGHT_FOLLOWER;
+		this._leftFollower.playRole = PrefPlayerPlayRole.LEFT_FOLLOWER;
 
 		this._game.player = this._mainPlayer;
 

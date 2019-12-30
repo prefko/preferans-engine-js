@@ -22,13 +22,17 @@ export default class PrefStageDeciding extends APrefStage {
 		this._decisions.push({ username: player.username, follows: player.follows });
 
 		if (!this.decidingCompleted) {
-			this.game.nextDeciding();
+			this.game.nextDecidingPlayer();
 
 		} else {
 			this.round.toKontring();
 		}
 
 		return this;
+	}
+
+	get name(): string {
+		return 'Deciding';
 	}
 
 	get decidingCompleted(): boolean {

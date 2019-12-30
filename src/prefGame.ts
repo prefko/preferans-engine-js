@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 import PrefRound from './prefRound';
 import PrefDeck from 'preferans-deck-js';
-import PrefPlayer from './prefPlayer';
+import PrefPlayer, { PrefPlayerDealRole } from './prefPlayer';
 import PrefScore from 'preferans-score-js';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
@@ -49,9 +49,9 @@ export default class PrefGame {
 	private readonly _rounds: PrefRound[];
 
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefEngineOptions) {
-		this._p1 = new PrefPlayer(1, username1);
-		this._p2 = new PrefPlayer(2, username2);
-		this._p3 = new PrefPlayer(3, username3);
+		this._p1 = new PrefPlayer('p1', username1);
+		this._p2 = new PrefPlayer('p2', username2);
+		this._p3 = new PrefPlayer('p3', username3);
 
 		this._p1.nextPlayer = this._p2;
 		this._p2.nextPlayer = this._p3;
@@ -82,6 +82,10 @@ export default class PrefGame {
 		this._dealerPlayer = this._dealerPlayer.nextPlayer;
 		this._firstPlayer = this._dealerPlayer.nextPlayer;
 		this._secondPlayer = this._firstPlayer.nextPlayer;
+
+		this._dealerPlayer.dealRole = PrefPlayerDealRole.DEALER;
+		this._firstPlayer.dealRole = PrefPlayerDealRole.FIRST_BIDDER;
+		this._secondPlayer.dealRole = PrefPlayerDealRole.SECOND_BIDDER;
 
 		let id = 1;
 		if (this._round) id = this._round.id + 1;
@@ -155,25 +159,25 @@ export default class PrefGame {
 		return this;
 	}
 
-	public nextBidding(): PrefGame {
+	public nextBiddingPlayer(): PrefGame {
 		this.next();
 		if (this._player.outOfBidding) this.next();
 		return this;
 	}
 
-	public nextDeciding(): PrefGame {
+	public nextDecidingPlayer(): PrefGame {
 		this.next();
 		if (this._player.isMain) this.next();
 		return this;
 	}
 
-	public nextKontring(kontra: EPrefKontra): PrefGame {
+	public nextKontringPlayer(kontra: EPrefKontra): PrefGame {
 		this.next();
 		if (this._player.isOutOfKontring(kontra)) this.next();
 		return this;
 	}
 
-	public nextPlaying(): PrefGame {
+	public nextPlayingPlayer(): PrefGame {
 		this.next();
 		if (!this._player.isPlaying) this.next();
 		return this;

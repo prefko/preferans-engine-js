@@ -5,19 +5,20 @@ import { includes } from 'lodash';
 import { EPrefBid, EPrefKontra } from './PrefGameEnums';
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
 
-export enum PrefEngineDealRole {NONE = 0, DEALER, SECOND_BIDDER, FIRST_BIDDER}
+export enum PrefPlayerDealRole {NONE = 0, DEALER, FIRST_BIDDER, SECOND_BIDDER}
 
-export enum PrefEnginePlayRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
+export enum PrefPlayerPlayRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
 
 export default class PrefPlayer {
 	private readonly _starter: string;
 	private readonly _replacements: string[] = [];
 
-	private _position: number;
-	private _nextPlayer!: PrefPlayer;
+	private _designation: 'p1' | 'p2' | 'p3';
 	private _username: string;
-	private _dealRole: PrefEngineDealRole;
-	private _playRole: PrefEnginePlayRole;
+	private _nextPlayer!: PrefPlayer;
+
+	private _dealRole: PrefPlayerDealRole;
+	private _playRole: PrefPlayerPlayRole;
 
 	private _cards: PrefDeckPile;
 
@@ -27,16 +28,16 @@ export default class PrefPlayer {
 	private _kontra: EPrefKontra;
 	private _lastKontra: EPrefKontra;
 
-	constructor(position: number, username: string) {
-		this._position = position;
+	constructor(designation: 'p1' | 'p2' | 'p3', username: string) {
+		this._designation = designation;
 
 		this._starter = username;
 		this._username = username;
 
 		this._cards = new PrefDeckPile([]);
 
-		this._dealRole = PrefEngineDealRole.NONE;
-		this._playRole = PrefEnginePlayRole.NONE;
+		this._dealRole = PrefPlayerDealRole.NONE;
+		this._playRole = PrefPlayerPlayRole.NONE;
 		this._bid = EPrefBid.NO_BID;
 		this._lastBid = EPrefBid.NO_BID;
 		this._follows = false;
@@ -50,8 +51,8 @@ export default class PrefPlayer {
 	}
 
 	private reset() {
-		this._dealRole = PrefEngineDealRole.NONE;
-		this._playRole = PrefEnginePlayRole.NONE;
+		this._dealRole = PrefPlayerDealRole.NONE;
+		this._playRole = PrefPlayerPlayRole.NONE;
 		this._bid = EPrefBid.NO_BID;
 		this._lastBid = EPrefBid.NO_BID;
 		this._follows = false;
@@ -70,12 +71,8 @@ export default class PrefPlayer {
 		return this._nextPlayer;
 	}
 
-	set position(position: number) {
-		this._position = position;
-	}
-
-	get position(): number {
-		return this._position;
+	get designation(): 'p1' | 'p2' | 'p3' {
+		return this._designation;
 	}
 
 	set username(username: string) {
@@ -86,19 +83,19 @@ export default class PrefPlayer {
 		return this._username;
 	}
 
-	set dealRole(dealRole: PrefEngineDealRole) {
+	set dealRole(dealRole: PrefPlayerDealRole) {
 		this._dealRole = dealRole;
 	}
 
-	get dealRole(): PrefEngineDealRole {
+	get dealRole(): PrefPlayerDealRole {
 		return this._dealRole;
 	}
 
-	set playRole(playRole: PrefEnginePlayRole) {
+	set playRole(playRole: PrefPlayerPlayRole) {
 		this._playRole = playRole;
 	}
 
-	get playRole(): PrefEnginePlayRole {
+	get playRole(): PrefPlayerPlayRole {
 		return this._playRole;
 	}
 
@@ -141,7 +138,7 @@ export default class PrefPlayer {
 	}
 
 	get isMain(): boolean {
-		return this._playRole === PrefEnginePlayRole.MAIN;
+		return this._playRole === PrefPlayerPlayRole.MAIN;
 	}
 
 	get isPlaying(): boolean {

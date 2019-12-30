@@ -11,6 +11,8 @@ export default abstract class APrefStage {
 		this._round = round;
 	}
 
+	public abstract get name(): string;
+
 	public isBiddingStage = (): boolean => false;
 	public isDiscardingStage = (): boolean => false;
 	public isContractingStage = (): boolean => false;

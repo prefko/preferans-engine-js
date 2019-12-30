@@ -12,4 +12,8 @@ export default class PrefStageContracting extends APrefStage {
 
 	public isContractingStage = (): boolean => true;
 
+	get name(): string {
+		return 'Contracting';
+	}
+
 }

@@ -8,7 +8,7 @@ export type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
 
 const _suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
 
-	// TODO:
+	// TODO: predloži licit (maksimalni ili samo sldeći? ili par opcija?)
 
 	return [];
 };
