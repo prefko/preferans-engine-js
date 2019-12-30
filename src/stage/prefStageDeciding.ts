@@ -6,10 +6,10 @@ import PrefRound from '../prefRound';
 import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
 
-export type PrefEnginePlayerDecision = { username: string, follows: boolean }
+export type PrefPlayerDecision = { username: string, follows: boolean }
 
 export default class PrefStageDeciding extends APrefStage {
-	private readonly _decisions: PrefEnginePlayerDecision[];
+	private readonly _decisions: PrefPlayerDecision[];
 
 	constructor(round: PrefRound) {
 		super(round);

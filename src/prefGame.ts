@@ -18,28 +18,32 @@ const _checkPlayer = (game: PrefGame, username: string): void => {
 	if (username !== game.player.username) throw new Error('PrefGame::checkCurrentPlayer:Wrong player: ' + username);
 };
 
-export type PrefEngineOptions = {
+type PrefGameOptions = {
 	unlimitedRefe: boolean,
 	playPikOnRefa: boolean,
 	lastHandDoubleFall: boolean,
 	lastHandLimitSoup: boolean,
 	failPikAfterRefas: boolean,
 	failPikAfterOneUnderZero: boolean,
+	automaticBetlNoFailEnd: boolean,
 	allowSubAndMortKontras: boolean
 };
+
+// TODO... export whats needed:
+export { PrefPlayer, PrefDeck, PrefScore, PrefGameOptions };
 
 export default class PrefGame {
 	private readonly _bula: number;
 	private readonly _refas: number;
-	private readonly _options: PrefEngineOptions;
+	private readonly _options: PrefGameOptions;
 
 	private readonly _p1: PrefPlayer;
 	private readonly _p2: PrefPlayer;
 	private readonly _p3: PrefPlayer;
 
-	private _dealerPlayer: PrefPlayer;
-	private _firstPlayer: PrefPlayer;
-	private _secondPlayer: PrefPlayer;
+	private _dealerPlayer!: PrefPlayer;
+	private _firstPlayer!: PrefPlayer;
+	private _secondPlayer!: PrefPlayer;
 
 	private _player!: PrefPlayer;
 
@@ -48,7 +52,7 @@ export default class PrefGame {
 	private _round!: PrefRound;
 	private readonly _rounds: PrefRound[];
 
-	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefEngineOptions) {
+	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefGameOptions) {
 		this._p1 = new PrefPlayer('p1', username1);
 		this._p2 = new PrefPlayer('p2', username2);
 		this._p3 = new PrefPlayer('p3', username3);
@@ -65,11 +69,6 @@ export default class PrefGame {
 		this._deck = new PrefDeck();
 		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
-		// First this.deal()
-		this._dealerPlayer = _random(this._p1, this._p2, this._p3);
-		this._firstPlayer = this._dealerPlayer.nextPlayer;
-		this._secondPlayer = this._firstPlayer.nextPlayer;
-
 		this.deal();
 	}
 
@@ -79,7 +78,8 @@ export default class PrefGame {
 	}
 
 	public deal(): PrefGame {
-		this._dealerPlayer = this._dealerPlayer.nextPlayer;
+		if (!this._dealerPlayer) this._dealerPlayer = _random(this._p1, this._p2, this._p3);
+		else this._dealerPlayer = this._dealerPlayer.nextPlayer;
 		this._firstPlayer = this._dealerPlayer.nextPlayer;
 		this._secondPlayer = this._firstPlayer.nextPlayer;
 
@@ -181,6 +181,12 @@ export default class PrefGame {
 		this.next();
 		if (!this._player.isPlaying) this.next();
 		return this;
+	}
+
+	public getPlayerByDesignation(designation: 'p1' | 'p2' | 'p3'): PrefPlayer {
+		if ('p1' === designation) return this._p1;
+		else if ('p3' === designation) return this._p2;
+		else return this._p3;
 	}
 
 	get deck(): PrefDeck {

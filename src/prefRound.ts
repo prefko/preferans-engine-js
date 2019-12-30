@@ -193,6 +193,11 @@ export default class PrefRound {
 		return this._stage;
 	}
 
+	get playersCount(): 2 | 3 {
+		if (this._rightFollower.follows && this._leftFollower.follows) return 3;
+		else return 2;
+	}
+
 	get biddingOptions(): EPrefBid[] {
 		return this._biddingStage.options;
 	}

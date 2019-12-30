@@ -6,12 +6,12 @@ import APrefStage from './prefStage';
 import PrefPlayer from '../prefPlayer';
 import { EPrefContract, EPrefKontra } from '../PrefGameEnums';
 
-export type PrefEnginePlayerKontra = { username: string, kontra: EPrefKontra }
+export type PrefPlayerKontra = { username: string, kontra: EPrefKontra }
 
 const _canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
 
 export default class PrefStageKontring extends APrefStage {
-	private _kontras: PrefEnginePlayerKontra[];
+	private _kontras: PrefPlayerKontra[];
 	private _max: EPrefKontra;
 	private _last: EPrefKontra;
 
