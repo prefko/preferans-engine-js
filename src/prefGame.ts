@@ -150,11 +150,29 @@ export default class PrefGame {
 		// TODO: is new refa?
 		// const hand = new PrefScoreHandGame...
 
-		const main = this.round.mainPlayer.getPaperPlayerMain();
-		const left = this.round.leftFollower.getPaperPlayerFollower();
-		const right = this.round.rightFollower.getPaperPlayerFollower();
-		const hand = new PrefScoreHandGame(this._round.value, main, left, right);
-		// TODO: this._score add hand
+		const mainPlayer = this.round.mainPlayer;
+		const leftFollower = this.round.leftFollower;
+		const rightFollower = this.round.rightFollower;
+
+		const mainPaper = this._score.getPaper(mainPlayer.designation);
+		const leftPaper = this._score.getPaper(leftFollower.designation);
+		const rightPaper = this._score.getPaper(rightFollower.designation);
+
+		const main: PrefScoreMain = { designation: mainPlayer.designation, tricks: 6, failed: false };
+		const right: PrefScoreFollower = {
+			designation: leftFollower.designation,
+			tricks: this.round.leftFollowerTricks,
+			failed: false,
+			followed: leftFollower.follows,
+		};
+		const left: PrefScoreFollower = {
+			designation: rightFollower.designation,
+			tricks: this.round.rightFollowerTricks,
+			failed: false,
+			followed: rightFollower.follows,
+		};
+
+		this._score.addPlayedHand(this._round.value, main, left, right);
 
 		return this;
 	}
