@@ -8,7 +8,7 @@ import PrefPlayer from '../prefPlayer';
 import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
 import { EPrefContract } from '../PrefGameEnums';
 
-const _contract2suit = (contract: EPrefContract): PrefDeckSuit => {
+const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
 	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract)) return PrefDeckSuit.SPADE;
 	if (_.includes([EPrefContract.CONTRACT_DIAMOND, EPrefContract.CONTRACT_GAME_DIAMOND], contract)) return PrefDeckSuit.DIAMOND;
 	if (_.includes([EPrefContract.CONTRACT_HEART, EPrefContract.CONTRACT_GAME_HEART], contract)) return PrefDeckSuit.HEART;
@@ -19,7 +19,7 @@ const _contract2suit = (contract: EPrefContract): PrefDeckSuit => {
 export default class PrefStagePlaying extends APrefStage {
 	private readonly _tricks: PrefDeckTrick[];
 	private readonly _players: 2 | 3;
-	private readonly _trump: PrefDeckSuit;
+	private readonly _trump: PrefDeckSuit | undefined;
 	private _trick!: PrefDeckTrick;
 
 	constructor(round: PrefRound) {
@@ -35,40 +35,34 @@ export default class PrefStagePlaying extends APrefStage {
 		if (!this._trick) this._trick = new PrefDeckTrick(this._players, this._trump);
 		this._trick.throw(player.designation, card);
 
-		if (!this.playingCompleted) {
-			if (this.trickFull) {
-				this.game.player = this.getTrickWinner();
+		if (this.trickFull) {
+			this._tricks.push(this._trick);
 
-				this._tricks.push(this._trick);
-				this._trick = new PrefDeckTrick(this._players, this._trump);
-
-			} else {
-				this.game.nextPlayingPlayer();
-			}
+			this.game.player = this.getTrickWinner();
+			if (this.playingCompleted) this.round.toEnding();
+			else this._trick = new PrefDeckTrick(this._players, this._trump);
 
 		} else {
-			this.round.toEnding();
+			this.game.nextPlayingPlayer();
 		}
 
 		return this;
-	}
-
-	public countTricks(player: PrefPlayer): number {
-		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner === player.designation));
-	}
-
-	public countOthersTricks(player: PrefPlayer): number {
-		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner !== player.designation));
 	}
 
 	get name(): string {
 		return 'Playing';
 	}
 
-	get playingCompleted(): boolean {
-		if (10 === this._tricks.length) return true;
+	get tricks(): PrefDeckTrick[] {
+		return this._tricks;
+	}
 
-		// TODO: betl/preferans/main failed
+	get playingCompleted(): boolean {
+		if (this.tricksFull) return true;
+
+		if (this.round.isBetl) return this.mainTricks > 0;
+		else if (this.round.isPreferans) return this.followersTricks > 0;
+		else return this.followersTricks > 4;
 
 		return false;
 	}
@@ -76,6 +70,18 @@ export default class PrefStagePlaying extends APrefStage {
 	get trickFull(): boolean {
 		return this._trick.full;
 		return false;
+	}
+
+	get tricksFull(): boolean {
+		return 10 === this._tricks.length;
+	}
+
+	get mainTricks(): number {
+		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner === this.round.mainPlayer.designation));
+	}
+
+	get followersTricks(): number {
+		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner !== this.round.mainPlayer.designation));
 	}
 
 	private getTrickWinner(): PrefPlayer {

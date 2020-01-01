@@ -2,12 +2,14 @@
 'use strict';
 
 import * as _ from 'lodash';
-import PrefRound from './prefRound';
-import PrefDeck from 'preferans-deck-js';
-import PrefPlayer, { PrefPlayerDealRole } from './prefPlayer';
-import PrefScore from 'preferans-score-js';
-import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
+
+import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
+import PrefScore, { PrefScoreHandGame, PrefScoreHandRefa } from 'preferans-score-js';
 import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
+
+import PrefRound from './prefRound';
+import PrefPlayer, { PrefPlayerDealRole } from './prefPlayer';
+import { PrefPaperPlayer, PrefPaperFollower } from 'preferans-paper-js';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
@@ -140,16 +142,18 @@ export default class PrefGame {
 		if (!this._round.stage.isPlayingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
 		this._round.playerThrows(card);
+		return this;
+	}
 
-		const mainTricks = this._round.mainTricks;
-		const followersTricks = this._round.followersTricks;
+	public endRound(): PrefGame {
+		// TODO: is new refa?
+		// const hand = new PrefScoreHandGame...
 
-		if ((this._round.isBetl && mainTricks > 0) || followersTricks > 4) {
-			this._round.stage.isEndingStage();
-
-			// TODO: round finished
-
-		}
+		const main = this.round.mainPlayer.getPaperPlayerMain();
+		const left = this.round.leftFollower.getPaperPlayerFollower();
+		const right = this.round.rightFollower.getPaperPlayerFollower();
+		const hand = new PrefScoreHandGame(this._round.value, main, left, right);
+		// TODO: this._score add hand
 
 		return this;
 	}
@@ -187,6 +191,10 @@ export default class PrefGame {
 		if ('p1' === designation) return this._p1;
 		else if ('p3' === designation) return this._p2;
 		else return this._p3;
+	}
+
+	get isUnderRefa(): boolean {
+		return this._score.hasUnplayedRefa(this.player.designation);
 	}
 
 	get deck(): PrefDeck {

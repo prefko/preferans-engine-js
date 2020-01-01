@@ -45,9 +45,7 @@ export default class PrefStageBidding extends APrefStage {
 
 		} else {
 			this.round.toDiscarding();
-			if (this.isGameBid) {
-				this.round.toContracting();
-			}
+			if (this.isGameBid) this.round.toContracting();
 		}
 
 		return this;

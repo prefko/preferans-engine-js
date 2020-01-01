@@ -31,7 +31,7 @@ export default class PrefStageKontring extends APrefStage {
 		this._last = kontra;
 
 		if (!this.kontringCompleted) {
-			this.game.nextKontringPlayer(this.max);
+			this.game.nextKontringPlayer(this._max);
 
 		} else {
 			this.round.toPlaying();
@@ -44,8 +44,22 @@ export default class PrefStageKontring extends APrefStage {
 		return 'Kontring';
 	}
 
-	get max(): EPrefKontra {
+	get kontra(): EPrefKontra {
 		return this._max;
+	}
+
+	get multiplication(): 1 | 2 | 4 | 8 | 16 {
+		switch (this._max) {
+			case EPrefKontra.KONTRA_KONTRA:
+				return 2;
+			case EPrefKontra.KONTRA_REKONTRA:
+				return 4;
+			case EPrefKontra.KONTRA_SUBKONTRA:
+				return 8;
+			case EPrefKontra.KONTRA_MORTKONTRA:
+				return 16;
+		}
+		return 1;
 	}
 
 	get options(): EPrefKontra[] {

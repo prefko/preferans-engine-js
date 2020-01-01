@@ -2,7 +2,7 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { PrefDeckDeal } from 'preferans-deck-js';
+import { PrefDeckDeal, PrefDeckTrick } from 'preferans-deck-js';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 import PrefGame from './prefGame';
 import PrefPlayer, { PrefPlayerDealRole, PrefPlayerPlayRole } from './prefPlayer';
@@ -28,6 +28,34 @@ const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
 const _isLeftFirst = (contract: EPrefContract): boolean => _isSans(contract) || _isPreferans(contract);
 
+const _contract2value = (contract: EPrefContract): number => {
+	switch (contract) {
+		case EPrefContract.CONTRACT_SPADE:
+			return 4;
+		case EPrefContract.CONTRACT_DIAMOND:
+		case EPrefContract.CONTRACT_GAME_SPADE:
+			return 6;
+		case EPrefContract.CONTRACT_HEART:
+		case EPrefContract.CONTRACT_GAME_DIAMOND:
+			return 8;
+		case EPrefContract.CONTRACT_CLUB:
+		case EPrefContract.CONTRACT_GAME_HEART:
+			return 10;
+		case EPrefContract.CONTRACT_BETL:
+		case EPrefContract.CONTRACT_GAME_CLUB:
+			return 12;
+		case EPrefContract.CONTRACT_SANS:
+		case EPrefContract.CONTRACT_GAME_BETL:
+			return 14;
+		case EPrefContract.CONTRACT_PREFERANS:
+		case EPrefContract.CONTRACT_GAME_SANS:
+			return 16;
+		case EPrefContract.CONTRACT_GAME_PREFERANS:
+			return 18;
+	}
+	return 0;
+};
+
 export default class PrefRound {
 	protected _game: PrefGame;
 
@@ -36,6 +64,9 @@ export default class PrefRound {
 
 	private _discarded!: PrefRoundDiscarded;
 	private _contract!: EPrefContract;
+
+	private _underRefa: boolean = false;
+	private _value!: number;
 
 	private _mainPlayer!: PrefPlayer;
 	private _rightFollower!: PrefPlayer;
@@ -108,6 +139,11 @@ export default class PrefRound {
 		if (!this._stage.isContractingStage()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this._stage.name);
 
 		this._contract = contract;
+		this._underRefa = this.game.isUnderRefa;
+		this._value = _contract2value(this._contract);
+		this._value *= this._kontringStage.multiplication;
+		if (this._underRefa) this._value *= 2;
+
 		this.toDeciding();
 
 		return this;
@@ -164,7 +200,12 @@ export default class PrefRound {
 		this._rightFollower.playRole = PrefPlayerPlayRole.NONE;
 		this._leftFollower.playRole = PrefPlayerPlayRole.NONE;
 
-		// TODO: calculate score...
+		const mainTricks = this.mainTricks;
+		const leftFollowerTricks = this.leftFollowerTricks;
+		const rightFollowerTricks = this.rightFollowerTricks;
+
+		// TODO: calculate scores...
+
 	}
 
 	private setupHighestBidder(): PrefRound {
@@ -193,6 +234,22 @@ export default class PrefRound {
 		return this._stage;
 	}
 
+	get value(): number {
+		return this._value;
+	}
+
+	get mainPlayer(): PrefPlayer {
+		return this._mainPlayer;
+	}
+
+	get rightFollower(): PrefPlayer {
+		return this._rightFollower;
+	}
+
+	get leftFollower(): PrefPlayer {
+		return this._leftFollower;
+	}
+
 	get playersCount(): 2 | 3 {
 		if (this._rightFollower.follows && this._leftFollower.follows) return 3;
 		else return 2;
@@ -207,15 +264,26 @@ export default class PrefRound {
 	}
 
 	get mainTricks(): number {
-		return this._playingStage.countTricks(this._mainPlayer);
+		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
+		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._mainPlayer.designation));
 	}
 
-	get followersTricks(): number {
-		return this._playingStage.countOthersTricks(this._mainPlayer);
+	get leftFollowerTricks(): number {
+		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
+		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._leftFollower.designation));
+	}
+
+	get rightFollowerTricks(): number {
+		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
+		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._rightFollower.designation));
 	}
 
 	get isBetl(): boolean {
 		return _isBetl(this._contract);
+	}
+
+	get isPreferans(): boolean {
+		return _isPreferans(this._contract);
 	}
 
 	get ppn(): string {

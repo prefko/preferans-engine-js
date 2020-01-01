@@ -2,6 +2,8 @@
 'use strict';
 
 import { includes } from 'lodash';
+import { PrefPaperPlayer, PrefPaperFollower } from 'preferans-paper-js';
+
 import { EPrefBid, EPrefKontra } from './PrefGameEnums';
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
 
@@ -50,12 +52,12 @@ export default class PrefPlayer {
 		return includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], this._lastKontra);
 	}
 
-	private reset() {
-		this._dealRole = PrefPlayerDealRole.NONE;
-		this._playRole = PrefPlayerPlayRole.NONE;
-		this._bid = EPrefBid.NO_BID;
-		this._lastBid = EPrefBid.NO_BID;
-		this._follows = false;
+	public getPaperPlayerMain(tricks: number, failed: boolean = false): PrefPaperPlayer {
+		return new PrefPaperPlayer(this._designation, tricks, failed);
+	}
+
+	public getPaperPlayerFollower(followed: boolean, tricks?: number, failed?: boolean): PrefPaperFollower {
+		return new PrefPaperFollower(this._designation, followed, tricks, failed);
 	}
 
 	set replacement(username: string) {
@@ -155,6 +157,14 @@ export default class PrefPlayer {
 
 	get lastKontra(): EPrefKontra {
 		return this._lastKontra;
+	}
+
+	private reset() {
+		this._dealRole = PrefPlayerDealRole.NONE;
+		this._playRole = PrefPlayerPlayRole.NONE;
+		this._bid = EPrefBid.NO_BID;
+		this._lastBid = EPrefBid.NO_BID;
+		this._follows = false;
 	}
 
 }

@@ -9,7 +9,7 @@
 	"types": "./lib/prefGame.d.ts",
 	"scripts": {
 		"all": "yarn & yarn build & yarn test & yarn docs",
-		"build": "tsc",
+		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
 		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
