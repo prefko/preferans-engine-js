@@ -1354,6 +1354,14 @@ preferans-paper-js@*:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
 
+preferans-paper-js@>=3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-3.0.2.tgz#095fe417643914f8180e0b9a1db481e7adab611b"
+  integrity sha512-OxIowW+/UA5zBaLTmcOFg8Ma7srQPvFXIjZDEB5I/mb2xzEwrftKzXor2B/BQx3bmipmYHRG+ZjyOOR+lkDV/A==
+  dependencies:
+    "@types/lodash" "^4.14.149"
+    lodash "^4.17.15"
+
 preferans-rating-js@*:
   version "2.3.7"
   resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.7.tgz#6d197cf6eb7328f374f62e32e9d2da7a2cc7ddc6"
