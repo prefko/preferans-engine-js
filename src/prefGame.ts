@@ -4,12 +4,13 @@
 import * as _ from 'lodash';
 
 import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
-import PrefScore, { PrefScoreHandGame, PrefScoreHandRefa } from 'preferans-score-js';
+import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
 import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
 
 import PrefRound from './prefRound';
 import PrefPlayer, { PrefPlayerDealRole } from './prefPlayer';
-import { PrefPaperPlayer, PrefPaperFollower } from 'preferans-paper-js';
+
+type PrefDesignation = 'p1' | 'p2' | 'p3';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
@@ -187,9 +188,9 @@ export default class PrefGame {
 		return this;
 	}
 
-	public getPlayerByDesignation(designation: 'p1' | 'p2' | 'p3'): PrefPlayer {
+	public getPlayerByDesignation(designation: PrefDesignation): PrefPlayer {
 		if ('p1' === designation) return this._p1;
-		else if ('p3' === designation) return this._p2;
+		else if ('p2' === designation) return this._p2;
 		else return this._p3;
 	}
 

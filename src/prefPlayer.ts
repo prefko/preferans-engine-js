@@ -2,10 +2,11 @@
 'use strict';
 
 import { includes } from 'lodash';
-import { PrefPaperPlayer, PrefPaperFollower } from 'preferans-paper-js';
 
 import { EPrefBid, EPrefKontra } from './PrefGameEnums';
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
+
+type PrefDesignation = 'p1' | 'p2' | 'p3';
 
 export enum PrefPlayerDealRole {NONE = 0, DEALER, FIRST_BIDDER, SECOND_BIDDER}
 
@@ -15,7 +16,7 @@ export default class PrefPlayer {
 	private readonly _starter: string;
 	private readonly _replacements: string[] = [];
 
-	private _designation: 'p1' | 'p2' | 'p3';
+	private _designation: PrefDesignation;
 	private _username: string;
 	private _nextPlayer!: PrefPlayer;
 
@@ -30,7 +31,7 @@ export default class PrefPlayer {
 	private _kontra: EPrefKontra;
 	private _lastKontra: EPrefKontra;
 
-	constructor(designation: 'p1' | 'p2' | 'p3', username: string) {
+	constructor(designation: PrefDesignation, username: string) {
 		this._designation = designation;
 
 		this._starter = username;
@@ -52,14 +53,6 @@ export default class PrefPlayer {
 		return includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], this._lastKontra);
 	}
 
-	public getPaperPlayerMain(tricks: number, failed: boolean = false): PrefPaperPlayer {
-		return new PrefPaperPlayer(this._designation, tricks, failed);
-	}
-
-	public getPaperPlayerFollower(followed: boolean, tricks?: number, failed?: boolean): PrefPaperFollower {
-		return new PrefPaperFollower(this._designation, followed, tricks, failed);
-	}
-
 	set replacement(username: string) {
 		this._username = username;
 		if (this._starter !== username) this._replacements.push(username);
@@ -73,7 +66,7 @@ export default class PrefPlayer {
 		return this._nextPlayer;
 	}
 
-	get designation(): 'p1' | 'p2' | 'p3' {
+	get designation(): PrefDesignation {
 		return this._designation;
 	}
 
