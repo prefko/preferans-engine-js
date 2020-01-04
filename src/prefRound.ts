@@ -2,8 +2,8 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { PrefDeckDeal, PrefDeckTrick } from 'preferans-deck-js';
-import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
+import { PrefDeckCard, PrefDeckDeal, PrefDeckTrick } from 'preferans-deck-js';
+
 import PrefGame from './prefGame';
 import PrefPlayer, { PrefPlayerDealRole, PrefPlayerPlayRole } from './prefPlayer';
 import PrefStageBidding from './stage/prefStageBidding';
@@ -57,6 +57,8 @@ const _contract2value = (contract: EPrefContract): number => {
 };
 
 export default class PrefRound {
+
+	// TODO: remove circular dependency!
 	protected _game: PrefGame;
 
 	private readonly _id: number;

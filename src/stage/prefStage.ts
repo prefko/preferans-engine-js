@@ -5,6 +5,8 @@ import PrefGame from '../prefGame';
 import PrefRound from '../prefRound';
 
 export default abstract class APrefStage {
+
+	// TODO: remove circular dependency!
 	protected _round: PrefRound;
 
 	protected constructor(round: PrefRound) {

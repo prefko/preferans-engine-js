@@ -4,7 +4,7 @@
 import { includes } from 'lodash';
 
 import { EPrefBid, EPrefKontra } from './PrefGameEnums';
-import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
+import { PrefDeckPile } from 'preferans-deck-js';
 
 type PrefDesignation = 'p1' | 'p2' | 'p3';
 
