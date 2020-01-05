@@ -152,10 +152,6 @@ export default class PrefRound extends APrefRound {
 		return this._id;
 	}
 
-	get game(): PrefGame {
-		return this._game;
-	}
-
 	get stage(): APrefStage {
 		return this._stage;
 	}
