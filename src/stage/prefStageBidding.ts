@@ -183,9 +183,13 @@ export default class PrefStageBidding extends APrefStage {
 		this._bids.push({ id, designation, bid });
 
 		if (this.biddingCompleted) this.complete();
-		else this.broadcast({ source: 'bidding', data: 'nextBiddingPlayer' });
+		else this.broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
 
 		return this;
+	}
+
+	public getBiddingChoices(playersLastBid: EPrefBid): EPrefBid[] {
+		return _choices(this._last, playersLastBid);
 	}
 
 	get name(): string {
@@ -208,10 +212,12 @@ export default class PrefStageBidding extends APrefStage {
 		return this._max >= EPrefBid.BID_GAME;
 	}
 
-	get highestBidder(): PrefDesignation {
+	get highestBidder(): PrefDesignation | undefined {
 		const b1 = this._last1;
 		const b2 = this._last2;
 		const b3 = this._last3;
+		if (b1 === EPrefBid.BID_PASS && b2 === EPrefBid.BID_PASS && b3 === EPrefBid.BID_PASS) return undefined;
+
 		return (b1 > b2)
 			? (b1 > b3 ? 'p1' : 'p3')
 			: (b2 > b3 ? 'p2' : 'p3');
@@ -223,10 +229,6 @@ export default class PrefStageBidding extends APrefStage {
 		if (_isEndBid(this._last2)) cnt++;
 		if (_isEndBid(this._last3)) cnt++;
 		return cnt >= 2;
-	}
-
-	public getChoices(playersLastBid: EPrefBid): EPrefBid[] {
-		return _choices(this._last, playersLastBid);
 	}
 
 	private storeBid(playerBid: PrefPlayerBid): PrefStageBidding {

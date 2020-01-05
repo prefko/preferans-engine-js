@@ -2,7 +2,7 @@
 'use strict';
 
 export type PrefDesignation = 'p1' | 'p2' | 'p3';
-export type PrefEvent = { source: string, data: any };
+export type PrefEvent = { source: string, event: string, data?: any };
 
 export type PrefGameOptions = {
 	unlimitedRefe: boolean,

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
-import { EPrefBid, EPrefContract, EPrefKontra } from './prefEngineEnums';
+import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole } from './prefEngineEnums';
 
 import PrefRound from './round/prefRound';
 import PrefPlayer from './prefPlayer';
@@ -175,30 +175,35 @@ export default class PrefGame extends APrefObservable {
 
 	public nextPlayer(): PrefGame {
 		this._player = this._player.nextPlayer;
+		this._round.setPlayerByDesignation(this._player.designation);
 		return this;
 	}
 
 	public nextBiddingPlayer(): PrefGame {
 		this.nextPlayer();
 		if (this._player.outOfBidding) this.nextPlayer();
+		this._round.setPlayerByDesignation(this._player.designation);
 		return this;
 	}
 
 	public nextDecidingPlayer(): PrefGame {
 		this.nextPlayer();
 		if (this._player.isMain) this.nextPlayer();
+		this._round.setPlayerByDesignation(this._player.designation);
 		return this;
 	}
 
 	public nextKontringPlayer(kontra: EPrefKontra): PrefGame {
 		this.nextPlayer();
 		if (this._player.isOutOfKontring(kontra)) this.nextPlayer();
+		this._round.setPlayerByDesignation(this._player.designation);
 		return this;
 	}
 
 	public nextPlayingPlayer(): PrefGame {
 		this.nextPlayer();
 		if (!this._player.isPlaying) this.nextPlayer();
+		this._round.setPlayerByDesignation(this._player.designation);
 		return this;
 	}
 
@@ -208,17 +213,21 @@ export default class PrefGame extends APrefObservable {
 		else return this._p3;
 	}
 
+	// TODO: split this up?
 	private _roundObserverNext(value: PrefEvent): void {
 		console.log('roundObserverNext', value);
 
-		const { source, data } = value;
+		const { source, event, data } = value;
 		if ('round' !== source) throw new Error('PrefGame::roundObserver:Source is not "round" but is ' + source + '?');
 
-		if ('changed' === data) console.log('must broadcast change further...');
-		if ('nextBiddingPlayer' === data) this.nextPlayer();
-		if (_.isPlainObject(data)) {
-			if (!!data.activate) this._player = this._getPlayerByDesignation(data.activate);
+		if ('changed' === data) console.log('must broadcast full game state...');
+
+		else if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
+		else if ('activePlayer' === event) {
+			this._round.setPlayerByDesignation(data);
+			this._player = this._getPlayerByDesignation(data);
 		}
+
 	}
 
 	private _broadcast(value: PrefEvent) {

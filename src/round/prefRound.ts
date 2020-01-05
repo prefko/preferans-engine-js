@@ -12,8 +12,8 @@ import APrefStage from '../stage/aPrefStage';
 import PrefStageDiscarding from '../stage/prefStageDiscarding';
 import PrefStageContracting from '../stage/prefStageContracting';
 import PrefRoundPlayer from './prefRoundPlayer';
-import APrefRound from './aPrefRound';
-import { PrefDesignation } from '../prefEngineTypes';
+import APrefRoundStages from './aPrefRoundStages';
+import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
 
 const _contract2value = (contract: EPrefContract): number => {
 	switch (contract) {
@@ -48,7 +48,7 @@ type PrefRoundStatus = {
 	// ...
 };
 
-export default class PrefRound extends APrefRound {
+export default class PrefRound extends APrefRoundStages {
 
 	private readonly _deal: PrefDeckDeal;
 
@@ -74,7 +74,7 @@ export default class PrefRound extends APrefRound {
 
 		const player: PrefRoundPlayer = this._getPlayerByDesignation(designation);
 		player.bid = bid;
-		(this.biddingStage).bid(player);  // TODO: USE THIS!!! Class PrefRoundPlayer can be used as type PrefPlayerBid!
+		(this._biddingStage).bid(player);  // TODO: USE THIS!!! Class PrefRoundPlayer can be used as type PrefPlayerBid!
 
 		return this;
 	}
@@ -94,7 +94,7 @@ export default class PrefRound extends APrefRound {
 		this._contract = contract;
 		this._underRefa = this.game.isUnderRefa;
 		this._value = _contract2value(this._contract);
-		this._value *= this.kontringStage.multiplication;
+		this._value *= this._kontringStage.multiplication;
 		if (this._underRefa) this._value *= 2;
 
 		this._toDeciding();
@@ -106,7 +106,7 @@ export default class PrefRound extends APrefRound {
 		if (!this._stage.isDecidingStage()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this._stage.name);
 
 		this._game.player.follows = follows;
-		this.decidingStage.playerDecided(this._game.player);
+		this._decidingStage.playerDecided(this._game.player);
 
 		return this;
 	}
@@ -131,19 +131,13 @@ export default class PrefRound extends APrefRound {
 	protected _stageObserverNext(value: PrefEvent): void {
 		console.log('stageObserver', value);
 
-		const { source, data } = value;
+		const { source, event, data } = value;
 		if (this._stage.isBiddingStage()) {
 			if ('bidding' !== source) throw new Error('PrefRound::stageObserver:Source is not "bidding" but is ' + source + '?');
-			if ('nextBiddingPlayer' === data) {
-				this._broadcast({ source: 'round', data: 'nextBiddingPlayer' });
+			if ('nextBiddingPlayer' === event) {
+				this._broadcast({ source: 'round', event: 'nextBiddingPlayer' });
 			}
 		}
-	}
-
-	private _getPlayerByDesignation(designation: PrefDesignation): PrefRoundPlayer {
-		if (this._firstPlayer.designation === designation) return this._firstPlayer;
-		if (this._secondPlayer.designation === designation) return this._secondPlayer;
-		return this._dealerPlayer;
 	}
 
 	get id(): number {
@@ -158,8 +152,8 @@ export default class PrefRound extends APrefRound {
 		return this._value;
 	}
 
-	get biddingOptions(): EPrefBid[] {
-		return this.biddingStage.getChoices();
+	get getBiddingChoices(): EPrefBid[] {
+		return this._biddingStage.getBiddingChoices();
 	}
 
 	get contract(): EPrefContract {

@@ -16,16 +16,15 @@ import { EPrefContract, EPrefPlayerPlayRole } from '../prefEngineEnums';
 import { PrefDeckCard } from 'preferans-deck-js';
 import * as _ from 'lodash';
 import APrefObservable from '../aPrefObservable';
+import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
 const _isLeftFirst = (contract: EPrefContract): boolean => _isSans(contract) || _isPreferans(contract);
 
-type PrefDesignation = 'p1' | 'p2' | 'p3';
-type PrefEvent = { source: string, data: any };
 type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
-export default abstract class APrefRound extends APrefObservable {
+export default abstract class APrefRoundStages extends APrefObservable {
 
 	protected _stageObserver!: Subscription;
 
@@ -39,6 +38,7 @@ export default abstract class APrefRound extends APrefObservable {
 
 	protected _stage!: APrefStage;
 
+	protected _player!: PrefRoundPlayer;
 	protected _firstPlayer!: PrefRoundPlayer;
 	protected _secondPlayer!: PrefRoundPlayer;
 	protected _dealerPlayer!: PrefRoundPlayer;
@@ -52,45 +52,52 @@ export default abstract class APrefRound extends APrefObservable {
 		this._id = id;
 	}
 
+	public setPlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
+		this._player = this._getPlayerByDesignation(designation);
+		return this;
+	}
+
 	get playersCount(): 2 | 3 {
 		if (this._rightFollower.follows && this._leftFollower.follows) return 3;
 		else return 2;
-	}
-
-	get biddingStage(): PrefStageBidding {
-		return (this._stage as PrefStageBidding);
-	}
-
-	get discardingStage(): PrefStageDiscarding {
-		return (this._stage as PrefStageDiscarding);
-	}
-
-	get contractingStage(): PrefStageContracting {
-		return (this._stage as PrefStageContracting);
-	}
-
-	get decidingStage(): PrefStageDeciding {
-		return (this._stage as PrefStageDeciding);
-	}
-
-	get kontringStage(): PrefStageKontring {
-		return (this._stage as PrefStageKontring);
-	}
-
-	get playingStage(): PrefStagePlaying {
-		return (this._stage as PrefStagePlaying);
-	}
-
-	get endingStage(): PrefStageEnding {
-		return (this._stage as PrefStageEnding);
 	}
 
 	get id(): number {
 		return this._id;
 	}
 
-	get stage(): APrefStage {
-		return this._stage;
+	protected get _biddingStage(): PrefStageBidding {
+		return (this._stage as PrefStageBidding);
+	}
+
+	protected get _discardingStage(): PrefStageDiscarding {
+		return (this._stage as PrefStageDiscarding);
+	}
+
+	protected get _contractingStage(): PrefStageContracting {
+		return (this._stage as PrefStageContracting);
+	}
+
+	protected get _decidingStage(): PrefStageDeciding {
+		return (this._stage as PrefStageDeciding);
+	}
+
+	protected get _kontringStage(): PrefStageKontring {
+		return (this._stage as PrefStageKontring);
+	}
+
+	protected get _playingStage(): PrefStagePlaying {
+		return (this._stage as PrefStagePlaying);
+	}
+
+	protected get _endingStage(): PrefStageEnding {
+		return (this._stage as PrefStageEnding);
+	}
+
+	protected _getPlayerByDesignation(designation: PrefDesignation): PrefRoundPlayer {
+		if (this._firstPlayer.designation === designation) return this._firstPlayer;
+		if (this._secondPlayer.designation === designation) return this._secondPlayer;
+		return this._dealerPlayer;
 	}
 
 	protected abstract _stageObserverNext(value: PrefEvent): void;
@@ -99,54 +106,59 @@ export default abstract class APrefRound extends APrefObservable {
 		return this._subject.next(value);
 	}
 
-	private _stageObserverError(error: any) {
+	protected _stageObserverError(error: any) {
 		throw new Error('APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error));
 	}
 
-	private _stageSubscribe(stageObserverComplete: () => void): void {
+	protected _stageSubscribe(stageObserverComplete: () => void): void {
 		if (this._stageObserver) this._stageObserver.unsubscribe();
 		this._stageObserver = this._stage.subscribe(this._stageObserverNext, this._stageObserverError, stageObserverComplete);
 	}
 
-	private _toBidding() {
+	protected _toBidding() {
 		this._stage = new PrefStageBidding();
 		this._stageSubscribe(this._toDiscarding);
-		this._broadcast({ source: 'round', data: { activate: this._firstPlayer } });
+		this._broadcastActivePlayer(this._firstPlayer.designation);
+	}
+
+	protected _broadcastActivePlayer(designation: PrefDesignation) {
+		this._player = this._getPlayerByDesignation(designation);
+		this._broadcast({ source: 'round', event: 'activePlayer', data: designation });
 	}
 
 	private _toDiscarding() {
-		if (this.biddingStage.isGameBid) return this._toContracting();
+		if (this._biddingStage.isGameBid) return this._toContracting();
 
 		this._stage = new PrefStageDiscarding();
 		this._stageSubscribe(this._toContracting);
 		this._setupHighestBidder();
-		this._broadcast({ source: 'round', data: 'changed' });
+		this._broadcast({ source: 'round', event: 'changed' });
 	}
 
 	private _toContracting() {
 		this._stage = new PrefStageContracting();
 		this._stageSubscribe(this._toDeciding);
 		this._setupHighestBidder();
-		this._broadcast({ source: 'round', data: 'changed' });
+		this._broadcast({ source: 'round', event: 'changed' });
 	}
 
 	private _toDeciding() {
 		this._stage = new PrefStageDeciding();
 		this._stageSubscribe(this._toKontring);
-		this._broadcast({ source: 'round', data: { activate: this._rightFollower } });
+		this._broadcastActivePlayer(this._rightFollower.designation);
 	}
 
 	private _toKontring() {
 		this._stage = new PrefStageKontring();
 		this._stageSubscribe(this._toPlaying);
-		this._broadcast({ source: 'round', data: { activate: this._rightFollower } });
+		this._broadcastActivePlayer(this._rightFollower.designation);
 	}
 
 	private _toPlaying() {
 		this._stage = new PrefStagePlaying(this.playersCount, this._contract);
 		this._stageSubscribe(this._toEnding);
 		const nextPlayer = _isLeftFirst(this._contract) ? this._leftFollower : this._firstPlayer;
-		this._broadcast({ source: 'round', data: { activate: nextPlayer } });
+		this._broadcastActivePlayer(nextPlayer.designation);
 	}
 
 	private _toEnding() {
@@ -156,28 +168,23 @@ export default abstract class APrefRound extends APrefObservable {
 	}
 
 	private _setupHighestBidder(): void {
-		const highestBidder = this.biddingStage.highestBidder;
-		this._mainPlayer = this._getPlayerByDesignation(highestBidder);
-		this._rightFollower = this._getNextPlayerFromDesignation(highestBidder);
-		this._leftFollower = this._getPreviousPlayerFromDesignation(highestBidder);
+		// TODO: all passed?
+		const highestBidderDesignation = this._biddingStage.highestBidder;
+		this._mainPlayer = this._getPlayerByDesignation(highestBidderDesignation);
+		this._rightFollower = this._getNextPlayerFromDesignation(highestBidderDesignation);
+		this._leftFollower = this._getPreviousPlayerFromDesignation(highestBidderDesignation);
 
 		this._mainPlayer.playRole = EPrefPlayerPlayRole.MAIN;
 		this._rightFollower.playRole = EPrefPlayerPlayRole.RIGHT_FOLLOWER;
 		this._leftFollower.playRole = EPrefPlayerPlayRole.LEFT_FOLLOWER;
 
-		this._broadcast({ source: 'round', data: { activate: highestBidder } });
+		this._broadcastActivePlayer(highestBidderDesignation);
 	}
 
 	private _getPreviousPlayerFromDesignation(designation: PrefDesignation): PrefRoundPlayer {
 		if (this._firstPlayer.designation === designation) return this._dealerPlayer;
 		else if (this._secondPlayer.designation === designation) return this._firstPlayer;
 		else return this._secondPlayer;
-	}
-
-	private _getPlayerByDesignation(designation: PrefDesignation): PrefRoundPlayer {
-		if (this._firstPlayer.designation === designation) return this._firstPlayer;
-		else if (this._secondPlayer.designation === designation) return this._secondPlayer;
-		else return this._dealerPlayer;
 	}
 
 	private _getNextPlayerFromDesignation(designation: PrefDesignation): PrefRoundPlayer {
