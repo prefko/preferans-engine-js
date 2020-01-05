@@ -2,7 +2,7 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
-import { EPrefContract, EPrefKontra } from '../PrefGameEnums';
+import { EPrefContract, EPrefKontra } from '../prefEngineEnums';
 
 type PrefPlayerKontra = { username: string, kontra: EPrefKontra }
 

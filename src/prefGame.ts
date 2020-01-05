@@ -2,15 +2,16 @@
 'use strict';
 
 import * as _ from 'lodash';
-// import * as rxjs from 'rxjs';
-import { Subject, Subscription } from 'rxjs';
 
 import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
-import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
+import { EPrefBid, EPrefContract, EPrefKontra } from './prefEngineEnums';
 
 import PrefRound from './round/prefRound';
-import PrefPlayer, { EPrefPlayerDealRole } from './prefPlayer';
+import PrefPlayer from './prefPlayer';
+import { PrefDesignation, PrefEvent, PrefGameOptions } from './prefEngineTypes';
+import APrefObservable from './aPrefObservable';
+import { Subscription } from 'rxjs';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
@@ -21,26 +22,10 @@ const _checkPlayer = (game: PrefGame, username: string): void => {
 	if (username !== game.player.username) throw new Error('PrefGame::checkCurrentPlayer:Wrong player: ' + username);
 };
 
-type PrefGameOptions = {
-	unlimitedRefe: boolean,
-	playPikOnRefa: boolean,
-	lastHandDoubleFall: boolean,
-	lastHandLimitSoup: boolean,
-	failPikAfterRefas: boolean,
-	failPikAfterOneUnderZero: boolean,
-	automaticBetlNoFailEnd: boolean,
-	allowSubAndMortKontras: boolean
-};
-
 // TODO... export whats needed:
 export { PrefPlayer, PrefDeck, PrefScore, PrefGameOptions };
 
-type PrefDesignation = 'p1' | 'p2' | 'p3';
-type PrefEvent = { source: string, data: any };
-
-export default class PrefGame {
-
-	private _subject: Subject<PrefEvent>;
+export default class PrefGame extends APrefObservable {
 
 	private readonly _bula: number;
 	private readonly _refas: number;
@@ -64,7 +49,7 @@ export default class PrefGame {
 	private _roundObserver!: Subscription;
 
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefGameOptions) {
-		this._subject = new Subject<PrefEvent>();
+		super();
 
 		this._p1 = new PrefPlayer('p1', username1);
 		this._p2 = new PrefPlayer('p2', username2);
@@ -85,10 +70,6 @@ export default class PrefGame {
 		this.deal();
 	}
 
-	public subscribe(next?: (value: PrefEvent) => void, error?: (error: any) => void, complete?: () => void): Subscription {
-		return this._subject.subscribe(next, error, complete);
-	}
-
 	public restoreDeck(cards: PrefDeckCard[]): PrefGame {
 		this._deck.restore(cards);
 		return this;
@@ -100,9 +81,9 @@ export default class PrefGame {
 		this._firstPlayer = this._dealerPlayer.nextPlayer;
 		this._secondPlayer = this._firstPlayer.nextPlayer;
 
-		this._dealerPlayer.dealRole = PrefPlayerDealRole.DEALER;
-		this._firstPlayer.dealRole = PrefPlayerDealRole.FIRST_BIDDER;
-		this._secondPlayer.dealRole = PrefPlayerDealRole.SECOND_BIDDER;
+		this._dealerPlayer.dealRole = EPrefPlayerDealRole.DEALER;
+		this._firstPlayer.dealRole = EPrefPlayerDealRole.FIRST_BIDDER;
+		this._secondPlayer.dealRole = EPrefPlayerDealRole.SECOND_BIDDER;
 
 		let id = 1;
 		if (this._round) id = this._round.id + 1;

@@ -12,10 +12,10 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import { EPrefContract, EPrefPlayerPlayRole } from '../PrefGameEnums';
+import { EPrefContract, EPrefPlayerPlayRole } from '../prefEngineEnums';
 import { PrefDeckCard } from 'preferans-deck-js';
 import * as _ from 'lodash';
-import PrefPlayer from '../prefPlayer';
+import APrefObservable from '../aPrefObservable';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
@@ -25,9 +25,8 @@ type PrefDesignation = 'p1' | 'p2' | 'p3';
 type PrefEvent = { source: string, data: any };
 type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
-export default abstract class APrefRound {
+export default abstract class APrefRound extends APrefObservable {
 
-	protected _subject: Subject<PrefEvent>;
 	protected _stageObserver!: Subscription;
 
 	protected readonly _id: number;
@@ -49,17 +48,13 @@ export default abstract class APrefRound {
 	protected _leftFollower!: PrefRoundPlayer;
 
 	protected constructor(id: number) {
-		this._subject = new Subject<PrefEvent>();
+		super();
 		this._id = id;
 	}
 
 	get playersCount(): 2 | 3 {
 		if (this._rightFollower.follows && this._leftFollower.follows) return 3;
 		else return 2;
-	}
-
-	public subscribe(next?: (value: PrefEvent) => void, error?: (error: any) => void, complete?: () => void): Subscription {
-		return this._subject.subscribe(next, error, complete);
 	}
 
 	get biddingStage(): PrefStageBidding {
@@ -157,7 +152,7 @@ export default abstract class APrefRound {
 	private _toEnding() {
 		this._stageObserver.unsubscribe();
 		this._stage = new PrefStageEnding();
-		this._subject.complete();
+		this.complete();
 	}
 
 	private _setupHighestBidder(): void {

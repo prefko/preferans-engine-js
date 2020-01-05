@@ -4,7 +4,7 @@
 import { includes, cloneDeep } from 'lodash';
 import { PrefDeckPile } from 'preferans-deck-js';
 
-import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../PrefGameEnums';
+import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../prefEngineEnums';
 
 type PrefDesignation = 'p1' | 'p2' | 'p3';
 

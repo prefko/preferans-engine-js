@@ -4,7 +4,8 @@
 import { includes } from 'lodash';
 
 import APrefStage from './aPrefStage';
-import { EPrefBid } from '../PrefGameEnums';
+import { EPrefBid } from '../prefEngineEnums';
+import { PrefDesignation } from '../prefEngineTypes';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -147,7 +148,6 @@ const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
 	return choices;
 };
 
-type PrefDesignation = 'p1' | 'p2' | 'p3';
 type PrefPlayerBid = { designation: PrefDesignation, bid: EPrefBid }
 type PrefPlayerBidOrdered = { id: number, designation: PrefDesignation, bid: EPrefBid }
 type PrefBids = { p1: EPrefBid, p2: EPrefBid, p3: EPrefBid }

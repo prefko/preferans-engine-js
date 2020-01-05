@@ -6,13 +6,14 @@ import { Subject, Subscription } from 'rxjs';
 
 import PrefDeck, { PrefDeckCard, PrefDeckDeal, PrefDeckTrick } from 'preferans-deck-js';
 
-import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole } from '../PrefGameEnums';
+import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole } from '../prefEngineEnums';
 import PrefStageBidding from '../stage/prefStageBidding';
 import APrefStage from '../stage/aPrefStage';
 import PrefStageDiscarding from '../stage/prefStageDiscarding';
 import PrefStageContracting from '../stage/prefStageContracting';
 import PrefRoundPlayer from './prefRoundPlayer';
 import APrefRound from './aPrefRound';
+import { PrefDesignation } from '../prefEngineTypes';
 
 const _contract2value = (contract: EPrefContract): number => {
 	switch (contract) {
@@ -46,9 +47,6 @@ type PrefRoundStatus = {
 	next: string
 	// ...
 };
-
-type PrefDesignation = 'p1' | 'p2' | 'p3';
-type PrefEvent = { source: string, data: any };
 
 export default class PrefRound extends APrefRound {
 

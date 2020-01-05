@@ -4,9 +4,8 @@
 import { includes } from 'lodash';
 import { PrefDeckPile } from 'preferans-deck-js';
 
-import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from './PrefGameEnums';
-
-type PrefDesignation = 'p1' | 'p2' | 'p3';
+import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from './prefEngineEnums';
+import { PrefDesignation } from './prefEngineTypes';
 
 export default class PrefPlayer {
 	private readonly _starter: string;
