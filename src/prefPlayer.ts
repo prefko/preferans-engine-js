@@ -2,15 +2,11 @@
 'use strict';
 
 import { includes } from 'lodash';
-
-import { EPrefBid, EPrefKontra } from './PrefGameEnums';
 import { PrefDeckPile } from 'preferans-deck-js';
 
+import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from './PrefGameEnums';
+
 type PrefDesignation = 'p1' | 'p2' | 'p3';
-
-export enum PrefPlayerDealRole {NONE = 0, DEALER, FIRST_BIDDER, SECOND_BIDDER}
-
-export enum PrefPlayerPlayRole {NONE = 0, MAIN, RIGHT_FOLLOWER, LEFT_FOLLOWER}
 
 export default class PrefPlayer {
 	private readonly _starter: string;
@@ -20,17 +16,6 @@ export default class PrefPlayer {
 	private _username: string;
 	private _nextPlayer!: PrefPlayer;
 
-	private _dealRole: PrefPlayerDealRole;
-	private _playRole: PrefPlayerPlayRole;
-
-	private _cards: PrefDeckPile;
-
-	private _bid: EPrefBid;
-	private _lastBid: EPrefBid;
-	private _follows: boolean;
-	private _kontra: EPrefKontra;
-	private _lastKontra: EPrefKontra;
-
 	constructor(designation: PrefDesignation, username: string) {
 		this._designation = designation;
 
@@ -39,8 +24,8 @@ export default class PrefPlayer {
 
 		this._cards = new PrefDeckPile([]);
 
-		this._dealRole = PrefPlayerDealRole.NONE;
-		this._playRole = PrefPlayerPlayRole.NONE;
+		this._dealRole = EPrefPlayerDealRole.NONE;
+		this._playRole = EPrefPlayerPlayRole.NONE;
 		this._bid = EPrefBid.NO_BID;
 		this._lastBid = EPrefBid.NO_BID;
 		this._follows = false;
@@ -78,19 +63,19 @@ export default class PrefPlayer {
 		return this._username;
 	}
 
-	set dealRole(dealRole: PrefPlayerDealRole) {
+	set dealRole(dealRole: EPrefPlayerDealRole) {
 		this._dealRole = dealRole;
 	}
 
-	get dealRole(): PrefPlayerDealRole {
+	get dealRole(): EPrefPlayerDealRole {
 		return this._dealRole;
 	}
 
-	set playRole(playRole: PrefPlayerPlayRole) {
+	set playRole(playRole: EPrefPlayerPlayRole) {
 		this._playRole = playRole;
 	}
 
-	get playRole(): PrefPlayerPlayRole {
+	get playRole(): EPrefPlayerPlayRole {
 		return this._playRole;
 	}
 
@@ -133,7 +118,7 @@ export default class PrefPlayer {
 	}
 
 	get isMain(): boolean {
-		return this._playRole === PrefPlayerPlayRole.MAIN;
+		return this._playRole === EPrefPlayerPlayRole.MAIN;
 	}
 
 	get isPlaying(): boolean {
@@ -153,8 +138,8 @@ export default class PrefPlayer {
 	}
 
 	private reset() {
-		this._dealRole = PrefPlayerDealRole.NONE;
-		this._playRole = PrefPlayerPlayRole.NONE;
+		this._dealRole = EPrefPlayerDealRole.NONE;
+		this._playRole = EPrefPlayerPlayRole.NONE;
 		this._bid = EPrefBid.NO_BID;
 		this._lastBid = EPrefBid.NO_BID;
 		this._follows = false;

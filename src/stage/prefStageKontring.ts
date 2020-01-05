@@ -1,26 +1,20 @@
 #!/usr/bin/env node
 'use strict';
 
-import PrefRound from '../prefRound';
-import APrefStage from './prefStage';
-import PrefPlayer from '../prefPlayer';
+import APrefStage from './aPrefStage';
 import { EPrefContract, EPrefKontra } from '../PrefGameEnums';
 
-export type PrefPlayerKontra = { username: string, kontra: EPrefKontra }
+type PrefPlayerKontra = { username: string, kontra: EPrefKontra }
 
 const _canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
 
 export default class PrefStageKontring extends APrefStage {
-	private _kontras: PrefPlayerKontra[];
-	private _max: EPrefKontra;
-	private _last: EPrefKontra;
+	private _kontras: PrefPlayerKontra[] = [];
+	private _max: EPrefKontra = EPrefKontra.NO_KONTRA;
+	private _last: EPrefKontra = EPrefKontra.NO_KONTRA;
 
-	constructor(round: PrefRound) {
-		super(round);
-
-		this._kontras = [];
-		this._max = EPrefKontra.NO_KONTRA;
-		this._last = EPrefKontra.NO_KONTRA;
+	constructor() {
+		super();
 	}
 
 	public isKontringStage = (): boolean => true;

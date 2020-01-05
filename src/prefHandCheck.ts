@@ -4,7 +4,7 @@
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
 import { EPrefBid, EPrefContract } from './PrefGameEnums';
 
-export type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
+type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
 
 const _suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
 

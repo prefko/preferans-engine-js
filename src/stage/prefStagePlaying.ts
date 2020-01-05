@@ -2,11 +2,10 @@
 'use strict';
 
 import * as _ from 'lodash';
-import PrefRound from '../prefRound';
-import APrefStage from './prefStage';
-import PrefPlayer from '../prefPlayer';
+import APrefStage from './aPrefStage';
 import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
 import { EPrefContract } from '../PrefGameEnums';
+import PrefRoundPlayer from '../round/prefRoundPlayer';
 
 const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
 	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract)) return PrefDeckSuit.SPADE;
@@ -16,29 +15,32 @@ const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
 	return undefined;
 };
 
+const _isBetl = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_BETL, EPrefContract.CONTRACT_GAME_BETL], contract);
+const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
+
 export default class PrefStagePlaying extends APrefStage {
-	private readonly _tricks: PrefDeckTrick[];
+	private readonly _tricks: PrefDeckTrick[] = [];
 	private readonly _players: 2 | 3;
 	private readonly _trump: PrefDeckSuit | undefined;
 	private _trick!: PrefDeckTrick;
 
-	constructor(round: PrefRound) {
-		super(round);
+	constructor(playersCount: 2 | 3, contract: EPrefContract) {
+		super();
 		this._tricks = [];
-		this._players = this.round.playersCount;
-		this._trump = _contract2suit(this.round.contract);
+		this._players = playersCount; // this.round.playersCount;
+		this._trump = _contract2suit(contract);
 	}
 
 	public isPlayingStage = (): boolean => true;
 
-	public throw(player: PrefPlayer, card: PrefDeckCard): PrefStagePlaying {
+	public throw(player: PrefRoundPlayer, card: PrefDeckCard): PrefStagePlaying {
 		if (!this._trick) this._trick = new PrefDeckTrick(this._players, this._trump);
 		this._trick.throw(player.designation, card);
 
 		if (this.trickFull) {
 			this._tricks.push(this._trick);
 
-			this.game.player = this.getTrickWinner();
+			this.game.player = this._getTrickWinner();
 			if (this.playingCompleted) this.round.toEnding();
 			else this._trick = new PrefDeckTrick(this._players, this._trump);
 
@@ -84,7 +86,7 @@ export default class PrefStagePlaying extends APrefStage {
 		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner !== this.round.mainPlayer.designation));
 	}
 
-	private getTrickWinner(): PrefPlayer {
+	private _getTrickWinner(): PrefPlayer {
 		return this.game.getPlayerByDesignation(this._trick.winner);
 	}
 

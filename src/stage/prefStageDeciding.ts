@@ -2,18 +2,15 @@
 'use strict';
 
 import { size } from 'lodash';
-import PrefRound from '../prefRound';
-import APrefStage from './prefStage';
-import PrefPlayer from '../prefPlayer';
+import APrefStage from './aPrefStage';
 
-export type PrefPlayerDecision = { username: string, follows: boolean }
+type PrefPlayerDecision = { username: string, follows: boolean }
 
 export default class PrefStageDeciding extends APrefStage {
-	private readonly _decisions: PrefPlayerDecision[];
+	private readonly _decisions: PrefPlayerDecision[] = [];
 
-	constructor(round: PrefRound) {
-		super(round);
-		this._decisions = [];
+	constructor() {
+		super();
 	}
 
 	public isDecidingStage = (): boolean => true;

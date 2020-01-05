@@ -61,7 +61,8 @@
 		"preferans-deck-js": "*",
 		"preferans-paper-js": "*",
 		"preferans-rating-js": "*",
-		"preferans-score-js": "*"
+		"preferans-score-js": "*",
+		"rxjs": "^6.5.4"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.1.7",

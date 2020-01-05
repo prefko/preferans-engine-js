@@ -2,15 +2,15 @@
 'use strict';
 
 import * as _ from 'lodash';
+// import * as rxjs from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
 import { EPrefBid, EPrefContract, EPrefKontra } from './PrefGameEnums';
 
-import PrefRound from './prefRound';
-import PrefPlayer, { PrefPlayerDealRole } from './prefPlayer';
-
-type PrefDesignation = 'p1' | 'p2' | 'p3';
+import PrefRound from './round/prefRound';
+import PrefPlayer, { EPrefPlayerDealRole } from './prefPlayer';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
@@ -35,7 +35,13 @@ type PrefGameOptions = {
 // TODO... export whats needed:
 export { PrefPlayer, PrefDeck, PrefScore, PrefGameOptions };
 
+type PrefDesignation = 'p1' | 'p2' | 'p3';
+type PrefEvent = { source: string, data: any };
+
 export default class PrefGame {
+
+	private _subject: Subject<PrefEvent>;
+
 	private readonly _bula: number;
 	private readonly _refas: number;
 	private readonly _options: PrefGameOptions;
@@ -55,7 +61,11 @@ export default class PrefGame {
 	private _round!: PrefRound;
 	private readonly _rounds: PrefRound[];
 
+	private _roundObserver!: Subscription;
+
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefGameOptions) {
+		this._subject = new Subject<PrefEvent>();
+
 		this._p1 = new PrefPlayer('p1', username1);
 		this._p2 = new PrefPlayer('p2', username2);
 		this._p3 = new PrefPlayer('p3', username3);
@@ -73,6 +83,10 @@ export default class PrefGame {
 		this._score = new PrefScore(this._p1.username, this._p2.username, this._p3.username, this._bula, this._refas);
 
 		this.deal();
+	}
+
+	public subscribe(next?: (value: PrefEvent) => void, error?: (error: any) => void, complete?: () => void): Subscription {
+		return this._subject.subscribe(next, error, complete);
 	}
 
 	public restoreDeck(cards: PrefDeckCard[]): PrefGame {
@@ -95,6 +109,7 @@ export default class PrefGame {
 
 		this._player = this._firstPlayer;
 		this._round = new PrefRound(this, id);
+		this._roundObserver = this._round.subscribe(this._roundObserverNext);
 		return this;
 	}
 
@@ -177,39 +192,56 @@ export default class PrefGame {
 		return this;
 	}
 
-	public next(): PrefGame {
+	public nextPlayer(): PrefGame {
 		this._player = this._player.nextPlayer;
 		return this;
 	}
 
 	public nextBiddingPlayer(): PrefGame {
-		this.next();
-		if (this._player.outOfBidding) this.next();
+		this.nextPlayer();
+		if (this._player.outOfBidding) this.nextPlayer();
 		return this;
 	}
 
 	public nextDecidingPlayer(): PrefGame {
-		this.next();
-		if (this._player.isMain) this.next();
+		this.nextPlayer();
+		if (this._player.isMain) this.nextPlayer();
 		return this;
 	}
 
 	public nextKontringPlayer(kontra: EPrefKontra): PrefGame {
-		this.next();
-		if (this._player.isOutOfKontring(kontra)) this.next();
+		this.nextPlayer();
+		if (this._player.isOutOfKontring(kontra)) this.nextPlayer();
 		return this;
 	}
 
 	public nextPlayingPlayer(): PrefGame {
-		this.next();
-		if (!this._player.isPlaying) this.next();
+		this.nextPlayer();
+		if (!this._player.isPlaying) this.nextPlayer();
 		return this;
 	}
 
-	public getPlayerByDesignation(designation: PrefDesignation): PrefPlayer {
+	private _getPlayerByDesignation(designation: PrefDesignation): PrefPlayer {
 		if ('p1' === designation) return this._p1;
 		else if ('p2' === designation) return this._p2;
 		else return this._p3;
+	}
+
+	private _roundObserverNext(value: PrefEvent): void {
+		console.log('roundObserverNext', value);
+
+		const { source, data } = value;
+		if ('round' !== source) throw new Error('PrefGame::roundObserver:Source is not "round" but is ' + source + '?');
+
+		if ('changed' === data) console.log('must broadcast change further...');
+		if ('nextBiddingPlayer' === data) this.nextPlayer();
+		if (_.isPlainObject(data)) {
+			if (!!data.activate) this._player = this._getPlayerByDesignation(data.activate);
+		}
+	}
+
+	private _broadcast(value: PrefEvent) {
+		return this._subject.next(value);
 	}
 
 	get isUnderRefa(): boolean {

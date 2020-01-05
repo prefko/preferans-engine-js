@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
-import PrefRound from '../prefRound';
-import APrefStage from './prefStage';
+import APrefStage from './aPrefStage';
 
 export default class PrefStageDiscarding extends APrefStage {
 
-	constructor(round: PrefRound) {
-		super(round);
+	constructor() {
+		super();
 	}
 
 	public isDiscardingStage = (): boolean => true;
