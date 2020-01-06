@@ -154,7 +154,6 @@ type PrefBids = { p1: EPrefBid, p2: EPrefBid, p3: EPrefBid }
 
 export default class PrefStageBidding extends APrefStage {
 	private _bids: PrefPlayerBidOrdered[] = [];
-
 	private _max: EPrefBid = EPrefBid.NO_BID;
 	private _last: EPrefBid = EPrefBid.NO_BID;
 
@@ -172,18 +171,18 @@ export default class PrefStageBidding extends APrefStage {
 
 	public isBiddingStage = (): boolean => true;
 
-	public bid(playerBid: PrefPlayerBid): PrefStageBidding {
-		this.storeBid(playerBid);
+	get name(): string {
+		return 'Bidding';
+	}
 
-		const { designation, bid } = playerBid;
-		this._last = bid;
-		if (this._max < bid) this._max = bid;
+	public playerBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
+		this._storeBid({ designation, bid });
 
 		const id = this._bids.length + 1;
 		this._bids.push({ id, designation, bid });
 
-		if (this.biddingCompleted) this.complete();
-		else this.broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
+		if (this._biddingCompleted) this._complete();
+		else this._broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
 
 		return this;
 	}
@@ -192,11 +191,7 @@ export default class PrefStageBidding extends APrefStage {
 		return _choices(this._last, playersLastBid);
 	}
 
-	get name(): string {
-		return 'Bidding';
-	}
-
-	get bids(): PrefPlayerBid[] {
+	get bids(): PrefPlayerBidOrdered[] {
 		return this._bids;
 	}
 
@@ -212,18 +207,21 @@ export default class PrefStageBidding extends APrefStage {
 		return this._max >= EPrefBid.BID_GAME;
 	}
 
-	get highestBidder(): PrefDesignation | undefined {
-		const b1 = this._last1;
-		const b2 = this._last2;
-		const b3 = this._last3;
-		if (b1 === EPrefBid.BID_PASS && b2 === EPrefBid.BID_PASS && b3 === EPrefBid.BID_PASS) return undefined;
-
-		return (b1 > b2)
-			? (b1 > b3 ? 'p1' : 'p3')
-			: (b2 > b3 ? 'p2' : 'p3');
+	get highestBidder(): PrefDesignation {
+		if (this._max === this._max1) return 'p1';
+		if (this._max === this._max2) return 'p2';
+		return 'p3';
 	}
 
-	get biddingCompleted(): boolean {
+	get allPassed(): boolean {
+		return this._max1 === EPrefBid.BID_PASS
+			&& this._max2 === EPrefBid.BID_PASS
+			&& this._max3 === EPrefBid.BID_PASS;
+	}
+
+	// TODO: ne valja ovo!!!
+	// dvoja kažu dalje, treći nije rekao ništa, ovo će vrnuti true, a ne treba!
+	private get _biddingCompleted(): boolean {
 		let cnt = 0;
 		if (_isEndBid(this._last1)) cnt++;
 		if (_isEndBid(this._last2)) cnt++;
@@ -231,8 +229,10 @@ export default class PrefStageBidding extends APrefStage {
 		return cnt >= 2;
 	}
 
-	private storeBid(playerBid: PrefPlayerBid): PrefStageBidding {
+	private _storeBid(playerBid: PrefPlayerBid): PrefStageBidding {
 		const { designation, bid } = playerBid;
+		this._last = bid;
+		if (this._max < bid) this._max = bid;
 		if (_isEndBid(bid)) return this;
 
 		switch (designation) {

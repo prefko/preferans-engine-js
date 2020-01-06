@@ -3,8 +3,9 @@
 
 import { size } from 'lodash';
 import APrefStage from './aPrefStage';
+import { PrefDesignation } from '../prefEngineTypes';
 
-type PrefPlayerDecision = { username: string, follows: boolean }
+type PrefPlayerDecision = { designation: PrefDesignation, follows: boolean }
 
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: PrefPlayerDecision[] = [];
@@ -15,15 +16,11 @@ export default class PrefStageDeciding extends APrefStage {
 
 	public isDecidingStage = (): boolean => true;
 
-	public playerDecided(player: PrefPlayer): PrefStageDeciding {
-		this._decisions.push({ username: player.username, follows: player.follows });
+	public playerDecided(designation: PrefDesignation, follows: boolean): PrefStageDeciding {
+		this._decisions.push({ designation, follows });
 
-		if (!this.decidingCompleted) {
-			this.game.nextDecidingPlayer();
-
-		} else {
-			this.round.toKontring();
-		}
+		if (this.decidingCompleted) this._complete();
+		else this._broadcast({ source: 'bidding', event: 'nextDecidingPlayer' });
 
 		return this;
 	}

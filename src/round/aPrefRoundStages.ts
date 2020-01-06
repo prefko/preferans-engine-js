@@ -12,11 +12,12 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import { EPrefContract, EPrefPlayerPlayRole } from '../prefEngineEnums';
-import { PrefDeckCard } from 'preferans-deck-js';
+import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../prefEngineEnums';
+import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import * as _ from 'lodash';
 import APrefObservable from '../aPrefObservable';
-import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
+import { PrefDesignation, PrefEvent, PrefGameOptions } from '../prefEngineTypes';
+import PrefScore from 'preferans-score-js';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
@@ -29,14 +30,17 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _stageObserver!: Subscription;
 
 	protected readonly _id: number;
+	protected _score: PrefScore;
 
+	protected _stage!: APrefStage;
+
+	protected _allPassed: boolean = false;
 	protected _discarded!: PrefRoundDiscarded;
 	protected _contract!: EPrefContract;
+	protected _kontra!: EPrefKontra;
 
 	protected _underRefa: boolean = false;
 	protected _value!: number;
-
-	protected _stage!: APrefStage;
 
 	protected _player!: PrefRoundPlayer;
 	protected _firstPlayer!: PrefRoundPlayer;
@@ -47,9 +51,10 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _rightFollower!: PrefRoundPlayer;
 	protected _leftFollower!: PrefRoundPlayer;
 
-	protected constructor(id: number) {
+	protected constructor(id: number, score: PrefScore) {
 		super();
 		this._id = id;
+		this._score = score;
 	}
 
 	public setPlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
@@ -115,20 +120,29 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		this._stageObserver = this._stage.subscribe(this._stageObserverNext, this._stageObserverError, stageObserverComplete);
 	}
 
-	protected _toBidding() {
-		this._stage = new PrefStageBidding();
-		this._stageSubscribe(this._toDiscarding);
-		this._broadcastActivePlayer(this._firstPlayer.designation);
-	}
-
 	protected _broadcastActivePlayer(designation: PrefDesignation) {
 		this._player = this._getPlayerByDesignation(designation);
 		this._broadcast({ source: 'round', event: 'activePlayer', data: designation });
 	}
 
-	private _toDiscarding() {
-		if (this._biddingStage.isGameBid) return this._toContracting();
+	protected _toBidding() {
+		this._stage = new PrefStageBidding();
+		this._stageSubscribe(this._biddingCompleted);
+		this._broadcastActivePlayer(this._firstPlayer.designation);
+	}
 
+	protected _biddingCompleted() {
+		if (this._biddingStage.allPassed) {
+			this._allPassed = true;
+			return this._toEnding();
+		}
+		if (this._biddingStage.isGameBid) {
+			return this._toContracting();
+		}
+		return this._toDiscarding();
+	}
+
+	private _toDiscarding() {
 		this._stage = new PrefStageDiscarding();
 		this._stageSubscribe(this._toContracting);
 		this._setupHighestBidder();
@@ -149,7 +163,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	private _toKontring() {
-		this._stage = new PrefStageKontring();
+		this._stage = new PrefStageKontring(this._contract, this._underRefa);
 		this._stageSubscribe(this._toPlaying);
 		this._broadcastActivePlayer(this._rightFollower.designation);
 	}
@@ -164,11 +178,10 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	private _toEnding() {
 		this._stageObserver.unsubscribe();
 		this._stage = new PrefStageEnding();
-		this.complete();
+		this._complete();
 	}
 
 	private _setupHighestBidder(): void {
-		// TODO: all passed?
 		const highestBidderDesignation = this._biddingStage.highestBidder;
 		this._mainPlayer = this._getPlayerByDesignation(highestBidderDesignation);
 		this._rightFollower = this._getNextPlayerFromDesignation(highestBidderDesignation);

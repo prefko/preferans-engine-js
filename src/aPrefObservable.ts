@@ -16,11 +16,11 @@ export default abstract class APrefObservable {
 		return this._subject.subscribe(next, error, complete);
 	}
 
-	protected broadcast(value: PrefEvent) {
+	protected _broadcast(value: PrefEvent) {
 		return this._subject.next(value);
 	}
 
-	protected complete() {
+	protected _complete() {
 		return this._subject.complete();
 	}
 

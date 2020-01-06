@@ -193,6 +193,7 @@ export default class PrefGame extends APrefObservable {
 		return this;
 	}
 
+	// TODO: check this
 	public nextKontringPlayer(kontra: EPrefKontra): PrefGame {
 		this.nextPlayer();
 		if (this._player.isOutOfKontring(kontra)) this.nextPlayer();
@@ -223,6 +224,8 @@ export default class PrefGame extends APrefObservable {
 		if ('changed' === data) console.log('must broadcast full game state...');
 
 		else if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
+		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();
+		else if ('nextKontringPlayer' === event) this.nextKontringPlayer(data);
 		else if ('activePlayer' === event) {
 			this._round.setPlayerByDesignation(data);
 			this._player = this._getPlayerByDesignation(data);
@@ -232,10 +235,6 @@ export default class PrefGame extends APrefObservable {
 
 	private _broadcast(value: PrefEvent) {
 		return this._subject.next(value);
-	}
-
-	get isUnderRefa(): boolean {
-		return this._score.hasUnplayedRefa(this.player.designation);
 	}
 
 	get deck(): PrefDeck {
@@ -276,10 +275,6 @@ export default class PrefGame extends APrefObservable {
 
 	get p3(): PrefPlayer {
 		return this._p3;
-	}
-
-	get allowSubAndMortKontras(): boolean {
-		return this._options.allowSubAndMortKontras;
 	}
 
 	get json(): any {

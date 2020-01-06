@@ -2,6 +2,7 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
+import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 
 export default class PrefStageDiscarding extends APrefStage {
 
@@ -13,6 +14,10 @@ export default class PrefStageDiscarding extends APrefStage {
 
 	get name(): string {
 		return 'Discarding';
+	}
+
+	public _complete(): void {
+		this._complete();
 	}
 
 }

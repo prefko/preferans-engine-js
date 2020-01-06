@@ -3,43 +3,142 @@
 
 import APrefStage from './aPrefStage';
 import { EPrefContract, EPrefKontra } from '../prefEngineEnums';
+import { PrefDesignation, PrefGameOptions } from '../prefEngineTypes';
+import { includes } from 'lodash';
 
-type PrefPlayerKontra = { username: string, kontra: EPrefKontra }
+const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
-const _canInvite = (player: PrefPlayer): boolean => !player.isMain && !player.follows;
+const _choices = (lastKontra: EPrefKontra,
+                  contract: EPrefContract,
+                  canInvite: boolean,
+                  allowSubAndMortKontras: boolean): EPrefKontra[] => {
+	const isContractSpade = EPrefContract.CONTRACT_SPADE === contract;
+
+	const choices: EPrefKontra[] = [];
+	choices.push(EPrefKontra.KONTRA_READY);
+	switch (lastKontra) {
+		case EPrefKontra.NO_KONTRA:
+			if (canInvite && !isContractSpade) choices.push(EPrefKontra.KONTRA_INVITE);
+			choices.push(EPrefKontra.KONTRA_KONTRA);
+			break;
+		case EPrefKontra.KONTRA_READY:
+			choices.push(EPrefKontra.KONTRA_KONTRA);
+			break;
+		case EPrefKontra.KONTRA_KONTRA:
+			choices.push(EPrefKontra.KONTRA_REKONTRA);
+			break;
+		case EPrefKontra.KONTRA_REKONTRA:
+			if (allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_SUBKONTRA);
+			break;
+		case EPrefKontra.KONTRA_SUBKONTRA:
+			if (allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_MORTKONTRA);
+			break;
+		case EPrefKontra.KONTRA_INVITE:
+		case EPrefKontra.KONTRA_MORTKONTRA:
+		default:
+			break;
+	}
+
+	return choices;
+};
+
+const _contract2value = (contract: EPrefContract): number => {
+	switch (contract) {
+		case EPrefContract.CONTRACT_SPADE:
+			return 4;
+		case EPrefContract.CONTRACT_DIAMOND:
+		case EPrefContract.CONTRACT_GAME_SPADE:
+			return 6;
+		case EPrefContract.CONTRACT_HEART:
+		case EPrefContract.CONTRACT_GAME_DIAMOND:
+			return 8;
+		case EPrefContract.CONTRACT_CLUB:
+		case EPrefContract.CONTRACT_GAME_HEART:
+			return 10;
+		case EPrefContract.CONTRACT_BETL:
+		case EPrefContract.CONTRACT_GAME_CLUB:
+			return 12;
+		case EPrefContract.CONTRACT_SANS:
+		case EPrefContract.CONTRACT_GAME_BETL:
+			return 14;
+		case EPrefContract.CONTRACT_PREFERANS:
+		case EPrefContract.CONTRACT_GAME_SANS:
+			return 16;
+		case EPrefContract.CONTRACT_GAME_PREFERANS:
+			return 18;
+	}
+	return 0;
+};
+
+type PrefPlayerKontra = { designation: PrefDesignation, kontra: EPrefKontra }
+type PrefPlayerKontraOrdered = { id: number, designation: PrefDesignation, kontra: EPrefKontra }
+type PrefKontras = { p1: EPrefKontra, p2: EPrefKontra, p3: EPrefKontra }
 
 export default class PrefStageKontring extends APrefStage {
-	private _kontras: PrefPlayerKontra[] = [];
+	protected _contract: EPrefContract;
+	protected _underRefa: boolean;
+
+	private _kontras: PrefPlayerKontraOrdered[] = [];
 	private _max: EPrefKontra = EPrefKontra.NO_KONTRA;
 	private _last: EPrefKontra = EPrefKontra.NO_KONTRA;
 
-	constructor() {
+	private _max1: EPrefKontra = EPrefKontra.NO_KONTRA;
+	private _max2: EPrefKontra = EPrefKontra.NO_KONTRA;
+	private _max3: EPrefKontra = EPrefKontra.NO_KONTRA;
+
+	private _last1: EPrefKontra = EPrefKontra.NO_KONTRA;
+	private _last2: EPrefKontra = EPrefKontra.NO_KONTRA;
+	private _last3: EPrefKontra = EPrefKontra.NO_KONTRA;
+
+	constructor(contract: EPrefContract, underRefa: boolean) {
 		super();
+		this._contract = contract;
+		this._underRefa = underRefa;
 	}
 
 	public isKontringStage = (): boolean => true;
-
-	public playerKontred(player: PrefPlayer, kontra: EPrefKontra): PrefStageKontring {
-		this._kontras.push({ username: player.username, kontra });
-		if (this._max < kontra) this._max = kontra;
-		this._last = kontra;
-
-		if (!this.kontringCompleted) {
-			this.game.nextKontringPlayer(this._max);
-
-		} else {
-			this.round.toPlaying();
-		}
-
-		return this;
-	}
 
 	get name(): string {
 		return 'Kontring';
 	}
 
-	get kontra(): EPrefKontra {
-		return this._max;
+	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefStageKontring {
+		this._storeKontra({ designation, kontra });
+
+		const id = this._kontras.length + 1;
+		this._kontras.push({ id, designation, kontra });
+
+		if (this._kontringCompleted) {
+			this._broadcast({ source: 'kontring', event: 'kontra', data: this._max });
+
+			let value = _contract2value(this._contract);
+			value *= this.multiplication;
+			if (this._underRefa) value *= 2;
+			this._broadcast({ source: 'kontring', event: 'value', data: value });
+
+			this._complete();
+
+		} else {
+			this._broadcast({ source: 'kontring', event: 'nextKontringPlayer', data: this._max });
+		}
+
+		return this;
+	}
+
+	public getKontringChoices(contract: EPrefContract, canInvite: boolean, allowSubAndMortKontras: boolean): EPrefKontra[] {
+		return _choices(this._max, contract, canInvite, allowSubAndMortKontras);
+	}
+
+	get kontras(): PrefPlayerKontraOrdered[] {
+		return this._kontras;
+	}
+
+	get json(): PrefKontras {
+		return {
+			'p1': this._max1,
+			'p2': this._max2,
+			'p3': this._max3,
+		};
 	}
 
 	get multiplication(): 1 | 2 | 4 | 8 | 16 {
@@ -56,58 +155,42 @@ export default class PrefStageKontring extends APrefStage {
 		return 1;
 	}
 
-	get options(): EPrefKontra[] {
-		const player: PrefPlayer = this.game.player;
-		const lastKontraMade: EPrefKontra = player.kontra;
+	get highestKontrar(): PrefDesignation {
+		if (this._max === this._max1) return 'p1';
+		if (this._max === this._max2) return 'p2';
+		return 'p3';
+	}
 
-		const isContractSpade = EPrefContract.CONTRACT_SPADE === this.game.round.contract;
+	private get _kontringCompleted(): boolean {
+		let cnt = 0;
+		if (_isEndKontra(this._last1)) cnt++;
+		if (_isEndKontra(this._last2)) cnt++;
+		if (_isEndKontra(this._last3)) cnt++;
+		return cnt >= 2;
+	}
 
-		const choices = [];
-		choices.push(EPrefKontra.KONTRA_READY);
-		switch (lastKontraMade) {
-			case EPrefKontra.NO_KONTRA:
-				if (_canInvite(player) && !isContractSpade) choices.push(EPrefKontra.KONTRA_INVITE);
-				choices.push(EPrefKontra.KONTRA_KONTRA);
+	private _storeKontra(playerKontra: PrefPlayerKontra): PrefStageKontring {
+		const { designation, kontra } = playerKontra;
+		this._last = kontra;
+		if (this._max < kontra) this._max = kontra;
+		this._last = kontra;
+
+		switch (designation) {
+			case 'p1':
+				this._last1 = kontra;
+				if (this._max1 < kontra) this._max1 = kontra;
 				break;
-			case EPrefKontra.KONTRA_READY:
-				choices.push(EPrefKontra.KONTRA_KONTRA);
+			case 'p2':
+				this._last2 = kontra;
+				if (this._max2 < kontra) this._max2 = kontra;
 				break;
-			case EPrefKontra.KONTRA_KONTRA:
-				choices.push(EPrefKontra.KONTRA_REKONTRA);
-				break;
-			case EPrefKontra.KONTRA_REKONTRA:
-				if (this.game.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_SUBKONTRA);
-				break;
-			case EPrefKontra.KONTRA_SUBKONTRA:
-				if (this.game.allowSubAndMortKontras) choices.push(EPrefKontra.KONTRA_MORTKONTRA);
-				break;
-			case EPrefKontra.KONTRA_INVITE:
-			case EPrefKontra.KONTRA_MORTKONTRA:
-			default:
+			case 'p3':
+				this._last3 = kontra;
+				if (this._max3 < kontra) this._max3 = kontra;
 				break;
 		}
 
-		return choices;
-	}
-
-	get highestKontrar(): PrefPlayer {
-		const p1 = this.game.p1;
-		const p2 = this.game.p2;
-		const p3 = this.game.p3;
-		return p1.kontra > p2.kontra
-			? p1.kontra > p3.kontra ? p1 : p3
-			: p2.kontra > p3.kontra ? p2 : p3;
-	}
-
-	get kontringCompleted(): boolean {
-		const p1 = this.game.p1;
-		const p2 = this.game.p2;
-		const p3 = this.game.p3;
-		let cnt = 0;
-		if (p1.isOutOfKontring(this._max)) cnt++;
-		if (p2.isOutOfKontring(this._max)) cnt++;
-		if (p3.isOutOfKontring(this._max)) cnt++;
-		return cnt >= 2;
+		return this;
 	}
 
 }
