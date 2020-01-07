@@ -1363,9 +1363,10 @@ preferans-deck-js@*:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
 
-preferans-paper-js@*:
+preferans-paper-js@*, preferans-paper-js@>=3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-3.1.0.tgz#998e56bbc0d09d46bf86cd65bb94f7f63f7b3a91"
+  integrity sha512-fiMqn5SHMxcgfyQlLXcpaKaeg9yDoesobwiAA/TioTnKAiDCFIEUIzDOge243HAlp+H09oL3rmVbElklZHF4SA==
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
