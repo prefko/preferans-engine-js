@@ -129,6 +129,10 @@ export default class PrefStageKontring extends APrefStage {
 		return _choices(this._max, contract, canInvite, allowSubAndMortKontras);
 	}
 
+	get kontra(): EPrefKontra {
+		return this._max;
+	}
+
 	get kontras(): PrefPlayerKontraOrdered[] {
 		return this._kontras;
 	}
@@ -153,12 +157,6 @@ export default class PrefStageKontring extends APrefStage {
 				return 16;
 		}
 		return 1;
-	}
-
-	get highestKontrar(): PrefDesignation {
-		if (this._max === this._max1) return 'p1';
-		if (this._max === this._max2) return 'p2';
-		return 'p3';
 	}
 
 	private get _kontringCompleted(): boolean {

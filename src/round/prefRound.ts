@@ -95,7 +95,9 @@ export default class PrefRound extends APrefRoundStages {
 	public playerThrows(designation: PrefDesignation, card: PrefDeckCard): PrefRound {
 		if (!this._stage.isPlayingStage()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this._stage.name);
 
-		this._playingStage.throw(this._game.player, card);
+		const player = this._getPlayerByDesignation(designation);
+		player.throw(card);
+		this._playingStage.throw(designation, card);
 
 		return this;
 	}
@@ -106,9 +108,7 @@ export default class PrefRound extends APrefRoundStages {
 
 		const { source, event, data } = value;
 		if (this._stage.isBiddingStage()) {
-			if ('bidding' !== source) {
-				throw new Error('PrefRound::stageObserver:Source is not "bidding" but is ' + source + '?');
-			} else if ('nextBiddingPlayer' === event) {
+			if ('nextBiddingPlayer' === event) {
 				this._broadcast({ source: 'round', event: 'nextBiddingPlayer' });
 			} else if ('nextDecidingPlayer' === event) {
 				this._broadcast({ source: 'round', event: 'nextDecidingPlayer' });
@@ -118,6 +118,8 @@ export default class PrefRound extends APrefRoundStages {
 				this._kontra = data;
 			} else if ('value' === event) {
 				this._value = data;
+			} else if ('nextPlayingPlayer' === event) {
+				this._broadcast({ source: 'round', event: 'nextPlayingPlayer' });
 			}
 		}
 	}

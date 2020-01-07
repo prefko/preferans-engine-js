@@ -6,6 +6,7 @@ import APrefStage from './aPrefStage';
 import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
 import { EPrefContract } from '../prefEngineEnums';
 import PrefRoundPlayer from '../round/prefRoundPlayer';
+import { PrefDesignation } from '../prefEngineTypes';
 
 const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
 	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract)) return PrefDeckSuit.SPADE;
@@ -33,7 +34,7 @@ export default class PrefStagePlaying extends APrefStage {
 
 	public isPlayingStage = (): boolean => true;
 
-	public throw(player: PrefRoundPlayer, card: PrefDeckCard): PrefStagePlaying {
+	public throw(designation: PrefDesignation, card: PrefDeckCard): PrefStagePlaying {
 		if (!this._trick) this._trick = new PrefDeckTrick(this._players, this._trump);
 		this._trick.throw(player.designation, card);
 
@@ -45,7 +46,7 @@ export default class PrefStagePlaying extends APrefStage {
 			else this._trick = new PrefDeckTrick(this._players, this._trump);
 
 		} else {
-			this.game.nextPlayingPlayer();
+			this._broadcast({ source: 'playing', event: 'nextPlayingPlayer' });
 		}
 
 		return this;

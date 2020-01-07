@@ -98,7 +98,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isBiddingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerBids(bid);
+		this._round.playerBids(this._player.designation, bid);
 		return this;
 	}
 
@@ -106,7 +106,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isDiscardingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerDiscarded(discard1, discard2);
+		this._round.playerDiscarded(this._player.designation, discard1, discard2);
 		return this;
 	}
 
@@ -114,7 +114,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isContractingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerContracted(contract);
+		this._round.playerContracted(this._player.designation, contract);
 		return this;
 	}
 
@@ -122,7 +122,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isDecidingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerDecided(follows);
+		this._round.playerDecided(this._player.designation, follows);
 		return this;
 	}
 
@@ -130,7 +130,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isKontringStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerKontred(kontra);
+		this._round.playerKontred(this._player.designation, kontra);
 		return this;
 	}
 
@@ -138,7 +138,7 @@ export default class PrefGame extends APrefObservable {
 		_checkPlayer(this, username);
 		if (!this._round.stage.isPlayingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
 
-		this._round.playerThrows(card);
+		this._round.playerThrows(this._player.designation, card);
 		return this;
 	}
 
@@ -226,15 +226,12 @@ export default class PrefGame extends APrefObservable {
 		else if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
 		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();
 		else if ('nextKontringPlayer' === event) this.nextKontringPlayer(data);
+		else if ('nextPlayingPlayer' === event) this.nextPlayingPlayer();
 		else if ('activePlayer' === event) {
 			this._round.setPlayerByDesignation(data);
 			this._player = this._getPlayerByDesignation(data);
 		}
 
-	}
-
-	private _broadcast(value: PrefEvent) {
-		return this._subject.next(value);
 	}
 
 	get deck(): PrefDeck {
