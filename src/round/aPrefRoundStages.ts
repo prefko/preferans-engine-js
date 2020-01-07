@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import APrefStage from '../stage/aPrefStage';
 import PrefStageBidding from '../stage/prefStageBidding';
@@ -13,10 +13,9 @@ import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
 import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../prefEngineEnums';
-import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import * as _ from 'lodash';
 import APrefObservable from '../aPrefObservable';
-import { PrefDesignation, PrefEvent, PrefGameOptions } from '../prefEngineTypes';
+import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
 import PrefScore from 'preferans-score-js';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
@@ -60,6 +59,18 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	public setPlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
 		this._player = this._getPlayerByDesignation(designation);
 		return this;
+	}
+
+	get mainPlayer(): PrefRoundPlayer {
+		return this._mainPlayer;
+	}
+
+	get leftFollower(): PrefRoundPlayer {
+		return this._leftFollower;
+	}
+
+	get rightFollower(): PrefRoundPlayer {
+		return this._rightFollower;
 	}
 
 	get playersCount(): 2 | 3 {

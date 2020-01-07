@@ -2,7 +2,7 @@
 'use strict';
 
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
-import { EPrefBid, EPrefContract } from './prefEngineEnums';
+import { EPrefContract } from './prefEngineEnums';
 
 type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
 

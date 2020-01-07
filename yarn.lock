@@ -80,6 +80,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@phenomnomnominal/tsquery@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenomnomnominal/tsquery/-/tsquery-4.0.0.tgz#610e8ac968137e4a0f98c842c919bb8ad0e85718"
+  dependencies:
+    esquery "^1.0.1"
+
 "@types/chai@^4.1.7":
   version "4.2.7"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.7.tgz#1c8c25cbf6e59ffa7d6b9652c78e547d9a41692d"
@@ -526,6 +532,16 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.5:
 esprima@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
+
+esquery@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/esquery/-/esquery-1.0.1.tgz#406c51658b1f5991a5f9b62b1dc25b00e3e5c708"
+  dependencies:
+    estraverse "^4.0.0"
+
+estraverse@^4.0.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
 
 esutils@^2.0.2:
   version "2.0.3"
@@ -1029,8 +1045,8 @@ marked@^0.8.0:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.8.0.tgz#ec5c0c9b93878dc52dd54be8d0e524097bd81a99"
 
 mathjs@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-6.3.0.tgz#e9c62df7fd6a57ea709b6cceba06a3c858628b80"
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-6.4.0.tgz#9af4bd1d1a0fbc1f294c0eaf0840fcd50bd9426b"
   dependencies:
     complex.js "2.0.11"
     decimal.js "10.2.0"
@@ -1341,22 +1357,22 @@ pkg-dir@^3.0.0:
     find-up "^3.0.0"
 
 preferans-deck-js@*:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.3.4.tgz#6930d8ac2f44a68688a7668bc05e077456c06138"
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.4.0.tgz#0cb7336b9eb184d4f74e4448320d283d386a6433"
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
 
 preferans-paper-js@*:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-3.0.5.tgz#e5a024f9637afb7b000fcca50ffd5bb9f24d78e1"
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/preferans-paper-js/-/preferans-paper-js-3.1.0.tgz#998e56bbc0d09d46bf86cd65bb94f7f63f7b3a91"
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
 
 preferans-rating-js@*:
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.3.8.tgz#58d32e4ebf382b7e656f324c1d958317b89bc1cb"
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/preferans-rating-js/-/preferans-rating-js-2.4.1.tgz#5c1be5092bf3c4e0fdf7ad23fa3c53df15e92029"
   dependencies:
     "@types/lodash" "^4.14.149"
     "@types/mathjs" "^6.0.2"
@@ -1364,8 +1380,8 @@ preferans-rating-js@*:
     mathjs "^6.3.0"
 
 preferans-score-js@*:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.4.1.tgz#3e21c44300edd537d122ad29d203d0bb19d3c865"
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/preferans-score-js/-/preferans-score-js-1.5.0.tgz#815757393b1527e40ce406d80db042189f8476cb"
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
@@ -1812,6 +1828,15 @@ tslint-config-prettier@^1.18.0:
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.18.0.tgz#75f140bde947d35d8f0d238e0ebf809d64592c37"
 
+tslint-etc@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslint-etc/-/tslint-etc-1.10.0.tgz#de264c4d8042c0eb5627d4c09a60089aa3a65e8e"
+  dependencies:
+    "@phenomnomnominal/tsquery" "^4.0.0"
+    tslib "^1.8.0"
+    tsutils "^3.0.0"
+    tsutils-etc "^1.0.0"
+
 tslint-no-unused-expression-chai@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/tslint-no-unused-expression-chai/-/tslint-no-unused-expression-chai-0.1.4.tgz#f4a2c9dd3306088f44eb7574cf470082b09ade49"
@@ -1835,6 +1860,10 @@ tslint@^5.18.0:
     semver "^5.3.0"
     tslib "^1.8.0"
     tsutils "^2.29.0"
+
+tsutils-etc@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tsutils-etc/-/tsutils-etc-1.1.0.tgz#82ce1c92da29e07d3cde95692d5c5e8dbdc92fd0"
 
 tsutils@^2.29.0:
   version "2.29.0"

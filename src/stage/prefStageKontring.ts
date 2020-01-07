@@ -3,7 +3,7 @@
 
 import APrefStage from './aPrefStage';
 import { EPrefContract, EPrefKontra } from '../prefEngineEnums';
-import { PrefDesignation, PrefGameOptions } from '../prefEngineTypes';
+import { PrefDesignation } from '../prefEngineTypes';
 import { includes } from 'lodash';
 
 const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);

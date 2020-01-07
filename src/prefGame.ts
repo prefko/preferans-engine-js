@@ -150,10 +150,6 @@ export default class PrefGame extends APrefObservable {
 		const leftFollower = this.round.leftFollower;
 		const rightFollower = this.round.rightFollower;
 
-		const mainPaper = this._score.getPaper(mainPlayer.designation);
-		const leftPaper = this._score.getPaper(leftFollower.designation);
-		const rightPaper = this._score.getPaper(rightFollower.designation);
-
 		const main: PrefScoreMain = { designation: mainPlayer.designation, tricks: 6, failed: false };
 		const right: PrefScoreFollower = {
 			designation: leftFollower.designation,
@@ -219,11 +215,9 @@ export default class PrefGame extends APrefObservable {
 		console.log('roundObserverNext', value);
 
 		const { source, event, data } = value;
-		if ('round' !== source) throw new Error('PrefGame::roundObserver:Source is not "round" but is ' + source + '?');
+		// if ('round' !== source) throw new Error('PrefGame::roundObserver:Source is not "round" but is ' + source + '?');
 
-		if ('changed' === data) console.log('must broadcast full game state...');
-
-		else if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
+		if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
 		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();
 		else if ('nextKontringPlayer' === event) this.nextKontringPlayer(data);
 		else if ('nextPlayingPlayer' === event) this.nextPlayingPlayer();
@@ -232,6 +226,7 @@ export default class PrefGame extends APrefObservable {
 			this._player = this._getPlayerByDesignation(data);
 		}
 
+		// TODO: broadcast full game state
 	}
 
 	get deck(): PrefDeck {

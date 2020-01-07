@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 import APrefStage from './aPrefStage';
 import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
 import { EPrefContract } from '../prefEngineEnums';
-import PrefRoundPlayer from '../round/prefRoundPlayer';
 import { PrefDesignation } from '../prefEngineTypes';
 
 const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {

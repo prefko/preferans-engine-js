@@ -8,17 +8,19 @@
 	"main": "./lib/prefGame.js",
 	"types": "./lib/prefGame.d.ts",
 	"scripts": {
-		"all": "yarn & yarn build & yarn test & yarn docs",
+		"all": "yarn & yarn clean & yarn build & yarn test & yarn docs",
 		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
+		"clean": "tslint --config tslint-imports.json --fix --project .",
 		"format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
 		"docs": "typedoc --readme none --out docs src",
 		"test": "nyc mocha -r ts-node/register test/**/*.spec.ts",
 		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
 		"sonar": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**",
 		"latest-interactive": "yarn upgrade-interactive --latest",
-		"latest": "yarn upgrade --latest"
+		"latest": "yarn upgrade --latest",
+		"up": "yarn upgrade-interactive"
 	},
 	"nyc": {
 		"include": [
@@ -77,6 +79,7 @@
 		"ts-node": "^8.3.0",
 		"tslint": "^5.18.0",
 		"tslint-config-prettier": "^1.18.0",
+		"tslint-etc": "^1.10.0",
 		"tslint-no-unused-expression-chai": "^0.1.4",
 		"typedoc": "^0.15.6",
 		"typescript": "^3.5.3"

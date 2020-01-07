@@ -2,19 +2,16 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import PrefScore from 'preferans-score-js';
 import PrefDeck, { PrefDeckCard, PrefDeckDeal, PrefDeckTrick } from 'preferans-deck-js';
 
 import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole } from '../prefEngineEnums';
-import PrefStageBidding from '../stage/prefStageBidding';
 import APrefStage from '../stage/aPrefStage';
-import PrefStageDiscarding from '../stage/prefStageDiscarding';
-import PrefStageContracting from '../stage/prefStageContracting';
 import PrefRoundPlayer from './prefRoundPlayer';
 import APrefRoundStages from './aPrefRoundStages';
-import { PrefDesignation, PrefEvent, PrefGameOptions } from '../prefEngineTypes';
+import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
 
 const _canInvite = (player: PrefRoundPlayer): boolean => !player.isMain && !player.follows;
 
@@ -107,19 +104,18 @@ export default class PrefRound extends APrefRoundStages {
 		console.log('stageObserver', value);
 
 		const { source, event, data } = value;
+		const forward = (val: PrefEvent) => this._broadcast(val);
 		if (this._stage.isBiddingStage()) {
-			if ('nextBiddingPlayer' === event) {
-				this._broadcast({ source: 'round', event: 'nextBiddingPlayer' });
-			} else if ('nextDecidingPlayer' === event) {
-				this._broadcast({ source: 'round', event: 'nextDecidingPlayer' });
-			} else if ('nextKontringPlayer' === event) {
-				this._broadcast({ source: 'round', event: 'nextKontringPlayer', data });
+			if ('nextBiddingPlayer' === event
+				|| 'nextDecidingPlayer' === event
+				|| 'nextKontringPlayer' === event
+				|| 'nextPlayingPlayer' === event) {
+				forward(value);
+
 			} else if ('kontra' === event) {
 				this._kontra = data;
 			} else if ('value' === event) {
 				this._value = data;
-			} else if ('nextPlayingPlayer' === event) {
-				this._broadcast({ source: 'round', event: 'nextPlayingPlayer' });
 			}
 		}
 	}
