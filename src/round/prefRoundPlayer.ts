@@ -6,6 +6,7 @@ import { PrefDeckPile } from 'preferans-deck-js';
 
 import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../prefEngineEnums';
 import { PrefDesignation } from '../prefEngineTypes';
+import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 
 export default class PrefRoundPlayer {
 	private readonly _designation: PrefDesignation;
@@ -21,6 +22,8 @@ export default class PrefRoundPlayer {
 	private _kontra: EPrefKontra = EPrefKontra.NO_KONTRA;
 	private _lastKontra: EPrefKontra = EPrefKontra.NO_KONTRA;
 
+	private _nextPlayer!: PrefRoundPlayer;
+
 	constructor(designation: PrefDesignation, dealRole: EPrefPlayerDealRole, cards: PrefDeckPile) {
 		this._designation = designation;
 		this._dealRole = dealRole;
@@ -28,9 +31,21 @@ export default class PrefRoundPlayer {
 		this._lepeza = cloneDeep(cards);
 	}
 
+	public throw(card: PrefDeckCard) {
+		// TODO
+	}
+
 	public isOutOfKontring(maxKontra: EPrefKontra): boolean {
 		if (maxKontra === EPrefKontra.KONTRA_INVITE) return this._kontra === EPrefKontra.KONTRA_READY;
 		return includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], this._lastKontra);
+	}
+
+	set nextPlayer(player: PrefRoundPlayer) {
+		this._nextPlayer = player;
+	}
+
+	get nextPlayer(): PrefRoundPlayer {
+		return this._nextPlayer;
 	}
 
 	get designation(): PrefDesignation {

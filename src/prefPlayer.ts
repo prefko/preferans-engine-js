@@ -3,6 +3,7 @@
 
 import { PrefDesignation } from './prefEngineTypes';
 import PrefRoundPlayer from './round/prefRoundPlayer';
+import { EPrefPlayerDealRole } from './prefEngineEnums';
 
 export default class PrefPlayer {
 	private readonly _starter: string;
@@ -12,7 +13,8 @@ export default class PrefPlayer {
 	private _username: string;
 	private _nextPlayer!: PrefPlayer;
 
-	private _rounds: PrefRoundPlayer[] = [];
+	private _roundPlayer !: PrefRoundPlayer;
+	private _roundPlayers: PrefRoundPlayer[] = [];
 
 	constructor(designation: PrefDesignation, username: string) {
 		this._designation = designation;
@@ -21,9 +23,17 @@ export default class PrefPlayer {
 		this._username = username;
 	}
 
-	set replacement(username: string) {
-		this._username = username;
-		if (this._starter !== username) this._replacements.push(username);
+	get isDealer(): boolean {
+		return this._roundPlayer && this._roundPlayer.dealRole === EPrefPlayerDealRole.DEALER;
+	}
+
+	set roundPlayer(roundPlayer: PrefRoundPlayer) {
+		this._roundPlayer = roundPlayer;
+		this._roundPlayers.push(this._roundPlayer);
+	}
+
+	get roundPlayer(): PrefRoundPlayer {
+		return this._roundPlayer;
 	}
 
 	set nextPlayer(player: PrefPlayer) {
@@ -48,6 +58,11 @@ export default class PrefPlayer {
 
 	get starter(): string {
 		return this._starter;
+	}
+
+	set replacement(username: string) {
+		this._username = username;
+		if (this._starter !== username) this._replacements.push(username);
 	}
 
 }

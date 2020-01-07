@@ -34,11 +34,11 @@ export default class PrefRound extends APrefRoundStages {
 		this._secondPlayer = new PrefRoundPlayer(second, EPrefPlayerDealRole.SECOND_BIDDER, this._deal.h2);
 		this._dealerPlayer = new PrefRoundPlayer(dealer, EPrefPlayerDealRole.DEALER, this._deal.h3);
 
-		this._toBidding();
-	}
+		this._firstPlayer.nextPlayer = this._secondPlayer;
+		this._secondPlayer.nextPlayer = this._dealerPlayer;
+		this._dealerPlayer.nextPlayer = this._firstPlayer;
 
-	public subscribe(next?: (value: PrefEvent) => void, error?: (error: any) => void, complete?: () => void): Subscription {
-		return this._subject.subscribe(next, error, complete);
+		this._toBidding();
 	}
 
 	public playerBids(designation: PrefDesignation, bid: EPrefBid): PrefRound {
@@ -116,6 +116,7 @@ export default class PrefRound extends APrefRoundStages {
 				this._kontra = data;
 			} else if ('value' === event) {
 				this._value = data;
+
 			}
 		}
 	}
@@ -153,14 +154,6 @@ export default class PrefRound extends APrefRoundStages {
 	get rightFollowerTricks(): number {
 		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
 		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._rightFollower.designation));
-	}
-
-	get isBetl(): boolean {
-		return _isBetl(this._contract);
-	}
-
-	get isPreferans(): boolean {
-		return _isPreferans(this._contract);
 	}
 
 	get ppn(): string {

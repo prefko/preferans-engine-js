@@ -35,7 +35,7 @@ export default class PrefStagePlaying extends APrefStage {
 
 	public throw(designation: PrefDesignation, card: PrefDeckCard): PrefStagePlaying {
 		if (!this._trick) this._trick = new PrefDeckTrick(this._players, this._trump);
-		this._trick.throw(player.designation, card);
+		this._trick.throw(designation, card);
 
 		if (this.trickFull) {
 			this._tricks.push(this._trick);

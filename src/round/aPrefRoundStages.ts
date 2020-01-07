@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
+import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 
+import PrefScore from 'preferans-score-js';
+import { PrefDeckCard } from 'preferans-deck-js';
+
+import APrefObservable from '../aPrefObservable';
 import APrefStage from '../stage/aPrefStage';
 import PrefStageBidding from '../stage/prefStageBidding';
 import PrefStageDiscarding from '../stage/prefStageDiscarding';
@@ -12,11 +17,8 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../prefEngineEnums';
-import * as _ from 'lodash';
-import APrefObservable from '../aPrefObservable';
 import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
-import PrefScore from 'preferans-score-js';
+import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../prefEngineEnums';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
@@ -56,9 +58,21 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		this._score = score;
 	}
 
-	public setPlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
+	public setActivePlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
 		this._player = this._getPlayerByDesignation(designation);
 		return this;
+	}
+
+	get dealerPlayer(): PrefRoundPlayer {
+		return this._dealerPlayer;
+	}
+
+	get firstPlayer(): PrefRoundPlayer {
+		return this._firstPlayer;
+	}
+
+	get secondPlayer(): PrefRoundPlayer {
+		return this._secondPlayer;
 	}
 
 	get mainPlayer(): PrefRoundPlayer {
@@ -118,10 +132,6 @@ export default abstract class APrefRoundStages extends APrefObservable {
 
 	protected abstract _stageObserverNext(value: PrefEvent): void;
 
-	protected _broadcast(value: PrefEvent) {
-		return this._subject.next(value);
-	}
-
 	protected _stageObserverError(error: any) {
 		throw new Error('APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error));
 	}
@@ -132,7 +142,6 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	protected _broadcastActivePlayer(designation: PrefDesignation) {
-		this._player = this._getPlayerByDesignation(designation);
 		this._broadcast({ source: 'round', event: 'activePlayer', data: designation });
 	}
 
@@ -145,12 +154,14 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _biddingCompleted() {
 		if (this._biddingStage.allPassed) {
 			this._allPassed = true;
-			return this._toEnding();
+			this._toEnding();
+
+		} else if (this._biddingStage.isGameBid) {
+			this._toContracting();
+
+		} else {
+			return this._toDiscarding();
 		}
-		if (this._biddingStage.isGameBid) {
-			return this._toContracting();
-		}
-		return this._toDiscarding();
 	}
 
 	private _toDiscarding() {
@@ -193,16 +204,16 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	private _setupHighestBidder(): void {
-		const highestBidderDesignation = this._biddingStage.highestBidder;
-		this._mainPlayer = this._getPlayerByDesignation(highestBidderDesignation);
-		this._rightFollower = this._getNextPlayerFromDesignation(highestBidderDesignation);
-		this._leftFollower = this._getPreviousPlayerFromDesignation(highestBidderDesignation);
+		const designation = this._biddingStage.highestBidderDesignation;
+		this._mainPlayer = this._getPlayerByDesignation(designation);
+		this._rightFollower = this._getNextPlayerFromDesignation(designation);
+		this._leftFollower = this._getPreviousPlayerFromDesignation(designation);
 
 		this._mainPlayer.playRole = EPrefPlayerPlayRole.MAIN;
 		this._rightFollower.playRole = EPrefPlayerPlayRole.RIGHT_FOLLOWER;
 		this._leftFollower.playRole = EPrefPlayerPlayRole.LEFT_FOLLOWER;
 
-		this._broadcastActivePlayer(highestBidderDesignation);
+		this._broadcastActivePlayer(designation);
 	}
 
 	private _getPreviousPlayerFromDesignation(designation: PrefDesignation): PrefRoundPlayer {

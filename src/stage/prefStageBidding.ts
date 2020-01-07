@@ -207,7 +207,7 @@ export default class PrefStageBidding extends APrefStage {
 		return this._max >= EPrefBid.BID_GAME;
 	}
 
-	get highestBidder(): PrefDesignation {
+	get highestBidderDesignation(): PrefDesignation {
 		if (this._max === this._max1) return 'p1';
 		if (this._max === this._max2) return 'p2';
 		return 'p3';

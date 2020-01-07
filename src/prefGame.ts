@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
 import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
-import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole } from './prefEngineEnums';
+import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from './prefEngineEnums';
 
 import PrefRound from './round/prefRound';
 import PrefPlayer from './prefPlayer';
@@ -34,12 +34,6 @@ export default class PrefGame extends APrefObservable {
 	private readonly _p1: PrefPlayer;
 	private readonly _p2: PrefPlayer;
 	private readonly _p3: PrefPlayer;
-
-	private _dealerPlayer!: PrefPlayer;
-	private _firstPlayer!: PrefPlayer;
-	private _secondPlayer!: PrefPlayer;
-
-	private _player!: PrefPlayer;
 
 	private readonly _deck: PrefDeck;
 	private _score: PrefScore;
@@ -76,21 +70,22 @@ export default class PrefGame extends APrefObservable {
 	}
 
 	public deal(): PrefGame {
-		if (!this._dealerPlayer) this._dealerPlayer = _random(this._p1, this._p2, this._p3);
-		else this._dealerPlayer = this._dealerPlayer.nextPlayer;
-		this._firstPlayer = this._dealerPlayer.nextPlayer;
-		this._secondPlayer = this._firstPlayer.nextPlayer;
-
-		this._dealerPlayer.dealRole = EPrefPlayerDealRole.DEALER;
-		this._firstPlayer.dealRole = EPrefPlayerDealRole.FIRST_BIDDER;
-		this._secondPlayer.dealRole = EPrefPlayerDealRole.SECOND_BIDDER;
+		let dealer = this._currentDealer();
+		if (dealer) dealer = dealer.nextPlayer;
+		else dealer = _random(this._p1, this._p2, this._p3);
+		const first = dealer.nextPlayer;
+		const second = first.nextPlayer;
 
 		let id = 1;
 		if (this._round) id = this._round.id + 1;
 
-		this._player = this._firstPlayer;
-		this._round = new PrefRound(this, id);
+		this._round = new PrefRound(id, this._deck, this._score, first.designation, second.designation, dealer.designation);
 		this._roundObserver = this._round.subscribe(this._roundObserverNext);
+
+		dealer.roundPlayer = this._round.dealerPlayer;
+		first.roundPlayer = this._round.firstPlayer;
+		second.roundPlayer = this._round.secondPlayer;
+
 		return this;
 	}
 
@@ -171,37 +166,43 @@ export default class PrefGame extends APrefObservable {
 
 	public nextPlayer(): PrefGame {
 		this._player = this._player.nextPlayer;
-		this._round.setPlayerByDesignation(this._player.designation);
+		this._round.setActivePlayerByDesignation(this._player.designation);
 		return this;
 	}
 
-	public nextBiddingPlayer(): PrefGame {
+	private nextBiddingPlayer(): PrefGame {
 		this.nextPlayer();
 		if (this._player.outOfBidding) this.nextPlayer();
-		this._round.setPlayerByDesignation(this._player.designation);
+		this._round.setActivePlayerByDesignation(this._player.designation);
 		return this;
 	}
 
-	public nextDecidingPlayer(): PrefGame {
+	private nextDecidingPlayer(): PrefGame {
 		this.nextPlayer();
 		if (this._player.isMain) this.nextPlayer();
-		this._round.setPlayerByDesignation(this._player.designation);
+		this._round.setActivePlayerByDesignation(this._player.designation);
 		return this;
 	}
 
 	// TODO: check this
-	public nextKontringPlayer(kontra: EPrefKontra): PrefGame {
+	private nextKontringPlayer(kontra: EPrefKontra) {
+		this._player = this._player.nextPlayer;
+		if (this._player.isOutOfKontring(kontra)) this._player = this._player.nextPlayer;
+		this._broadcastActivePlayer(this._player.designation);
+	}
+
+	private nextPlayingPlayer(): PrefGame {
 		this.nextPlayer();
-		if (this._player.isOutOfKontring(kontra)) this.nextPlayer();
-		this._round.setPlayerByDesignation(this._player.designation);
+		if (!this._player.isPlaying) this.nextPlayer();
+		this._round.setActivePlayerByDesignation(this._player.designation);
 		return this;
 	}
 
-	public nextPlayingPlayer(): PrefGame {
-		this.nextPlayer();
-		if (!this._player.isPlaying) this.nextPlayer();
-		this._round.setPlayerByDesignation(this._player.designation);
-		return this;
+	private _currentDealer(): PrefPlayer | undefined {
+		if (this._p1.isDealer) return this._p1;
+		if (this._p2.isDealer) return this._p2;
+		if (this._p3.isDealer) return this._p3;
+		return undefined;
 	}
 
 	private _getPlayerByDesignation(designation: PrefDesignation): PrefPlayer {
@@ -215,15 +216,15 @@ export default class PrefGame extends APrefObservable {
 		console.log('roundObserverNext', value);
 
 		const { source, event, data } = value;
-		// if ('round' !== source) throw new Error('PrefGame::roundObserver:Source is not "round" but is ' + source + '?');
 
 		if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
 		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();
 		else if ('nextKontringPlayer' === event) this.nextKontringPlayer(data);
 		else if ('nextPlayingPlayer' === event) this.nextPlayingPlayer();
 		else if ('activePlayer' === event) {
-			this._round.setPlayerByDesignation(data);
+			this._round.setActivePlayerByDesignation(data);
 			this._player = this._getPlayerByDesignation(data);
+
 		}
 
 		// TODO: broadcast full game state
@@ -235,26 +236,6 @@ export default class PrefGame extends APrefObservable {
 
 	get round(): PrefRound {
 		return this._round;
-	}
-
-	get firstPlayer(): PrefPlayer {
-		return this._firstPlayer;
-	}
-
-	get secondPlayer(): PrefPlayer {
-		return this._secondPlayer;
-	}
-
-	get dealerPlayer(): PrefPlayer {
-		return this._dealerPlayer;
-	}
-
-	set player(player: PrefPlayer) {
-		this._player = player;
-	}
-
-	get player(): PrefPlayer {
-		return this._player;
 	}
 
 	get p1(): PrefPlayer {
