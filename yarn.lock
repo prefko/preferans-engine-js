@@ -1356,9 +1356,10 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-preferans-deck-js@*:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.4.0.tgz#0cb7336b9eb184d4f74e4448320d283d386a6433"
+preferans-deck-js@>=2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.4.2.tgz#86e175dab8372d1674289562a2cacf17e55649d2"
+  integrity sha512-XjSmE1hh/WMWyxlkUD6zyZxtCaZ9k6YO9EN/Uoi9WPzqz9D2OYun0jO84sWXoqbn3fjjGlI41sxMTG9tmf3k1Q==
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
