@@ -143,40 +143,6 @@ export default class PrefGame extends APrefObservable {
 		return this;
 	}
 
-	public nextPlayer(): PrefGame {
-		this._player = this._player.nextPlayer;
-		this._round.setActivePlayerByDesignation(this._player.designation);
-		return this;
-	}
-
-	private nextBiddingPlayer(): PrefGame {
-		this.nextPlayer();
-		if (this._player.outOfBidding) this.nextPlayer();
-		this._round.setActivePlayerByDesignation(this._player.designation);
-		return this;
-	}
-
-	private nextDecidingPlayer(): PrefGame {
-		this.nextPlayer();
-		if (this._player.isMain) this.nextPlayer();
-		this._round.setActivePlayerByDesignation(this._player.designation);
-		return this;
-	}
-
-	// TODO: check this
-	private nextKontringPlayer(kontra: EPrefKontra) {
-		this._player = this._player.nextPlayer;
-		if (this._player.isOutOfKontring(kontra)) this._player = this._player.nextPlayer;
-		this._broadcastActivePlayer(this._player.designation);
-	}
-
-	private nextPlayingPlayer(): PrefGame {
-		this.nextPlayer();
-		if (!this._player.isPlaying) this.nextPlayer();
-		this._round.setActivePlayerByDesignation(this._player.designation);
-		return this;
-	}
-
 	private _currentDealer(): PrefPlayer | undefined {
 		if (this._p1.isDealer) return this._p1;
 		if (this._p2.isDealer) return this._p2;
@@ -195,16 +161,6 @@ export default class PrefGame extends APrefObservable {
 		console.log('roundObserverNext', value);
 
 		const {source, event, data} = value;
-
-		if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
-		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();
-		else if ('nextKontringPlayer' === event) this.nextKontringPlayer(data);
-		else if ('nextPlayingPlayer' === event) this.nextPlayingPlayer();
-		else if ('activePlayer' === event) {
-			this._round.setActivePlayerByDesignation(data);
-			this._player = this._getPlayerByDesignation(data);
-
-		}
 
 		// TODO: broadcast full game state
 	}

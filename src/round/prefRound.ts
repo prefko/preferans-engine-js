@@ -32,7 +32,6 @@ export default class PrefRound extends APrefRoundStages {
 
 		this._deal = deal;
 		this._talon = this._deal.talon;
-
 		this._firstPlayer = new PrefRoundPlayer(first, EPrefPlayerDealRole.FIRST_BIDDER, this._deal.hand1);
 		this._secondPlayer = new PrefRoundPlayer(second, EPrefPlayerDealRole.SECOND_BIDDER, this._deal.hand2);
 		this._dealerPlayer = new PrefRoundPlayer(dealer, EPrefPlayerDealRole.DEALER, this._deal.hand3);
@@ -61,6 +60,7 @@ export default class PrefRound extends APrefRoundStages {
 
 		this._discarded = {discard1, discard2};
 		this._discardingStage._complete();
+
 		return this;
 	}
 
@@ -70,7 +70,6 @@ export default class PrefRound extends APrefRoundStages {
 
 		this._contract = contract;
 		this._underRefa = this._score.hasUnplayedRefa(designation);
-
 		this._contractingStage._complete();
 
 		return this;
@@ -109,26 +108,32 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
+	public getBiddingChoices(designation: PrefDesignation): EPrefBid[] {
+		const player = this._getPlayerByDesignation(designation);
+		return this._biddingStage.getBiddingChoices(player.lastBid);
+	}
+
 	// TODO: split this up?
 	protected _stageObserverNext(value: PrefEvent): void {
 		console.log('stageObserver', value);
 
 		const {source, event, data} = value;
 		const forward = (val: PrefEvent) => this._broadcast(val);
-		if (this._stage.isBiddingStage()) {
-			if ('nextBiddingPlayer' === event
-				|| 'nextDecidingPlayer' === event
-				|| 'nextKontringPlayer' === event
-				|| 'nextPlayingPlayer' === event) {
-				forward(value);
 
-			} else if ('kontra' === event) {
-				this._kontra = data;
-			} else if ('value' === event) {
-				this._value = data;
+		if ('nextBiddingPlayer' === event) this._nextBiddingPlayer();
+		else if ('nextDecidingPlayer' === event) this._nextDecidingPlayer();
+		else if ('nextPlayingPlayer' === event) this._nextPlayingPlayer();
 
+		if ('kontring' === source && this._stage.isKontringStage()) {
+			if ('nextKontringPlayer' === event) this._nextKontringPlayer(data);
+			else if ('kontra' === event) this._kontra = data;
+			else if ('value' === event) this._value = data;
+			else if ('kontra' === event) {
+				// TODO
 			}
 		}
+
+		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	get id(): number {
@@ -141,10 +146,6 @@ export default class PrefRound extends APrefRoundStages {
 
 	get value(): number {
 		return this._value;
-	}
-
-	get getBiddingChoices(): EPrefBid[] {
-		return this._biddingStage.getBiddingChoices();
 	}
 
 	get contract(): EPrefContract {
