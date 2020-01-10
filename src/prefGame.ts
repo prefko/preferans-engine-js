@@ -3,27 +3,23 @@
 
 import * as _ from 'lodash';
 
-import PrefDeck, { PrefDeckCard } from 'preferans-deck-js';
-import PrefScore, { PrefScoreMain, PrefScoreFollower } from 'preferans-score-js';
-import { EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from './prefEngineEnums';
+import PrefDeck, {PrefDeckCard} from 'preferans-deck-js';
+import PrefScore, {PrefScoreMain, PrefScoreFollower} from 'preferans-score-js';
+import {EPrefBid, EPrefContract, EPrefKontra} from './prefEngineEnums';
 
 import PrefRound from './round/prefRound';
 import PrefPlayer from './prefPlayer';
-import { PrefDesignation, PrefEvent, PrefGameOptions } from './prefEngineTypes';
+import {PrefDesignation, PrefEvent, PrefGameOptions} from './prefEngineTypes';
 import APrefObservable from './aPrefObservable';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
 	return r === 1 ? p1 : r === 2 ? p2 : p3;
 };
 
-const _checkPlayer = (game: PrefGame, username: string): void => {
-	if (username !== game.player.username) throw new Error('PrefGame::checkCurrentPlayer:Wrong player: ' + username);
-};
-
 // TODO... export whats needed:
-export { PrefPlayer, PrefDeck, PrefScore, PrefGameOptions };
+export {PrefScore, PrefGameOptions};
 
 export default class PrefGame extends APrefObservable {
 
@@ -79,7 +75,8 @@ export default class PrefGame extends APrefObservable {
 		let id = 1;
 		if (this._round) id = this._round.id + 1;
 
-		this._round = new PrefRound(id, this._deck, this._score, first.designation, second.designation, dealer.designation);
+		const deal = this._deck.shuffle.cut.deal;
+		this._round = new PrefRound(id, deal, this._score, first.designation, second.designation, dealer.designation);
 		this._roundObserver = this._round.subscribe(this._roundObserverNext);
 
 		dealer.roundPlayer = this._round.dealerPlayer;
@@ -89,51 +86,33 @@ export default class PrefGame extends APrefObservable {
 		return this;
 	}
 
-	public playerBids(username: string, bid: EPrefBid): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isBiddingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerBids(this._player.designation, bid);
+	public playerBids(designation: PrefDesignation, bid: EPrefBid): PrefGame {
+		if (this._round) this._round.playerBids(designation, bid);
 		return this;
 	}
 
-	public playerDiscarded(username: string, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isDiscardingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerDiscarded(this._player.designation, discard1, discard2);
+	public playerDiscarded(designation: PrefDesignation, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
+		if (this._round) this._round.playerDiscarded(designation, discard1, discard2);
 		return this;
 	}
 
-	public playerContracted(username: string, contract: EPrefContract): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isContractingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerContracted(this._player.designation, contract);
+	public playerContracted(designation: PrefDesignation, contract: EPrefContract): PrefGame {
+		if (this._round) this._round.playerContracted(designation, contract);
 		return this;
 	}
 
-	public playerDecided(username: string, follows: boolean): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isDecidingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerDecided(this._player.designation, follows);
+	public playerDecided(designation: PrefDesignation, follows: boolean): PrefGame {
+		if (this._round) this._round.playerDecided(designation, follows);
 		return this;
 	}
 
-	public playerKontred(username: string, kontra: EPrefKontra): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isKontringStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerKontred(this._player.designation, kontra);
+	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefGame {
+		if (this._round) this._round.playerKontred(designation, kontra);
 		return this;
 	}
 
-	public playerThrows(username: string, card: PrefDeckCard): PrefGame {
-		_checkPlayer(this, username);
-		if (!this._round.stage.isPlayingStage()) throw new Error('PrefGame::checkCurrentStage:Wrong stage: ' + this._round.stage);
-
-		this._round.playerThrows(this._player.designation, card);
+	public playerThrows(designation: PrefDesignation, card: PrefDeckCard): PrefGame {
+		if (this._round) this._round.playerThrows(designation, card);
 		return this;
 	}
 
@@ -145,7 +124,7 @@ export default class PrefGame extends APrefObservable {
 		const leftFollower = this.round.leftFollower;
 		const rightFollower = this.round.rightFollower;
 
-		const main: PrefScoreMain = { designation: mainPlayer.designation, tricks: 6, failed: false };
+		const main: PrefScoreMain = {designation: mainPlayer.designation, tricks: 6, failed: false};
 		const right: PrefScoreFollower = {
 			designation: leftFollower.designation,
 			tricks: this.round.leftFollowerTricks,
@@ -215,7 +194,7 @@ export default class PrefGame extends APrefObservable {
 	private _roundObserverNext(value: PrefEvent): void {
 		console.log('roundObserverNext', value);
 
-		const { source, event, data } = value;
+		const {source, event, data} = value;
 
 		if ('nextBiddingPlayer' === event) this.nextBiddingPlayer();
 		else if ('nextDecidingPlayer' === event) this.nextDecidingPlayer();

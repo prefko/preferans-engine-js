@@ -2,10 +2,10 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 
 import PrefScore from 'preferans-score-js';
-import { PrefDeckCard } from 'preferans-deck-js';
+import {PrefDeckCard} from 'preferans-deck-js';
 
 import APrefObservable from '../aPrefObservable';
 import APrefStage from '../stage/aPrefStage';
@@ -17,14 +17,12 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import { PrefDesignation, PrefEvent } from '../prefEngineTypes';
-import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../prefEngineEnums';
+import {PrefDesignation, PrefEvent, PrefRoundDiscarded, PrefRoundTalon} from '../prefEngineTypes';
+import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../prefEngineEnums';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
 const _isLeftFirst = (contract: EPrefContract): boolean => _isSans(contract) || _isPreferans(contract);
-
-type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
 
 export default abstract class APrefRoundStages extends APrefObservable {
 
@@ -36,6 +34,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _stage!: APrefStage;
 
 	protected _allPassed: boolean = false;
+	protected _talon!: PrefRoundTalon;
 	protected _discarded!: PrefRoundDiscarded;
 	protected _contract!: EPrefContract;
 	protected _kontra!: EPrefKontra;
@@ -61,6 +60,10 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	public setActivePlayerByDesignation(designation: PrefDesignation): APrefRoundStages {
 		this._player = this._getPlayerByDesignation(designation);
 		return this;
+	}
+
+	get player(): PrefRoundPlayer {
+		return this._player;
 	}
 
 	get dealerPlayer(): PrefRoundPlayer {
@@ -142,7 +145,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	protected _broadcastActivePlayer(designation: PrefDesignation) {
-		this._broadcast({ source: 'round', event: 'activePlayer', data: designation });
+		this._broadcast({source: 'round', event: 'activePlayer', data: designation});
 	}
 
 	protected _toBidding() {
@@ -168,14 +171,14 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		this._stage = new PrefStageDiscarding();
 		this._stageSubscribe(this._toContracting);
 		this._setupHighestBidder();
-		this._broadcast({ source: 'round', event: 'changed' });
+		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	private _toContracting() {
 		this._stage = new PrefStageContracting();
 		this._stageSubscribe(this._toDeciding);
 		this._setupHighestBidder();
-		this._broadcast({ source: 'round', event: 'changed' });
+		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	private _toDeciding() {

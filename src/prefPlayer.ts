@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-import { PrefDesignation } from './prefEngineTypes';
+import {PrefDesignation} from './prefEngineTypes';
 import PrefRoundPlayer from './round/prefRoundPlayer';
-import { EPrefPlayerDealRole } from './prefEngineEnums';
+import {EPrefPlayerDealRole} from './prefEngineEnums';
 
 export default class PrefPlayer {
 	private readonly _starter: string;
@@ -14,7 +14,6 @@ export default class PrefPlayer {
 	private _nextPlayer!: PrefPlayer;
 
 	private _roundPlayer !: PrefRoundPlayer;
-	private _roundPlayers: PrefRoundPlayer[] = [];
 
 	constructor(designation: PrefDesignation, username: string) {
 		this._designation = designation;
@@ -29,7 +28,6 @@ export default class PrefPlayer {
 
 	set roundPlayer(roundPlayer: PrefRoundPlayer) {
 		this._roundPlayer = roundPlayer;
-		this._roundPlayers.push(this._roundPlayer);
 	}
 
 	get roundPlayer(): PrefRoundPlayer {

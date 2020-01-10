@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+import {PrefDeckCard} from "preferans-deck-js";
+
 export type PrefDesignation = 'p1' | 'p2' | 'p3';
 export type PrefEvent = { source: string, event: string, data?: any };
 
@@ -14,3 +16,5 @@ export type PrefGameOptions = {
 	automaticBetlNoFailEnd: boolean,
 	allowSubAndMortKontras: boolean
 };
+
+export type PrefRoundDiscarded = { discard1: PrefDeckCard, discard2: PrefDeckCard };
