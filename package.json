@@ -81,7 +81,7 @@
 		"tslint-config-prettier": "^1.18.0",
 		"tslint-etc": "^1.10.0",
 		"tslint-no-unused-expression-chai": "^0.1.4",
-		"typedoc": "^0.15.6",
+		"typedoc": "^0.15.8",
 		"typescript": "^3.5.3"
 	}
 }
