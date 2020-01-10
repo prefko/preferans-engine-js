@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-import { Subject, Subscription } from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 
-import { PrefEvent } from './prefEngineTypes';
+import {PrefEvent} from './prefEngineTypes';
 
 export default abstract class APrefObservable {
 	protected _subject: Subject<PrefEvent>;
@@ -16,12 +16,12 @@ export default abstract class APrefObservable {
 		return this._subject.subscribe(next, error, complete);
 	}
 
-	protected _broadcast(value: PrefEvent) {
-		return this._subject.next(value);
+	protected _broadcast(value: PrefEvent): void {
+		this._subject.next(value);
 	}
 
-	protected _complete() {
-		return this._subject.complete();
+	protected _complete(): void {
+		this._subject.complete();
 	}
 
 }

@@ -2,16 +2,16 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
-import { EPrefContract, EPrefKontra } from '../prefEngineEnums';
-import { PrefDesignation } from '../prefEngineTypes';
-import { includes } from 'lodash';
+import {EPrefContract, EPrefKontra} from '../prefEngineEnums';
+import {PrefDesignation, PrefKontras, PrefPlayerKontra, PrefPlayerKontraOrdered} from '../prefEngineTypes';
+import {includes} from 'lodash';
 
 const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
 const _choices = (lastKontra: EPrefKontra,
-                  contract: EPrefContract,
-                  canInvite: boolean,
-                  allowSubAndMortKontras: boolean): EPrefKontra[] => {
+				  contract: EPrefContract,
+				  canInvite: boolean,
+				  allowSubAndMortKontras: boolean): EPrefKontra[] => {
 	const isContractSpade = EPrefContract.CONTRACT_SPADE === contract;
 
 	const choices: EPrefKontra[] = [];
@@ -70,10 +70,6 @@ const _contract2value = (contract: EPrefContract): number => {
 	return 0;
 };
 
-type PrefPlayerKontra = { designation: PrefDesignation, kontra: EPrefKontra }
-type PrefPlayerKontraOrdered = { id: number, designation: PrefDesignation, kontra: EPrefKontra }
-type PrefKontras = { p1: EPrefKontra, p2: EPrefKontra, p3: EPrefKontra }
-
 export default class PrefStageKontring extends APrefStage {
 	protected _contract: EPrefContract;
 	protected _underRefa: boolean;
@@ -103,23 +99,23 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefStageKontring {
-		this._storeKontra({ designation, kontra });
+		this._storeKontra({designation, kontra});
 
 		const id = this._kontras.length + 1;
-		this._kontras.push({ id, designation, kontra });
+		this._kontras.push({id, designation, kontra});
 
 		if (this._kontringCompleted) {
-			this._broadcast({ source: 'kontring', event: 'kontra', data: this._max });
+			this._broadcast({source: 'kontring', event: 'kontra', data: this._max});
 
 			let value = _contract2value(this._contract);
 			value *= this.multiplication;
 			if (this._underRefa) value *= 2;
-			this._broadcast({ source: 'kontring', event: 'value', data: value });
+			this._broadcast({source: 'kontring', event: 'value', data: value});
 
 			this._complete();
 
 		} else {
-			this._broadcast({ source: 'kontring', event: 'nextKontringPlayer', data: this._max });
+			this._broadcast({source: 'kontring', event: 'nextKontringPlayer', data: this._max});
 		}
 
 		return this;
@@ -168,7 +164,7 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	private _storeKontra(playerKontra: PrefPlayerKontra): PrefStageKontring {
-		const { designation, kontra } = playerKontra;
+		const {designation, kontra} = playerKontra;
 		this._last = kontra;
 		if (this._max < kontra) this._max = kontra;
 		this._last = kontra;

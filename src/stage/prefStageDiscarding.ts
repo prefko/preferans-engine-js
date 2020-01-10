@@ -15,7 +15,7 @@ export default class PrefStageDiscarding extends APrefStage {
 		return 'Discarding';
 	}
 
-	public _complete(): void {
+	public discarded(): void {
 		this._complete();
 	}
 

@@ -10,12 +10,7 @@ import {EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole} from '../pref
 import APrefStage from '../stage/aPrefStage';
 import PrefRoundPlayer from './prefRoundPlayer';
 import APrefRoundStages from './aPrefRoundStages';
-import {PrefDesignation, PrefEvent} from '../prefEngineTypes';
-
-type PrefRoundStatus = {
-	next: string
-	// ...
-};
+import {PrefDesignation, PrefEvent, PrefRoundStatus} from '../prefEngineTypes';
 
 export default class PrefRound extends APrefRoundStages {
 
@@ -59,7 +54,7 @@ export default class PrefRound extends APrefRoundStages {
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
 		this._discarded = {discard1, discard2};
-		this._discardingStage._complete();
+		this._discardingStage.discarded();
 
 		return this;
 	}
@@ -70,7 +65,7 @@ export default class PrefRound extends APrefRoundStages {
 
 		this._contract = contract;
 		this._underRefa = this._score.hasUnplayedRefa(designation);
-		this._contractingStage._complete();
+		this._contractingStage.contracted();
 
 		return this;
 	}

@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-import { size } from 'lodash';
+import {size} from 'lodash';
 import APrefStage from './aPrefStage';
-import { PrefDesignation } from '../prefEngineTypes';
-
-type PrefPlayerDecision = { designation: PrefDesignation, follows: boolean }
+import {PrefDesignation, PrefPlayerDecision} from '../prefEngineTypes';
 
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: PrefPlayerDecision[] = [];
@@ -17,10 +15,10 @@ export default class PrefStageDeciding extends APrefStage {
 	public isDecidingStage = (): boolean => true;
 
 	public playerDecided(designation: PrefDesignation, follows: boolean): PrefStageDeciding {
-		this._decisions.push({ designation, follows });
+		this._decisions.push({designation, follows});
 
-		if (this.decidingCompleted) this._complete();
-		else this._broadcast({ source: 'bidding', event: 'nextDecidingPlayer' });
+		if (this._decidingCompleted) this._complete();
+		else this._broadcast({source: 'bidding', event: 'nextDecidingPlayer'});
 
 		return this;
 	}
@@ -29,7 +27,7 @@ export default class PrefStageDeciding extends APrefStage {
 		return 'Deciding';
 	}
 
-	get decidingCompleted(): boolean {
+	protected get _decidingCompleted(): boolean {
 		return size(this._decisions) === 2;
 	}
 

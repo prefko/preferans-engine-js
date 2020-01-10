@@ -2,11 +2,10 @@
 'use strict';
 
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
-import { EPrefContract } from './prefEngineEnums';
+import {PrefHandSuggestion} from "./prefEngineTypes";
 
-type PrefHandSuggestion = { contract: EPrefContract, possible: boolean }
-
-const _suggest = (hand: PrefDeckPile, rest: PrefDeckPile): PrefHandSuggestion[] => {
+// TODO: dodaj licitaciju...
+const _suggest = (hand: PrefDeckPile, talon: PrefDeckPile): PrefHandSuggestion[] => {
 
 	// TODO: predloži licit (maksimalni ili samo sldeći? ili par opcija?)
 

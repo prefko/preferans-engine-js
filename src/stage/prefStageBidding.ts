@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-import { includes } from 'lodash';
+import {includes} from 'lodash';
 
 import APrefStage from './aPrefStage';
-import { EPrefBid } from '../prefEngineEnums';
-import { PrefDesignation } from '../prefEngineTypes';
+import {EPrefBid} from '../prefEngineEnums';
+import {PrefBids, PrefDesignation, PrefPlayerBid, PrefPlayerBidOrdered} from '../prefEngineTypes';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -148,10 +148,6 @@ const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
 	return choices;
 };
 
-type PrefPlayerBid = { designation: PrefDesignation, bid: EPrefBid }
-type PrefPlayerBidOrdered = { id: number, designation: PrefDesignation, bid: EPrefBid }
-type PrefBids = { p1: EPrefBid, p2: EPrefBid, p3: EPrefBid }
-
 export default class PrefStageBidding extends APrefStage {
 	private _bids: PrefPlayerBidOrdered[] = [];
 	private _max: EPrefBid = EPrefBid.NO_BID;
@@ -176,13 +172,13 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	public playerBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
-		this._storeBid({ designation, bid });
+		this._storeBid({designation, bid});
 
 		const id = this._bids.length + 1;
-		this._bids.push({ id, designation, bid });
+		this._bids.push({id, designation, bid});
 
 		if (this._biddingCompleted) this._complete();
-		else this._broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
+		else this._broadcast({source: 'bidding', event: 'nextBiddingPlayer'});
 
 		return this;
 	}
@@ -230,7 +226,7 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	private _storeBid(playerBid: PrefPlayerBid): PrefStageBidding {
-		const { designation, bid } = playerBid;
+		const {designation, bid} = playerBid;
 		this._last = bid;
 		if (this._max < bid) this._max = bid;
 		if (_isEndBid(bid)) return this;
