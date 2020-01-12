@@ -2,7 +2,7 @@
 'use strict';
 
 import {PrefDeckCard} from "preferans-deck-js";
-import {EPrefBid, EPrefContract, EPrefKontra} from "./prefEngineEnums";
+import {EPrefBid, EPrefContract, EPrefKontra} from "./prefEngine.enums";
 
 export type PrefDesignation = 'p1' | 'p2' | 'p3';
 export type PrefEvent = { source: string, event: string, data?: any };

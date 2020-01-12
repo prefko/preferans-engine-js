@@ -3,7 +3,7 @@
 
 import {size} from 'lodash';
 import APrefStage from './aPrefStage';
-import {PrefDesignation, PrefPlayerDecision} from '../prefEngineTypes';
+import {PrefDesignation, PrefPlayerDecision} from '../prefEngine.types';
 
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: PrefPlayerDecision[] = [];
