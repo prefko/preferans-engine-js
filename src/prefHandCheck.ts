@@ -2,7 +2,7 @@
 'use strict';
 
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
-import {PrefHandSuggestion} from "./prefEngineTypes";
+import {PrefHandSuggestion} from "./util/prefEngine.types";
 
 // TODO: dodaj licitaciju...
 const _suggest = (hand: PrefDeckPile, talon: PrefDeckPile): PrefHandSuggestion[] => {

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-import {PrefDesignation} from './prefEngineTypes';
+import {PrefDesignation} from './util/prefEngine.types';
 import PrefRoundPlayer from './round/prefRoundPlayer';
-import {EPrefPlayerDealRole} from './prefEngineEnums';
+import {EPrefPlayerDealRole} from './util/prefEngine.enums';
 
 export default class PrefPlayer {
 	private readonly _starter: string;

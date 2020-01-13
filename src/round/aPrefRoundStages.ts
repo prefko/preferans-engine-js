@@ -17,8 +17,8 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import {PrefDesignation, PrefEvent, PrefRoundDiscarded} from '../prefEngineTypes';
-import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../prefEngineEnums';
+import {PrefDesignation, PrefEvent, PrefRoundDiscarded} from '../util/prefEngine.types';
+import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../util/prefEngine.enums';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);

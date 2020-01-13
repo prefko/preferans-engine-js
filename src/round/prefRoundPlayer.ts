@@ -4,8 +4,8 @@
 import { includes, cloneDeep } from 'lodash';
 import { PrefDeckPile } from 'preferans-deck-js';
 
-import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../prefEngineEnums';
-import { PrefDesignation } from '../prefEngineTypes';
+import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../util/prefEngine.enums';
+import { PrefDesignation } from '../util/prefEngine.types';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 
 export default class PrefRoundPlayer {

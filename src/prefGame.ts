@@ -5,11 +5,11 @@ import * as _ from 'lodash';
 
 import PrefDeck, {PrefDeckCard} from 'preferans-deck-js';
 import PrefScore, {PrefScoreMain, PrefScoreFollower} from 'preferans-score-js';
-import {EPrefBid, EPrefContract, EPrefKontra} from './prefEngineEnums';
+import {EPrefBid, EPrefContract, EPrefKontra} from './util/prefEngine.enums';
 
 import PrefRound from './round/prefRound';
 import PrefPlayer from './prefPlayer';
-import {PrefDesignation, PrefEvent, PrefGameOptions} from './prefEngineTypes';
+import {PrefDesignation, PrefEvent, PrefGameOptions} from './util/prefEngine.types';
 import APrefObservable from './aPrefObservable';
 import {Subscription} from 'rxjs';
 

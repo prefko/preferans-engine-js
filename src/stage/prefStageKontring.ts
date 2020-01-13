@@ -2,8 +2,8 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
-import {EPrefContract, EPrefKontra} from '../prefEngineEnums';
-import {PrefDesignation, PrefKontras, PrefPlayerKontra, PrefPlayerKontraOrdered} from '../prefEngineTypes';
+import {EPrefContract, EPrefKontra} from '../util/prefEngine.enums';
+import {PrefDesignation, PrefKontras, PrefPlayerKontra, PrefPlayerKontraOrdered} from '../util/prefEngine.types';
 import {includes} from 'lodash';
 
 const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);

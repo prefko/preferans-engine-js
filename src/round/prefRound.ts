@@ -4,21 +4,21 @@
 import * as _ from 'lodash';
 
 import PrefScore from 'preferans-score-js';
-import {PrefDeckCard, PrefDeckDeal, PrefDeckTrick} from 'preferans-deck-js';
+import {PrefDeckCard, TPrefDeckDeal, PrefDeckTrick} from 'preferans-deck-js';
 
-import {EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole} from '../prefEngineEnums';
 import APrefStage from '../stage/aPrefStage';
 import PrefRoundPlayer from './prefRoundPlayer';
 import APrefRoundStages from './aPrefRoundStages';
-import {PrefDesignation, PrefEvent, PrefRoundStatus} from '../prefEngineTypes';
+import {PrefDesignation, PrefEvent, PrefRoundStatus} from '../util/prefEngine.types';
+import {EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole} from '../util/prefEngine.enums';
 
 export default class PrefRound extends APrefRoundStages {
 
-	private readonly _deal: PrefDeckDeal;
+	private readonly _deal: TPrefDeckDeal;
 
 	// TODO: add judge and his decision
 	constructor(id: number,
-				deal: PrefDeckDeal,
+				deal: TPrefDeckDeal,
 				score: PrefScore,
 				first: PrefDesignation,
 				second: PrefDesignation,

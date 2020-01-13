@@ -3,7 +3,7 @@
 
 import {Subject, Subscription} from 'rxjs';
 
-import {PrefEvent} from './prefEngineTypes';
+import {PrefEvent} from './util/prefEngine.types';
 
 export default abstract class APrefObservable {
 	protected _subject: Subject<PrefEvent>;

@@ -4,8 +4,8 @@
 import {includes} from 'lodash';
 
 import APrefStage from './aPrefStage';
-import {EPrefBid} from '../prefEngineEnums';
-import {PrefBids, PrefDesignation, PrefPlayerBid, PrefPlayerBidOrdered} from '../prefEngineTypes';
+import {EPrefBid} from '../util/prefEngine.enums';
+import {PrefBids, PrefDesignation, PrefPlayerBid, PrefPlayerBidOrdered} from '../util/prefEngine.types';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);

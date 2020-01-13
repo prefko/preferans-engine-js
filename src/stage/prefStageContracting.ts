@@ -2,8 +2,8 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
-import {EPrefContract} from '../prefEngineEnums';
-import {PrefDesignation} from '../prefEngineTypes';
+import {EPrefContract} from '../util/prefEngine.enums';
+import {PrefDesignation} from '../util/prefEngine.types';
 
 export default class PrefStageContracting extends APrefStage {
 
