@@ -17,6 +17,7 @@ export default abstract class APrefObservable {
 	}
 
 	protected _broadcast(value: PrefEvent): void {
+		console.log(JSON.stringify(value));
 		this._subject.next(value);
 	}
 

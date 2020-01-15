@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {Subscription} from 'rxjs';
 
 import PrefScore from 'preferans-score-js';
-import {PrefDeckTalon} from 'preferans-deck-js';
+import {TPrefDeckTalon} from 'preferans-deck-js';
 
 import APrefObservable from '../aPrefObservable';
 import APrefStage from '../stage/aPrefStage';
@@ -34,7 +34,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _stage!: APrefStage;
 
 	protected _allPassed: boolean = false;
-	protected _talon!: PrefDeckTalon;
+	protected _talon!: TPrefDeckTalon;
 	protected _discarded!: PrefRoundDiscarded;
 	protected _contract!: EPrefContract;
 	protected _kontra!: EPrefKontra;
@@ -181,30 +181,21 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	protected _biddingCompleted() {
-		if (this._biddingStage.allPassed) {
-			this._allPassed = true;
-			this._toEnding();
-
-		} else if (this._biddingStage.isGameBid) {
-			this._toContracting();
-
-		} else {
-			return this._toDiscarding();
-		}
+		if (this._biddingStage.allPassed) this._toEndingRefa();
+		else if (this._biddingStage.isGameBid) this._toContracting();
+		else this._toDiscarding();
 	}
 
 	private _toDiscarding() {
 		this._stage = new PrefStageDiscarding();
 		this._stageSubscribe(this._toContracting);
 		this._setupHighestBidder();
-		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	private _toContracting() {
 		this._stage = new PrefStageContracting();
 		this._stageSubscribe(this._toDeciding);
 		this._setupHighestBidder();
-		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	private _toDeciding() {
@@ -224,6 +215,11 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		this._stageSubscribe(this._toEnding);
 		const nextPlayer = _isLeftFirst(this._contract) ? this._leftFollower : this._firstPlayer;
 		this._setActivePlayer(nextPlayer.designation);
+	}
+
+	private _toEndingRefa() {
+		this._allPassed = true;
+		this._toEnding();
 	}
 
 	private _toEnding() {

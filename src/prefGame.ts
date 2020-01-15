@@ -60,10 +60,10 @@ export default class PrefGame extends APrefObservable {
 		this.deal();
 	}
 
-	public restoreDeck(cards: PrefDeckCard[]): PrefGame {
-		this._deck.restore(cards);
-		return this;
-	}
+	// public restoreDeck(cards: PrefDeckCard[]): PrefGame {
+	// 	this._deck.restore(cards);
+	// 	return this;
+	// }
 
 	public deal(): PrefGame {
 		let dealer = this._currentDealer();

@@ -17,135 +17,145 @@ const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 
 const _isEndBid = (bid: EPrefBid): boolean => includes([EPrefBid.BID_PASS, EPrefBid.BID_YOURS_IS_BETTER], bid);
 
-const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+const _noTrumpGameOptions = (lastBid: EPrefBid): EPrefBid[] => {
 	let choices: EPrefBid[] = [];
-	if (lastBid >= EPrefBid.BID_GAME_BETL) {
-		choices.push(EPrefBid.BID_PASS);
-		switch (lastBid) {
-			case EPrefBid.BID_GAME_BETL:
-				choices.push(EPrefBid.BID_GAME_SANS);
-				choices.push(EPrefBid.BID_GAME_PREFERANS);
-				break;
-			case EPrefBid.BID_GAME_SANS:
-				choices.push(EPrefBid.BID_GAME_PREFERANS);
-				break;
-			default:
-				break;
-		}
+	choices.push(EPrefBid.BID_PASS);
+	switch (lastBid) {
+		case EPrefBid.BID_GAME_BETL:
+			choices.push(EPrefBid.BID_GAME_SANS);
+			choices.push(EPrefBid.BID_GAME_PREFERANS);
+			break;
+		case EPrefBid.BID_GAME_SANS:
+			choices.push(EPrefBid.BID_GAME_PREFERANS);
+			break;
+		default:
+			break;
+	}
+	return choices;
+};
 
-	} else if (lastBid >= EPrefBid.BID_GAME) {
-		switch (lastBid) {
-			case EPrefBid.BID_GAME:
-				if (playersLastBid === EPrefBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
-					choices.push(EPrefBid.BID_GAME_SPADE);
-					choices.push(EPrefBid.BID_GAME_DIAMOND);
-					choices.push(EPrefBid.BID_GAME_HEART);
-					choices.push(EPrefBid.BID_GAME_CLUB);
-
-				} else if (playersLastBid === EPrefBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
-					choices.push(EPrefBid.BID_PASS);
-					choices = _addInitialGameChoices(choices);
-
-				} else {  // Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
-					choices.push(EPrefBid.BID_PASS);
-				}
-				break;
-
-			case EPrefBid.BID_GAME_SPADE:
+const _trumpGameOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+	let choices: EPrefBid[] = [];
+	switch (lastBid) {
+		case EPrefBid.BID_GAME:
+			if (playersLastBid === EPrefBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
+				choices.push(EPrefBid.BID_GAME_SPADE);
 				choices.push(EPrefBid.BID_GAME_DIAMOND);
 				choices.push(EPrefBid.BID_GAME_HEART);
 				choices.push(EPrefBid.BID_GAME_CLUB);
-				break;
 
-			case EPrefBid.BID_GAME_DIAMOND:
-				choices.push(EPrefBid.BID_YOURS_IS_BETTER);
-				choices.push(EPrefBid.BID_GAME_HEART);
-				choices.push(EPrefBid.BID_GAME_CLUB);
-				break;
-
-			case EPrefBid.BID_GAME_HEART:
-				choices.push(EPrefBid.BID_YOURS_IS_BETTER);
-				choices.push(EPrefBid.BID_GAME_CLUB);
-				break;
-
-			case EPrefBid.BID_GAME_CLUB:
-				choices.push(EPrefBid.BID_YOURS_IS_BETTER);
-				break;
-
-			default:
+			} else if (playersLastBid === EPrefBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
 				choices.push(EPrefBid.BID_PASS);
-				break;
-		}
-
-	} else {
-		choices.push(EPrefBid.BID_PASS);
-		switch (lastBid) {
-			case EPrefBid.NO_BID:
-			case EPrefBid.BID_PASS:
-				choices.push(EPrefBid.BID_SPADE);
 				choices = _addInitialGameChoices(choices);
-				break;
 
-			case EPrefBid.BID_SPADE:
-				choices.push(EPrefBid.BID_DIAMOND);
-				choices = _addInitialGameChoices(choices);
-				break;
+				// TODO: ovog treba preskočiti!!!
+			} else {  // Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
+				choices.push(EPrefBid.BID_PASS);
+			}
+			break;
 
-			case EPrefBid.BID_DIAMOND:
-				if (playersLastBid === EPrefBid.BID_SPADE) choices.push(EPrefBid.BID_DIAMOND_MINE);
-				else {
-					choices.push(EPrefBid.BID_HEART);
-					choices = _addInitialGameChoices(choices);
-				}
-				break;
+		case EPrefBid.BID_GAME_SPADE:
+			choices.push(EPrefBid.BID_GAME_DIAMOND);
+			choices.push(EPrefBid.BID_GAME_HEART);
+			choices.push(EPrefBid.BID_GAME_CLUB);
+			break;
 
-			case EPrefBid.BID_DIAMOND_MINE:
-				choices.push(EPrefBid.BID_HEART);
-				break;
+		case EPrefBid.BID_GAME_DIAMOND:
+			choices.push(EPrefBid.BID_YOURS_IS_BETTER);
+			choices.push(EPrefBid.BID_GAME_HEART);
+			choices.push(EPrefBid.BID_GAME_CLUB);
+			break;
 
-			case EPrefBid.BID_HEART:
-				choices.push(EPrefBid.BID_HEART_MINE);
-				break;
+		case EPrefBid.BID_GAME_HEART:
+			choices.push(EPrefBid.BID_YOURS_IS_BETTER);
+			choices.push(EPrefBid.BID_GAME_CLUB);
+			break;
 
-			case EPrefBid.BID_HEART_MINE:
-				choices.push(EPrefBid.BID_CLUB);
-				break;
+		case EPrefBid.BID_GAME_CLUB:
+			choices.push(EPrefBid.BID_YOURS_IS_BETTER);
+			break;
 
-			case EPrefBid.BID_CLUB:
-				choices.push(EPrefBid.BID_CLUB_MINE);
-				break;
-
-			case EPrefBid.BID_CLUB_MINE:
-				choices.push(EPrefBid.BID_BETL);
-				break;
-
-			case EPrefBid.BID_BETL:
-				choices.push(EPrefBid.BID_BETL_MINE);
-				break;
-
-			case EPrefBid.BID_BETL_MINE:
-				choices.push(EPrefBid.BID_SANS);
-				break;
-
-			case EPrefBid.BID_SANS:
-				choices.push(EPrefBid.BID_SANS_MINE);
-				break;
-
-			case EPrefBid.BID_SANS_MINE:
-				choices.push(EPrefBid.BID_PREFERANS);
-				break;
-
-			case EPrefBid.BID_PREFERANS:
-				choices.push(EPrefBid.BID_PREFERANS_MINE);
-				break;
-
-			case EPrefBid.BID_PREFERANS_MINE:
-			default:
-				break;
-		}
+		default:
+			choices.push(EPrefBid.BID_PASS);
+			break;
 	}
-
 	return choices;
+};
+
+const _plainOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+	let choices: EPrefBid[] = [];
+	choices.push(EPrefBid.BID_PASS);
+	switch (lastBid) {
+		case EPrefBid.NO_BID:
+		case EPrefBid.BID_PASS:
+			choices.push(EPrefBid.BID_SPADE);
+			choices = _addInitialGameChoices(choices);
+			break;
+
+		case EPrefBid.BID_SPADE:
+			choices.push(EPrefBid.BID_DIAMOND);
+			choices = _addInitialGameChoices(choices);
+			break;
+
+		case EPrefBid.BID_DIAMOND:
+			if (playersLastBid === EPrefBid.BID_SPADE) choices.push(EPrefBid.BID_DIAMOND_MINE);
+			else {
+				choices.push(EPrefBid.BID_HEART);
+				choices = _addInitialGameChoices(choices);
+			}
+			break;
+
+		case EPrefBid.BID_DIAMOND_MINE:
+			choices.push(EPrefBid.BID_HEART);
+			break;
+
+		case EPrefBid.BID_HEART:
+			choices.push(EPrefBid.BID_HEART_MINE);
+			break;
+
+		case EPrefBid.BID_HEART_MINE:
+			choices.push(EPrefBid.BID_CLUB);
+			break;
+
+		case EPrefBid.BID_CLUB:
+			choices.push(EPrefBid.BID_CLUB_MINE);
+			break;
+
+		case EPrefBid.BID_CLUB_MINE:
+			choices.push(EPrefBid.BID_BETL);
+			break;
+
+		case EPrefBid.BID_BETL:
+			choices.push(EPrefBid.BID_BETL_MINE);
+			break;
+
+		case EPrefBid.BID_BETL_MINE:
+			choices.push(EPrefBid.BID_SANS);
+			break;
+
+		case EPrefBid.BID_SANS:
+			choices.push(EPrefBid.BID_SANS_MINE);
+			break;
+
+		case EPrefBid.BID_SANS_MINE:
+			choices.push(EPrefBid.BID_PREFERANS);
+			break;
+
+		case EPrefBid.BID_PREFERANS:
+			choices.push(EPrefBid.BID_PREFERANS_MINE);
+			break;
+
+		case EPrefBid.BID_PREFERANS_MINE:
+		default:
+			break;
+	}
+	return choices;
+};
+
+const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+	if (lastBid >= EPrefBid.BID_GAME_BETL) return _noTrumpGameOptions(lastBid);
+	else if (lastBid >= EPrefBid.BID_GAME) return _trumpGameOptions(lastBid, playersLastBid);
+	else return _plainOptions(lastBid, playersLastBid);
 };
 
 export default class PrefStageBidding extends APrefStage {
@@ -172,7 +182,7 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	public playerBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
-		this._storeBid({designation, bid});
+		this._processBid(designation, bid);
 
 		const id = this._bids.length + 1;
 		this._bids.push({id, designation, bid});
@@ -215,9 +225,15 @@ export default class PrefStageBidding extends APrefStage {
 			&& this._max3 === EPrefBid.BID_PASS;
 	}
 
-	// TODO: ne valja ovo!!!
-	// dvoja kažu dalje, treći nije rekao ništa, ovo će vrnuti true, a ne treba!
+	private get _allBidded(): boolean {
+		return this._max1 > EPrefBid.NO_BID
+			&& this._max2 > EPrefBid.NO_BID
+			&& this._max3 > EPrefBid.NO_BID;
+	}
+
 	private get _biddingCompleted(): boolean {
+		if (!this._allBidded) return false;
+
 		let cnt = 0;
 		if (_isEndBid(this._last1)) cnt++;
 		if (_isEndBid(this._last2)) cnt++;
@@ -225,25 +241,21 @@ export default class PrefStageBidding extends APrefStage {
 		return cnt >= 2;
 	}
 
-	private _storeBid(playerBid: PrefPlayerBid): PrefStageBidding {
-		const {designation, bid} = playerBid;
+	private _processBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
 		this._last = bid;
 		if (this._max < bid) this._max = bid;
-		if (_isEndBid(bid)) return this;
 
-		switch (designation) {
-			case 'p1':
-				this._last1 = bid;
-				if (this._max1 < bid) this._max1 = bid;
-				break;
-			case 'p2':
-				this._last2 = bid;
-				if (this._max2 < bid) this._max2 = bid;
-				break;
-			case 'p3':
-				this._last3 = bid;
-				if (this._max3 < bid) this._max3 = bid;
-				break;
+		if ('p1' === designation) {
+			this._last1 = bid;
+			if (this._max1 < bid) this._max1 = bid;
+
+		} else if ('p2' === designation) {
+			this._last2 = bid;
+			if (this._max2 < bid) this._max2 = bid;
+
+		} else {
+			this._last3 = bid;
+			if (this._max3 < bid) this._max3 = bid;
 		}
 
 		return this;
