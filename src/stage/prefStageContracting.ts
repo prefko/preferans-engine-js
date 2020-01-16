@@ -3,7 +3,7 @@
 
 import APrefStage from './aPrefStage';
 import {EPrefContract} from '../util/prefEngine.enums';
-import {PrefDesignation} from '../util/prefEngine.types';
+import {TPrefDesignation} from '../util/prefEngine.types';
 
 export default class PrefStageContracting extends APrefStage {
 

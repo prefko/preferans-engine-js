@@ -2,10 +2,10 @@
 'use strict';
 
 import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
-import {PrefHandSuggestion} from "./util/prefEngine.types";
+import {TPrefHandSuggestion} from "./util/prefEngine.types";
 
 // TODO: dodaj licitaciju...
-const _suggest = (hand: PrefDeckPile, talon: PrefDeckPile): PrefHandSuggestion[] => {
+const _suggest = (hand: PrefDeckPile, talon: PrefDeckPile): TPrefHandSuggestion[] => {
 
 	// TODO: predloži licit (maksimalni ili samo sldeći? ili par opcija?)
 
@@ -16,7 +16,7 @@ export default class PrefHandCheck {
 	private _hand: PrefDeckPile;
 	private _rest: PrefDeckPile;
 
-	private _suggestions: PrefHandSuggestion[];
+	private _suggestions: TPrefHandSuggestion[];
 
 	constructor(hand: PrefDeckPile, rest: PrefDeckPile) {
 		this._hand = new PrefDeckPile(hand.cards);

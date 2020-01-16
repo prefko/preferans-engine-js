@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import {PrefDesignation} from './util/prefEngine.types';
+import {TPrefDesignation} from './util/prefEngine.types';
 import PrefRoundPlayer from './round/prefRoundPlayer';
 import {EPrefPlayerDealRole} from './util/prefEngine.enums';
 
@@ -9,13 +9,13 @@ export default class PrefPlayer {
 	private readonly _starter: string;
 	private readonly _replacements: string[] = [];
 
-	private readonly _designation: PrefDesignation;
+	private readonly _designation: TPrefDesignation;
 	private _username: string;
 	private _nextPlayer!: PrefPlayer;
 
 	private _roundPlayer !: PrefRoundPlayer;
 
-	constructor(designation: PrefDesignation, username: string) {
+	constructor(designation: TPrefDesignation, username: string) {
 		this._designation = designation;
 
 		this._starter = username;
@@ -42,7 +42,7 @@ export default class PrefPlayer {
 		return this._nextPlayer;
 	}
 
-	get designation(): PrefDesignation {
+	get designation(): TPrefDesignation {
 		return this._designation;
 	}
 

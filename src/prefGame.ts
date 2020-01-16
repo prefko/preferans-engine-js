@@ -9,7 +9,7 @@ import {EPrefBid, EPrefContract, EPrefKontra} from './util/prefEngine.enums';
 
 import PrefRound from './round/prefRound';
 import PrefPlayer from './prefPlayer';
-import {PrefDesignation, PrefEvent, PrefGameOptions} from './util/prefEngine.types';
+import {TPrefDesignation, TPrefEvent, TPrefGameOptions} from './util/prefEngine.types';
 import APrefObservable from './aPrefObservable';
 import {Subscription} from 'rxjs';
 
@@ -19,13 +19,13 @@ const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => 
 };
 
 // TODO... export whats needed:
-export {PrefScore, PrefGameOptions};
+export {PrefScore, TPrefGameOptions};
 
 export default class PrefGame extends APrefObservable {
 
 	private readonly _bula: number;
 	private readonly _refas: number;
-	private readonly _options: PrefGameOptions;
+	private readonly _options: TPrefGameOptions;
 
 	private readonly _p1: PrefPlayer;
 	private readonly _p2: PrefPlayer;
@@ -38,7 +38,7 @@ export default class PrefGame extends APrefObservable {
 
 	private _roundObserver!: Subscription;
 
-	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: PrefGameOptions) {
+	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: TPrefGameOptions) {
 		super();
 
 		this._p1 = new PrefPlayer('p1', username1);
@@ -86,60 +86,33 @@ export default class PrefGame extends APrefObservable {
 		return this;
 	}
 
-	public playerBids(designation: PrefDesignation, bid: EPrefBid): PrefGame {
+	public playerBids(designation: TPrefDesignation, bid: EPrefBid): PrefGame {
 		if (this._round) this._round.playerBids(designation, bid);
 		return this;
 	}
 
-	public playerDiscarded(designation: PrefDesignation, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
+	public playerDiscarded(designation: TPrefDesignation, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefGame {
 		if (this._round) this._round.playerDiscarded(designation, discard1, discard2);
 		return this;
 	}
 
-	public playerContracted(designation: PrefDesignation, contract: EPrefContract): PrefGame {
+	public playerContracted(designation: TPrefDesignation, contract: EPrefContract): PrefGame {
 		if (this._round) this._round.playerContracted(designation, contract);
 		return this;
 	}
 
-	public playerDecided(designation: PrefDesignation, follows: boolean): PrefGame {
+	public playerDecided(designation: TPrefDesignation, follows: boolean): PrefGame {
 		if (this._round) this._round.playerDecided(designation, follows);
 		return this;
 	}
 
-	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefGame {
+	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefGame {
 		if (this._round) this._round.playerKontred(designation, kontra);
 		return this;
 	}
 
-	public playerThrows(designation: PrefDesignation, card: PrefDeckCard): PrefGame {
+	public playerThrows(designation: TPrefDesignation, card: PrefDeckCard): PrefGame {
 		if (this._round) this._round.playerThrows(designation, card);
-		return this;
-	}
-
-	public endRound(): PrefGame {
-		// TODO: is new refa?
-		// const hand = new PrefScoreHandGame...
-
-		const mainPlayer = this.round.mainPlayer;
-		const leftFollower = this.round.leftFollower;
-		const rightFollower = this.round.rightFollower;
-
-		const main: PrefScoreMain = {designation: mainPlayer.designation, tricks: 6, failed: false};
-		const right: PrefScoreFollower = {
-			designation: leftFollower.designation,
-			tricks: this.round.leftFollowerTricks,
-			failed: false,
-			followed: leftFollower.follows,
-		};
-		const left: PrefScoreFollower = {
-			designation: rightFollower.designation,
-			tricks: this.round.rightFollowerTricks,
-			failed: false,
-			followed: rightFollower.follows,
-		};
-
-		this._score.addPlayedHand(this._round.value, main, left, right);
-
 		return this;
 	}
 
@@ -150,14 +123,14 @@ export default class PrefGame extends APrefObservable {
 		return undefined;
 	}
 
-	private _getPlayerByDesignation(designation: PrefDesignation): PrefPlayer {
+	private _getPlayerByDesignation(designation: TPrefDesignation): PrefPlayer {
 		if ('p1' === designation) return this._p1;
 		else if ('p2' === designation) return this._p2;
 		else return this._p3;
 	}
 
 	// TODO: split this up?
-	private _roundObserverNext(value: PrefEvent): void {
+	private _roundObserverNext(value: TPrefEvent): void {
 		console.log('roundObserverNext', value);
 
 		const {source, event, data} = value;
@@ -185,6 +158,7 @@ export default class PrefGame extends APrefObservable {
 		return this._p3;
 	}
 
+	// TODO: replace :any with correct type!
 	get json(): any {
 		return this._rounds;
 	}

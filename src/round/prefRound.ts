@@ -3,13 +3,13 @@
 
 import * as _ from 'lodash';
 
-import PrefScore from 'preferans-score-js';
+import PrefScore, {PrefScoreFollower, PrefScoreMain} from 'preferans-score-js';
 import {PrefDeckCard, TPrefDeckDeal, PrefDeckTrick} from 'preferans-deck-js';
 
 import APrefStage from '../stage/aPrefStage';
 import PrefRoundPlayer from './prefRoundPlayer';
 import APrefRoundStages from './aPrefRoundStages';
-import {PrefDesignation, PrefEvent, PrefRoundStatus} from '../util/prefEngine.types';
+import {TPrefDesignation, TPrefEvent, TPrefRoundStatusObject} from '../util/prefEngine.types';
 import {EPrefBid, EPrefContract, EPrefKontra, EPrefPlayerDealRole} from '../util/prefEngine.enums';
 
 export default class PrefRound extends APrefRoundStages {
@@ -20,9 +20,9 @@ export default class PrefRound extends APrefRoundStages {
 	constructor(id: number,
 				deal: TPrefDeckDeal,
 				score: PrefScore,
-				first: PrefDesignation,
-				second: PrefDesignation,
-				dealer: PrefDesignation) {
+				first: TPrefDesignation,
+				second: TPrefDesignation,
+				dealer: TPrefDesignation) {
 		super(id, score);
 
 		this._deal = deal;
@@ -38,7 +38,12 @@ export default class PrefRound extends APrefRoundStages {
 		this._toBidding();
 	}
 
-	public playerBids(designation: PrefDesignation, bid: EPrefBid): PrefRound {
+	public getBiddingChoices(designation: TPrefDesignation): EPrefBid[] {
+		const player = this._getPlayerByDesignation(designation);
+		return this._biddingStage.getBiddingChoices(player.lastBid);
+	}
+
+	public playerBids(designation: TPrefDesignation, bid: EPrefBid): PrefRound {
 		if (!this._stage.isBiddingStage()) throw new Error('PrefRound::bid:Round is not in bidding stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -49,7 +54,7 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public playerDiscarded(designation: PrefDesignation, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
+	public playerDiscarded(designation: TPrefDesignation, discard1: PrefDeckCard, discard2: PrefDeckCard): PrefRound {
 		if (!this._stage.isDiscardingStage()) throw new Error('PrefRound::discarding:Round is not in discarding stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -59,7 +64,7 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public playerContracted(designation: PrefDesignation, contract: EPrefContract): PrefRound {
+	public playerContracted(designation: TPrefDesignation, contract: EPrefContract): PrefRound {
 		if (!this._stage.isContractingStage()) throw new Error('PrefRound::contracting:Round is not in contracting stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -70,7 +75,7 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public playerDecided(designation: PrefDesignation, follows: boolean): PrefRound {
+	public playerDecided(designation: TPrefDesignation, follows: boolean): PrefRound {
 		if (!this._stage.isDecidingStage()) throw new Error('PrefRound::decide:Round is not in deciding stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -81,7 +86,7 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefRound {
+	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefRound {
 		if (!this._stage.isKontringStage()) throw new Error('PrefRound::kontra:Round is not in kontra stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -92,7 +97,7 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public playerThrows(designation: PrefDesignation, card: PrefDeckCard): PrefRound {
+	public playerThrows(designation: TPrefDesignation, card: PrefDeckCard): PrefRound {
 		if (!this._stage.isPlayingStage()) throw new Error('PrefRound::throw:Round is not in playing stage but in ' + this._stage.name);
 		if (designation !== this._player.designation) throw new Error('PrefRound::bid:Wrong player ' + designation + ', active player is ' + this._player.designation);
 
@@ -103,17 +108,46 @@ export default class PrefRound extends APrefRoundStages {
 		return this;
 	}
 
-	public getBiddingChoices(designation: PrefDesignation): EPrefBid[] {
-		const player = this._getPlayerByDesignation(designation);
-		return this._biddingStage.getBiddingChoices(player.lastBid);
+	protected _finishRefa(): void {
+		this._score.addRefaHand();
+		this._broadcastFinish();
+	}
+
+	protected _finish(): void {
+		const mainPlayer = this._mainPlayer;
+		const leftFollower = this._leftFollower;
+		const rightFollower = this._rightFollower;
+
+		const main: PrefScoreMain = {designation: mainPlayer.designation, tricks: 6, failed: false};
+		const right: PrefScoreFollower = {
+			designation: leftFollower.designation,
+			tricks: this._leftFollowerTricks,
+			failed: false,
+			followed: leftFollower.follows,
+		};
+		const left: PrefScoreFollower = {
+			designation: rightFollower.designation,
+			tricks: this._rightFollowerTricks,
+			failed: false,
+			followed: rightFollower.follows,
+		};
+
+		this._score.addPlayedHand(this._value, main, left, right);
+		this._broadcastFinish();
+	}
+
+	private _broadcastFinish(): void {
+
+		// TODO: collect and broadcast cards!
+		this._broadcast({source: 'round', event: 'finished'});
 	}
 
 	// TODO: split this up?
-	protected _stageObserverNext(value: PrefEvent): void {
+	protected _stageObserverNext(value: TPrefEvent): void {
 		console.log('stageObserver', value);
 
 		const {source, event, data} = value;
-		const forward = (val: PrefEvent) => this._broadcast(val);
+		const forward = (val: TPrefEvent) => this._broadcast(val);
 
 		if ('nextBiddingPlayer' === event) this._nextBiddingPlayer();
 		else if ('nextDecidingPlayer' === event) this._nextDecidingPlayer();
@@ -152,24 +186,24 @@ export default class PrefRound extends APrefRoundStages {
 		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._mainPlayer.designation));
 	}
 
-	get leftFollowerTricks(): number {
-		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
-		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._leftFollower.designation));
-	}
-
-	get rightFollowerTricks(): number {
-		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
-		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._rightFollower.designation));
-	}
-
 	get ppn(): string {
 		// TODO: generate and return ppn
 		return '';
 	}
 
-	get status(): PrefRoundStatus {
+	get status(): TPrefRoundStatusObject {
 		// TODO:
 		return {next: 'cope'};
+	}
+
+	private get _leftFollowerTricks(): number {
+		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
+		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._leftFollower.designation));
+	}
+
+	private get _rightFollowerTricks(): number {
+		const tricks: PrefDeckTrick[] = this._playingStage.tricks;
+		return _.size(_.filter(tricks, (trick: PrefDeckTrick) => trick.winner === this._rightFollower.designation));
 	}
 
 }

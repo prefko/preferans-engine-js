@@ -5,11 +5,11 @@ import { includes, cloneDeep } from 'lodash';
 import { PrefDeckPile } from 'preferans-deck-js';
 
 import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from '../util/prefEngine.enums';
-import { PrefDesignation } from '../util/prefEngine.types';
+import { TPrefDesignation } from '../util/prefEngine.types';
 import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 
 export default class PrefRoundPlayer {
-	private readonly _designation: PrefDesignation;
+	private readonly _designation: TPrefDesignation;
 	private readonly _dealRole: EPrefPlayerDealRole;
 	private readonly _dealtCards: PrefDeckPile;
 
@@ -24,7 +24,7 @@ export default class PrefRoundPlayer {
 
 	private _nextPlayer!: PrefRoundPlayer;
 
-	constructor(designation: PrefDesignation, dealRole: EPrefPlayerDealRole, cards: PrefDeckPile) {
+	constructor(designation: TPrefDesignation, dealRole: EPrefPlayerDealRole, cards: PrefDeckPile) {
 		this._designation = designation;
 		this._dealRole = dealRole;
 		this._dealtCards = cards;
@@ -48,7 +48,7 @@ export default class PrefRoundPlayer {
 		return this._nextPlayer;
 	}
 
-	get designation(): PrefDesignation {
+	get designation(): TPrefDesignation {
 		return this._designation;
 	}
 

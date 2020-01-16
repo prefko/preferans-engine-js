@@ -3,10 +3,10 @@
 
 import {size} from 'lodash';
 import APrefStage from './aPrefStage';
-import {PrefDesignation, PrefPlayerDecision} from '../util/prefEngine.types';
+import {TPrefDesignation, TPrefPlayerDecision} from '../util/prefEngine.types';
 
 export default class PrefStageDeciding extends APrefStage {
-	private readonly _decisions: PrefPlayerDecision[] = [];
+	private readonly _decisions: TPrefPlayerDecision[] = [];
 
 	constructor() {
 		super();
@@ -14,7 +14,7 @@ export default class PrefStageDeciding extends APrefStage {
 
 	public isDecidingStage = (): boolean => true;
 
-	public playerDecided(designation: PrefDesignation, follows: boolean): PrefStageDeciding {
+	public playerDecided(designation: TPrefDesignation, follows: boolean): PrefStageDeciding {
 		this._decisions.push({designation, follows});
 
 		if (this._decidingCompleted) this._complete();

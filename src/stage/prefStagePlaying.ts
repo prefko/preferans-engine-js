@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import APrefStage from './aPrefStage';
 import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
 import { EPrefContract } from '../util/prefEngine.enums';
-import { PrefDesignation } from '../util/prefEngine.types';
+import { TPrefDesignation } from '../util/prefEngine.types';
 
 const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
 	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract)) return PrefDeckSuit.SPADE;
@@ -33,7 +33,7 @@ export default class PrefStagePlaying extends APrefStage {
 
 	public isPlayingStage = (): boolean => true;
 
-	public throw(designation: PrefDesignation, card: PrefDeckCard): PrefStagePlaying {
+	public throw(designation: TPrefDesignation, card: PrefDeckCard): PrefStagePlaying {
 		if (!this._trick) this._trick = new PrefDeckTrick(this._players, this._trump);
 		this._trick.throw(designation, card);
 

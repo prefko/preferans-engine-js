@@ -17,8 +17,9 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import {PrefDesignation, PrefEvent, PrefRoundDiscarded} from '../util/prefEngine.types';
+import {TPrefDesignation, TPrefEvent, TPrefRoundDiscarded, TPrefRoundStatusObject} from '../util/prefEngine.types';
 import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../util/prefEngine.enums';
+import PrefRoundStatus from "./prefRoundStatus";
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
@@ -29,13 +30,14 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected _stageObserver!: Subscription;
 
 	protected readonly _id: number;
+	protected _status!: PrefRoundStatus;
 	protected _score: PrefScore;
 
 	protected _stage!: APrefStage;
 
 	protected _allPassed: boolean = false;
 	protected _talon!: TPrefDeckTalon;
-	protected _discarded!: PrefRoundDiscarded;
+	protected _discarded!: TPrefRoundDiscarded;
 	protected _contract!: EPrefContract;
 	protected _kontra!: EPrefKontra;
 
@@ -54,6 +56,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected constructor(id: number, score: PrefScore) {
 		super();
 		this._id = id;
+		this._status = new PrefRoundStatus(id);
 		this._score = score;
 	}
 
@@ -122,7 +125,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		return (this._stage as PrefStageEnding);
 	}
 
-	protected _setActivePlayer(designation: PrefDesignation) {
+	protected _setActivePlayer(designation: TPrefDesignation) {
 		this._player = this._getPlayerByDesignation(designation);
 		this._broadcast({source: 'round', event: 'changed'});
 	}
@@ -157,13 +160,13 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		return this._player;
 	}
 
-	protected _getPlayerByDesignation(designation: PrefDesignation): PrefRoundPlayer {
+	protected _getPlayerByDesignation(designation: TPrefDesignation): PrefRoundPlayer {
 		if (this._firstPlayer.designation === designation) return this._firstPlayer;
 		if (this._secondPlayer.designation === designation) return this._secondPlayer;
 		return this._dealerPlayer;
 	}
 
-	protected abstract _stageObserverNext(value: PrefEvent): void;
+	protected abstract _stageObserverNext(value: TPrefEvent): void;
 
 	protected _stageObserverError(error: any) {
 		throw new Error('APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error));
@@ -186,49 +189,53 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		else this._toDiscarding();
 	}
 
-	private _toDiscarding() {
+	protected _toDiscarding() {
 		this._stage = new PrefStageDiscarding();
 		this._stageSubscribe(this._toContracting);
 		this._setupHighestBidder();
 	}
 
-	private _toContracting() {
+	protected _toContracting() {
 		this._stage = new PrefStageContracting();
 		this._stageSubscribe(this._toDeciding);
 		this._setupHighestBidder();
 	}
 
-	private _toDeciding() {
+	protected _toDeciding() {
 		this._stage = new PrefStageDeciding();
 		this._stageSubscribe(this._toKontring);
 		this._setActivePlayer(this._rightFollower.designation);
 	}
 
-	private _toKontring() {
+	protected _toKontring() {
 		this._stage = new PrefStageKontring(this._contract, this._underRefa);
 		this._stageSubscribe(this._toPlaying);
 		this._setActivePlayer(this._rightFollower.designation);
 	}
 
-	private _toPlaying() {
+	protected _toPlaying() {
 		this._stage = new PrefStagePlaying(this.playersCount, this._contract);
 		this._stageSubscribe(this._toEnding);
 		const nextPlayer = _isLeftFirst(this._contract) ? this._leftFollower : this._firstPlayer;
 		this._setActivePlayer(nextPlayer.designation);
 	}
 
-	private _toEndingRefa() {
+	protected abstract _finishRefa(): void;
+
+	protected abstract _finish(): void;
+
+	protected _toEndingRefa() {
 		this._allPassed = true;
 		this._toEnding();
 	}
 
-	private _toEnding() {
+	protected _toEnding() {
 		this._stageObserver.unsubscribe();
 		this._stage = new PrefStageEnding();
-		this._complete();
+		return this._allPassed ? this._finishRefa() : this._finish();
 	}
 
-	private _setupHighestBidder(): void {
+	protected _setupHighestBidder(): void {
 		const designation = this._biddingStage.highestBidderDesignation;
 		this._mainPlayer = this._getPlayerByDesignation(designation);
 		this._rightFollower = this._getNextPlayerFromDesignation(designation);
@@ -241,13 +248,13 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		this._setActivePlayer(designation);
 	}
 
-	private _getPreviousPlayerFromDesignation(designation: PrefDesignation): PrefRoundPlayer {
+	protected _getPreviousPlayerFromDesignation(designation: TPrefDesignation): PrefRoundPlayer {
 		if (this._firstPlayer.designation === designation) return this._dealerPlayer;
 		else if (this._secondPlayer.designation === designation) return this._firstPlayer;
 		else return this._secondPlayer;
 	}
 
-	private _getNextPlayerFromDesignation(designation: PrefDesignation): PrefRoundPlayer {
+	protected _getNextPlayerFromDesignation(designation: TPrefDesignation): PrefRoundPlayer {
 		if (this._firstPlayer.designation === designation) return this._secondPlayer;
 		else if (this._secondPlayer.designation === designation) return this._dealerPlayer;
 		else return this._firstPlayer;

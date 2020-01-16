@@ -5,7 +5,7 @@ import {includes} from 'lodash';
 
 import APrefStage from './aPrefStage';
 import {EPrefBid} from '../util/prefEngine.enums';
-import {PrefBids, PrefDesignation, PrefPlayerBid, PrefPlayerBidOrdered} from '../util/prefEngine.types';
+import {TPrefBids, TPrefDesignation, TPrefPlayerBid, TPrefPlayerBidOrdered} from '../util/prefEngine.types';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -159,7 +159,7 @@ const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
 };
 
 export default class PrefStageBidding extends APrefStage {
-	private _bids: PrefPlayerBidOrdered[] = [];
+	private _bids: TPrefPlayerBidOrdered[] = [];
 	private _max: EPrefBid = EPrefBid.NO_BID;
 	private _last: EPrefBid = EPrefBid.NO_BID;
 
@@ -181,7 +181,7 @@ export default class PrefStageBidding extends APrefStage {
 		return 'Bidding';
 	}
 
-	public playerBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
+	public playerBid(designation: TPrefDesignation, bid: EPrefBid): PrefStageBidding {
 		this._processBid(designation, bid);
 
 		const id = this._bids.length + 1;
@@ -197,11 +197,11 @@ export default class PrefStageBidding extends APrefStage {
 		return _choices(this._last, playersLastBid);
 	}
 
-	get bids(): PrefPlayerBidOrdered[] {
+	get bids(): TPrefPlayerBidOrdered[] {
 		return this._bids;
 	}
 
-	get json(): PrefBids {
+	get json(): TPrefBids {
 		return {
 			'p1': this._max1,
 			'p2': this._max2,
@@ -213,7 +213,7 @@ export default class PrefStageBidding extends APrefStage {
 		return this._max >= EPrefBid.BID_GAME;
 	}
 
-	get highestBidderDesignation(): PrefDesignation {
+	get highestBidderDesignation(): TPrefDesignation {
 		if (this._max === this._max1) return 'p1';
 		if (this._max === this._max2) return 'p2';
 		return 'p3';
@@ -241,7 +241,7 @@ export default class PrefStageBidding extends APrefStage {
 		return cnt >= 2;
 	}
 
-	private _processBid(designation: PrefDesignation, bid: EPrefBid): PrefStageBidding {
+	private _processBid(designation: TPrefDesignation, bid: EPrefBid): PrefStageBidding {
 		this._last = bid;
 		if (this._max < bid) this._max = bid;
 

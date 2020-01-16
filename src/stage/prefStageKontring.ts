@@ -5,7 +5,7 @@ import {includes} from 'lodash';
 
 import APrefStage from './aPrefStage';
 import {EPrefContract, EPrefKontra} from '../util/prefEngine.enums';
-import {PrefDesignation, PrefKontras, PrefPlayerKontra, PrefPlayerKontraOrdered} from '../util/prefEngine.types';
+import {TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered} from '../util/prefEngine.types';
 
 const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
@@ -75,7 +75,7 @@ export default class PrefStageKontring extends APrefStage {
 	protected _contract: EPrefContract;
 	protected _underRefa: boolean;
 
-	private _kontras: PrefPlayerKontraOrdered[] = [];
+	private _kontras: TPrefPlayerKontraOrdered[] = [];
 	private _max: EPrefKontra = EPrefKontra.NO_KONTRA;
 	private _last: EPrefKontra = EPrefKontra.NO_KONTRA;
 
@@ -99,7 +99,7 @@ export default class PrefStageKontring extends APrefStage {
 		return 'Kontring';
 	}
 
-	public playerKontred(designation: PrefDesignation, kontra: EPrefKontra): PrefStageKontring {
+	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefStageKontring {
 		this._storeKontra({designation, kontra});
 
 		const id = this._kontras.length + 1;
@@ -130,11 +130,11 @@ export default class PrefStageKontring extends APrefStage {
 		return this._max;
 	}
 
-	get kontras(): PrefPlayerKontraOrdered[] {
+	get kontras(): TPrefPlayerKontraOrdered[] {
 		return this._kontras;
 	}
 
-	get json(): PrefKontras {
+	get json(): TPrefKontras {
 		return {
 			'p1': this._max1,
 			'p2': this._max2,
@@ -164,7 +164,7 @@ export default class PrefStageKontring extends APrefStage {
 		return cnt >= 2;
 	}
 
-	private _storeKontra(playerKontra: PrefPlayerKontra): PrefStageKontring {
+	private _storeKontra(playerKontra: TPrefPlayerKontra): PrefStageKontring {
 		const {designation, kontra} = playerKontra;
 		this._last = kontra;
 		if (this._max < kontra) this._max = kontra;
