@@ -1367,8 +1367,8 @@ pkg-dir@^3.0.0:
     find-up "^3.0.0"
 
 preferans-deck-js@*:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.5.1.tgz#6b1853daa804e24ed652267a3247eb88a17cc2cf"
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/preferans-deck-js/-/preferans-deck-js-2.5.2.tgz#6dcbcdf6cd6dc2cb844eaddeeed6dfdcb8a7fefa"
   dependencies:
     "@types/lodash" "^4.14.149"
     lodash "^4.17.15"
@@ -1936,9 +1936,13 @@ typedoc@^0.15.6:
     typedoc-default-themes "^0.6.3"
     typescript "3.7.x"
 
-typescript@3.7.x, typescript@^3.5.3:
+typescript@3.7.x:
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
+
+typescript@^3.5.3:
+  version "3.7.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
 
 uglify-js@^3.1.4:
   version "3.7.4"
