@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+// TODO: add javascript-state-machine (or stately.js, or machina)
+
 import * as _ from 'lodash';
 
 import PrefDeck, {PrefDeckCard} from 'preferans-deck-js';
