@@ -1,6 +1,6 @@
 {
 	"name": "preferans-engine-js",
-	"version": "0.1.0",
+	"version": "0.1.1s",
 	"description": "nodejs engine for preferans",
 	"engines": {
 		"node": ">=8.9"
@@ -58,30 +58,30 @@
 	},
 	"homepage": "https://github.com/prefko/preferans-engine-js#readme",
 	"dependencies": {
-		"@types/lodash": "^4.14.136",
+		"@types/lodash": "^4.14.155",
 		"lodash": "^4.2.1",
 		"preferans-deck-js": "*",
 		"preferans-paper-js": "*",
 		"preferans-rating-js": "*",
 		"preferans-score-js": "*",
-		"rxjs": "^6.5.4"
+		"rxjs": "^6.5.5"
 	},
 	"devDependencies": {
-		"@types/chai": "^4.1.7",
+		"@types/chai": "^4.2.11",
 		"@types/mocha": "^5.2.7",
 		"chai": "^4.1.2",
-		"coveralls": "^3.0.5",
+		"coveralls": "^3.1.0",
 		"mocha": "^6.2.0",
-		"nyc": "^14.1.1",
+		"nyc": "^15.1.0",
 		"prettier": "^1.18.2",
 		"sonarjs": "^1.0.0",
-		"source-map-support": "^0.5.12",
-		"ts-node": "^8.3.0",
-		"tslint": "^5.18.0",
+		"source-map-support": "^0.5.19",
+		"ts-node": "^8.10.2",
+		"tslint": "^6.1.2",
 		"tslint-config-prettier": "^1.18.0",
-		"tslint-etc": "^1.10.0",
+		"tslint-etc": "^1.11.0",
 		"tslint-no-unused-expression-chai": "^0.1.4",
-		"typedoc": "^0.15.6",
-		"typescript": "^3.5.3"
+		"typedoc": "^0.17.7",
+		"typescript": "^3.9.5"
 	}
 }

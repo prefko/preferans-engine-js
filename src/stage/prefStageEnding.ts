@@ -4,7 +4,6 @@
 import APrefStage from './aPrefStage';
 
 export default class PrefStageEnding extends APrefStage {
-
 	constructor() {
 		super();
 	}
@@ -14,5 +13,4 @@ export default class PrefStageEnding extends APrefStage {
 	get name(): string {
 		return 'Ending';
 	}
-
 }

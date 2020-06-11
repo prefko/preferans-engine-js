@@ -2,10 +2,10 @@
 'use strict';
 
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import PrefScore from 'preferans-score-js';
-import {TPrefDeckTalon} from 'preferans-deck-js';
+import { TPrefDeckTalon } from 'preferans-deck-js';
 
 import APrefObservable from '../aPrefObservable';
 import APrefStage from '../stage/aPrefStage';
@@ -17,16 +17,17 @@ import PrefStageKontring from '../stage/prefStageKontring';
 import PrefStagePlaying from '../stage/prefStagePlaying';
 import PrefStageEnding from '../stage/prefStageEnding';
 import PrefRoundPlayer from './prefRoundPlayer';
-import {TPrefDesignation, TPrefEvent, TPrefRoundDiscarded, TPrefRoundStatusObject} from '../util/prefEngine.types';
-import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../util/prefEngine.enums';
-import PrefRoundStatus from "./prefRoundStatus";
+import { TPrefDesignation, TPrefEvent, TPrefRoundDiscarded } from '../util/prefEngine.types';
+import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from '../util/prefEngine.enums';
+import PrefRoundStatus from './prefRoundStatus';
 
-const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
-const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
+const _isSans = (contract: EPrefContract): boolean =>
+	_.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
+const _isPreferans = (contract: EPrefContract): boolean =>
+	_.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
 const _isLeftFirst = (contract: EPrefContract): boolean => _isSans(contract) || _isPreferans(contract);
 
 export default abstract class APrefRoundStages extends APrefObservable {
-
 	protected _stageObserver!: Subscription;
 
 	protected readonly _id: number;
@@ -98,36 +99,36 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	}
 
 	protected get _biddingStage(): PrefStageBidding {
-		return (this._stage as PrefStageBidding);
+		return this._stage as PrefStageBidding;
 	}
 
 	protected get _discardingStage(): PrefStageDiscarding {
-		return (this._stage as PrefStageDiscarding);
+		return this._stage as PrefStageDiscarding;
 	}
 
 	protected get _contractingStage(): PrefStageContracting {
-		return (this._stage as PrefStageContracting);
+		return this._stage as PrefStageContracting;
 	}
 
 	protected get _decidingStage(): PrefStageDeciding {
-		return (this._stage as PrefStageDeciding);
+		return this._stage as PrefStageDeciding;
 	}
 
 	protected get _kontringStage(): PrefStageKontring {
-		return (this._stage as PrefStageKontring);
+		return this._stage as PrefStageKontring;
 	}
 
 	protected get _playingStage(): PrefStagePlaying {
-		return (this._stage as PrefStagePlaying);
+		return this._stage as PrefStagePlaying;
 	}
 
 	protected get _endingStage(): PrefStageEnding {
-		return (this._stage as PrefStageEnding);
+		return this._stage as PrefStageEnding;
 	}
 
 	protected _setActivePlayer(designation: TPrefDesignation) {
 		this._player = this._getPlayerByDesignation(designation);
-		this._broadcast({source: 'round', event: 'changed'});
+		this._broadcast({ source: 'round', event: 'changed' });
 	}
 
 	protected _nextPlayer(): PrefRoundPlayer {
@@ -169,12 +170,18 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected abstract _stageObserverNext(value: TPrefEvent): void;
 
 	protected _stageObserverError(error: any) {
-		throw new Error('APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error));
+		throw new Error(
+			'APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error),
+		);
 	}
 
 	protected _stageSubscribe(stageObserverComplete: () => void): void {
 		if (this._stageObserver) this._stageObserver.unsubscribe();
-		this._stageObserver = this._stage.subscribe(this._stageObserverNext, this._stageObserverError, stageObserverComplete);
+		this._stageObserver = this._stage.subscribe(
+			this._stageObserverNext,
+			this._stageObserverError,
+			stageObserverComplete,
+		);
 	}
 
 	protected _toBidding() {
@@ -259,5 +266,4 @@ export default abstract class APrefRoundStages extends APrefObservable {
 		else if (this._secondPlayer.designation === designation) return this._dealerPlayer;
 		else return this._firstPlayer;
 	}
-
 }

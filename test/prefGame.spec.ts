@@ -9,5 +9,5 @@ describe('Game tests', () => {
 	});
 });
 
-// TODO: add a way to fake define the deck and deals!
+// Add a way to fake define the deck and deals!
 // Testing requires fixed cards...

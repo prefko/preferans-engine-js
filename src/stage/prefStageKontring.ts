@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 'use strict';
 
-import {includes} from 'lodash';
+import { includes } from 'lodash';
 
 import APrefStage from './aPrefStage';
-import {EPrefContract, EPrefKontra} from '../util/prefEngine.enums';
-import {TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered} from '../util/prefEngine.types';
+import { EPrefContract, EPrefKontra } from '../util/prefEngine.enums';
+import { TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered } from '../util/prefEngine.types';
 
-const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
+const _isEndKontra = (kontra: EPrefKontra): boolean =>
+	includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
-const _choices = (lastKontra: EPrefKontra,
-				  contract: EPrefContract,
-				  canInvite: boolean,
-				  allowSubAndMortKontras: boolean): EPrefKontra[] => {
+const _choices = (
+	lastKontra: EPrefKontra,
+	contract: EPrefContract,
+	canInvite: boolean,
+	allowSubAndMortKontras: boolean,
+): EPrefKontra[] => {
 	const isContractSpade = EPrefContract.CONTRACT_SPADE === contract;
 
 	const choices: EPrefKontra[] = [];
@@ -100,29 +103,32 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefStageKontring {
-		this._storeKontra({designation, kontra});
+		this._storeKontra({ designation, kontra });
 
 		const id = this._kontras.length + 1;
-		this._kontras.push({id, designation, kontra});
+		this._kontras.push({ id, designation, kontra });
 
 		if (this._kontringCompleted) {
-			this._broadcast({source: 'kontring', event: 'kontra', data: this._max});
+			this._broadcast({ source: 'kontring', event: 'kontra', data: this._max });
 
 			let value = _contract2value(this._contract);
 			value *= this.multiplication;
 			if (this._underRefa) value *= 2;
-			this._broadcast({source: 'kontring', event: 'value', data: value});
+			this._broadcast({ source: 'kontring', event: 'value', data: value });
 
 			this._complete();
-
 		} else {
-			this._broadcast({source: 'kontring', event: 'nextKontringPlayer', data: this._max});
+			this._broadcast({ source: 'kontring', event: 'nextKontringPlayer', data: this._max });
 		}
 
 		return this;
 	}
 
-	public getKontringChoices(contract: EPrefContract, canInvite: boolean, allowSubAndMortKontras: boolean): EPrefKontra[] {
+	public getKontringChoices(
+		contract: EPrefContract,
+		canInvite: boolean,
+		allowSubAndMortKontras: boolean,
+	): EPrefKontra[] {
 		return _choices(this._max, contract, canInvite, allowSubAndMortKontras);
 	}
 
@@ -136,9 +142,9 @@ export default class PrefStageKontring extends APrefStage {
 
 	get json(): TPrefKontras {
 		return {
-			'p1': this._max1,
-			'p2': this._max2,
-			'p3': this._max3,
+			p1: this._max1,
+			p2: this._max2,
+			p3: this._max3,
 		};
 	}
 
@@ -165,7 +171,7 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	private _storeKontra(playerKontra: TPrefPlayerKontra): PrefStageKontring {
-		const {designation, kontra} = playerKontra;
+		const { designation, kontra } = playerKontra;
 		this._last = kontra;
 		if (this._max < kontra) this._max = kontra;
 		this._last = kontra;
@@ -187,5 +193,4 @@ export default class PrefStageKontring extends APrefStage {
 
 		return this;
 	}
-
 }

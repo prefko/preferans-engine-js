@@ -32,7 +32,7 @@ export default class PrefRoundPlayer {
 	}
 
 	public throw(card: PrefDeckCard) {
-		// TODO
+		// TODO:
 	}
 
 	public isOutOfKontring(maxKontra: EPrefKontra): boolean {
@@ -113,5 +113,4 @@ export default class PrefRoundPlayer {
 	get lastKontra(): EPrefKontra {
 		return this._lastKontra;
 	}
-
 }

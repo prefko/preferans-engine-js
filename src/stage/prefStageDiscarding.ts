@@ -4,7 +4,6 @@
 import APrefStage from './aPrefStage';
 
 export default class PrefStageDiscarding extends APrefStage {
-
 	constructor() {
 		super();
 	}
@@ -18,5 +17,4 @@ export default class PrefStageDiscarding extends APrefStage {
 	public discarded(): void {
 		this._complete();
 	}
-
 }

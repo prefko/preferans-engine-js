@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-import {TPrefRoundStatusObject} from '../util/prefEngine.types';
-
 export default class PrefRoundStatus {
 	protected readonly _id: number;
 
@@ -19,5 +17,4 @@ export default class PrefRoundStatus {
 	// get ppn(): string {
 	// 	return ...;
 	// }
-
 }

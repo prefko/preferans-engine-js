@@ -2,11 +2,8 @@
 'use strict';
 
 import APrefStage from './aPrefStage';
-import {EPrefContract} from '../util/prefEngine.enums';
-import {TPrefDesignation} from '../util/prefEngine.types';
 
 export default class PrefStageContracting extends APrefStage {
-
 	constructor() {
 		super();
 	}
@@ -20,5 +17,4 @@ export default class PrefStageContracting extends APrefStage {
 	public contracted(): void {
 		this._complete();
 	}
-
 }

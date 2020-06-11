@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-import {includes} from 'lodash';
+import { includes } from 'lodash';
 
 import APrefStage from './aPrefStage';
-import {EPrefBid} from '../util/prefEngine.enums';
-import {TPrefBids, TPrefDesignation, TPrefPlayerBid, TPrefPlayerBidOrdered} from '../util/prefEngine.types';
+import { EPrefBid } from '../util/prefEngine.enums';
+import { TPrefBids, TPrefDesignation, TPrefPlayerBidOrdered } from '../util/prefEngine.types';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -38,18 +38,20 @@ const _trumpGameOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBi
 	let choices: EPrefBid[] = [];
 	switch (lastBid) {
 		case EPrefBid.BID_GAME:
-			if (playersLastBid === EPrefBid.BID_GAME) { // Zatvoren krug, treba da kazem KOJA je moja
+			if (playersLastBid === EPrefBid.BID_GAME) {
+				// Zatvoren krug, treba da kazem KOJA je moja
 				choices.push(EPrefBid.BID_GAME_SPADE);
 				choices.push(EPrefBid.BID_GAME_DIAMOND);
 				choices.push(EPrefBid.BID_GAME_HEART);
 				choices.push(EPrefBid.BID_GAME_CLUB);
-
-			} else if (playersLastBid === EPrefBid.NO_BID) { // Ja nisam rekao nista, ali je pre mene licit IGRA
+			} else if (playersLastBid === EPrefBid.NO_BID) {
+				// Ja nisam rekao nista, ali je pre mene licit IGRA
 				choices.push(EPrefBid.BID_PASS);
 				choices = _addInitialGameChoices(choices);
 
 				// TODO: ovog treba preskočiti!!!
-			} else {  // Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
+			} else {
+				// Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
 				choices.push(EPrefBid.BID_PASS);
 			}
 			break;
@@ -185,10 +187,10 @@ export default class PrefStageBidding extends APrefStage {
 		this._processBid(designation, bid);
 
 		const id = this._bids.length + 1;
-		this._bids.push({id, designation, bid});
+		this._bids.push({ id, designation, bid });
 
 		if (this._biddingCompleted) this._complete();
-		else this._broadcast({source: 'bidding', event: 'nextBiddingPlayer'});
+		else this._broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
 
 		return this;
 	}
@@ -203,9 +205,9 @@ export default class PrefStageBidding extends APrefStage {
 
 	get json(): TPrefBids {
 		return {
-			'p1': this._max1,
-			'p2': this._max2,
-			'p3': this._max3,
+			p1: this._max1,
+			p2: this._max2,
+			p3: this._max3,
 		};
 	}
 
@@ -220,15 +222,11 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	get allPassed(): boolean {
-		return this._max1 === EPrefBid.BID_PASS
-			&& this._max2 === EPrefBid.BID_PASS
-			&& this._max3 === EPrefBid.BID_PASS;
+		return this._max1 === EPrefBid.BID_PASS && this._max2 === EPrefBid.BID_PASS && this._max3 === EPrefBid.BID_PASS;
 	}
 
 	private get _allBidded(): boolean {
-		return this._max1 > EPrefBid.NO_BID
-			&& this._max2 > EPrefBid.NO_BID
-			&& this._max3 > EPrefBid.NO_BID;
+		return this._max1 > EPrefBid.NO_BID && this._max2 > EPrefBid.NO_BID && this._max3 > EPrefBid.NO_BID;
 	}
 
 	private get _biddingCompleted(): boolean {
@@ -248,11 +246,9 @@ export default class PrefStageBidding extends APrefStage {
 		if ('p1' === designation) {
 			this._last1 = bid;
 			if (this._max1 < bid) this._max1 = bid;
-
 		} else if ('p2' === designation) {
 			this._last2 = bid;
 			if (this._max2 < bid) this._max2 = bid;
-
 		} else {
 			this._last3 = bid;
 			if (this._max3 < bid) this._max3 = bid;
@@ -260,5 +256,4 @@ export default class PrefStageBidding extends APrefStage {
 
 		return this;
 	}
-
 }

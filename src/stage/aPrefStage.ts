@@ -3,7 +3,6 @@
 import APrefObservable from '../aPrefObservable';
 
 export default abstract class APrefStage extends APrefObservable {
-
 	protected constructor() {
 		super();
 	}
