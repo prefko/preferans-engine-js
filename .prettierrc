@@ -1,6 +1,5 @@
 {
 	"printWidth": 180,
-	"trailingComma": "all",
 	"bracketSpacing": true,
 	"arrowParens": "always",
 	"useTabs": true,
