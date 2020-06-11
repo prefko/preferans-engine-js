@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 export default class PrefRoundStatus {
 	protected readonly _id: number;

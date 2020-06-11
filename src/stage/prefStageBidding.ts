@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { includes } from 'lodash';
+import { includes } from "lodash";
 
-import APrefStage from './aPrefStage';
-import { EPrefBid } from '../util/prefEngine.enums';
-import { TPrefBids, TPrefDesignation, TPrefPlayerBidOrdered } from '../util/prefEngine.types';
+import APrefStage from "./aPrefStage";
+import { EPrefBid } from "../util/prefEngine.enums";
+import { TPrefBids, TPrefDesignation, TPrefPlayerBidOrdered } from "../util/prefEngine.types";
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -17,16 +17,22 @@ const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 
 const _isEndBid = (bid: EPrefBid): boolean => includes([EPrefBid.BID_PASS, EPrefBid.BID_YOURS_IS_BETTER], bid);
 
-const _noTrumpGameOptions = (lastBid: EPrefBid): EPrefBid[] => {
+const _noTrumpGameOptions = (currentMax: EPrefBid, myLastBid: EPrefBid): EPrefBid[] => {
 	let choices: EPrefBid[] = [];
 	choices.push(EPrefBid.BID_PASS);
-	switch (lastBid) {
+	switch (currentMax) {
 		case EPrefBid.BID_GAME_BETL:
-			choices.push(EPrefBid.BID_GAME_SANS);
-			choices.push(EPrefBid.BID_GAME_PREFERANS);
+			if (myLastBid === EPrefBid.NO_BID) {
+				// Ja nisam rekao nista, ali je pre mene licit IGRA BETL
+				choices.push(EPrefBid.BID_GAME_SANS);
+				choices.push(EPrefBid.BID_GAME_PREFERANS);
+			}
 			break;
 		case EPrefBid.BID_GAME_SANS:
-			choices.push(EPrefBid.BID_GAME_PREFERANS);
+			if (myLastBid === EPrefBid.NO_BID) {
+				// Ja nisam rekao nista, ali je pre mene licit IGRA SANS
+				choices.push(EPrefBid.BID_GAME_PREFERANS);
+			}
 			break;
 		default:
 			break;
@@ -34,28 +40,27 @@ const _noTrumpGameOptions = (lastBid: EPrefBid): EPrefBid[] => {
 	return choices;
 };
 
-const _trumpGameOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+const _trumpGameOptions = (currentMax: EPrefBid, myLastBid: EPrefBid): EPrefBid[] => {
 	let choices: EPrefBid[] = [];
-	switch (lastBid) {
+	switch (currentMax) {
 		case EPrefBid.BID_GAME:
-			if (playersLastBid === EPrefBid.BID_GAME) {
-				// Zatvoren krug, treba da kazem KOJA je moja
+			if (myLastBid === EPrefBid.BID_GAME) {
+				// Zatvoren krug, treba da kazem KOJA je moja igra
 				choices.push(EPrefBid.BID_GAME_SPADE);
 				choices.push(EPrefBid.BID_GAME_DIAMOND);
 				choices.push(EPrefBid.BID_GAME_HEART);
 				choices.push(EPrefBid.BID_GAME_CLUB);
-			} else if (playersLastBid === EPrefBid.NO_BID) {
+			} else if (myLastBid === EPrefBid.NO_BID) {
 				// Ja nisam rekao nista, ali je pre mene licit IGRA
 				choices.push(EPrefBid.BID_PASS);
 				choices = _addInitialGameChoices(choices);
-
-				// TODO: ovog treba preskočiti!!!
 			} else {
-				// Licitirao sam nesto sto nije IGRA ali sad je neko rekao IGRA
+				// Licitirao sam nesto ispod IGRA, za mene je kraj
 				choices.push(EPrefBid.BID_PASS);
 			}
 			break;
 
+		// Sve ispod dolazi do mene samo ako samprethodno rekao IGRA
 		case EPrefBid.BID_GAME_SPADE:
 			choices.push(EPrefBid.BID_GAME_DIAMOND);
 			choices.push(EPrefBid.BID_GAME_HEART);
@@ -84,10 +89,10 @@ const _trumpGameOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBi
 	return choices;
 };
 
-const _plainOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
+const _plainOptions = (currentMax: EPrefBid, myLastBid: EPrefBid): EPrefBid[] => {
 	let choices: EPrefBid[] = [];
 	choices.push(EPrefBid.BID_PASS);
-	switch (lastBid) {
+	switch (currentMax) {
 		case EPrefBid.NO_BID:
 		case EPrefBid.BID_PASS:
 			choices.push(EPrefBid.BID_SPADE);
@@ -100,7 +105,7 @@ const _plainOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] 
 			break;
 
 		case EPrefBid.BID_DIAMOND:
-			if (playersLastBid === EPrefBid.BID_SPADE) choices.push(EPrefBid.BID_DIAMOND_MINE);
+			if (myLastBid === EPrefBid.BID_SPADE) choices.push(EPrefBid.BID_DIAMOND_MINE);
 			else {
 				choices.push(EPrefBid.BID_HEART);
 				choices = _addInitialGameChoices(choices);
@@ -154,10 +159,10 @@ const _plainOptions = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] 
 	return choices;
 };
 
-const _choices = (lastBid: EPrefBid, playersLastBid: EPrefBid): EPrefBid[] => {
-	if (lastBid >= EPrefBid.BID_GAME_BETL) return _noTrumpGameOptions(lastBid);
-	else if (lastBid >= EPrefBid.BID_GAME) return _trumpGameOptions(lastBid, playersLastBid);
-	else return _plainOptions(lastBid, playersLastBid);
+const _choices = (currentMax: EPrefBid, lastBid: EPrefBid, myLastBid: EPrefBid): EPrefBid[] => {
+	if (currentMax >= EPrefBid.BID_GAME_BETL) return _noTrumpGameOptions(currentMax, myLastBid);
+	else if (currentMax >= EPrefBid.BID_GAME) return _trumpGameOptions(currentMax, myLastBid);
+	else return _plainOptions(currentMax, myLastBid);
 };
 
 export default class PrefStageBidding extends APrefStage {
@@ -180,7 +185,7 @@ export default class PrefStageBidding extends APrefStage {
 	public isBiddingStage = (): boolean => true;
 
 	get name(): string {
-		return 'Bidding';
+		return "Bidding";
 	}
 
 	public playerBid(designation: TPrefDesignation, bid: EPrefBid): PrefStageBidding {
@@ -190,13 +195,13 @@ export default class PrefStageBidding extends APrefStage {
 		this._bids.push({ id, designation, bid });
 
 		if (this._biddingCompleted) this._complete();
-		else this._broadcast({ source: 'bidding', event: 'nextBiddingPlayer' });
+		else this._broadcast({ source: "bidding", event: "nextBiddingPlayer" });
 
 		return this;
 	}
 
 	public getBiddingChoices(playersLastBid: EPrefBid): EPrefBid[] {
-		return _choices(this._last, playersLastBid);
+		return _choices(this._max, this._last, playersLastBid);
 	}
 
 	get bids(): TPrefPlayerBidOrdered[] {
@@ -216,9 +221,9 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	get highestBidderDesignation(): TPrefDesignation {
-		if (this._max === this._max1) return 'p1';
-		if (this._max === this._max2) return 'p2';
-		return 'p3';
+		if (this._max === this._max1) return "p1";
+		if (this._max === this._max2) return "p2";
+		return "p3";
 	}
 
 	get allPassed(): boolean {
@@ -243,10 +248,10 @@ export default class PrefStageBidding extends APrefStage {
 		this._last = bid;
 		if (this._max < bid) this._max = bid;
 
-		if ('p1' === designation) {
+		if ("p1" === designation) {
 			this._last1 = bid;
 			if (this._max1 < bid) this._max1 = bid;
-		} else if ('p2' === designation) {
+		} else if ("p2" === designation) {
 			this._last2 = bid;
 			if (this._max2 < bid) this._max2 = bid;
 		} else {

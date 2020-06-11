@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import APrefStage from './aPrefStage';
+import APrefStage from "./aPrefStage";
 
 export default class PrefStageDiscarding extends APrefStage {
 	constructor() {
@@ -11,7 +11,7 @@ export default class PrefStageDiscarding extends APrefStage {
 	public isDiscardingStage = (): boolean => true;
 
 	get name(): string {
-		return 'Discarding';
+		return "Discarding";
 	}
 
 	public discarded(): void {

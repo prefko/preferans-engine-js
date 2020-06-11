@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 export enum EPrefPlayerDealRole {
 	NONE = 0,

@@ -37,14 +37,7 @@ export default class PrefGame extends APrefObservable {
 
 	private _roundObserver!: Subscription;
 
-	constructor(
-		username1: string,
-		username2: string,
-		username3: string,
-		bula: number,
-		refas: number,
-		options: TPrefGameOptions
-	) {
+	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: TPrefGameOptions) {
 		super();
 
 		this._p1 = new PrefPlayer("p1", username1);

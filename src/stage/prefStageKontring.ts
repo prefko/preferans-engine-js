@@ -1,21 +1,15 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { includes } from 'lodash';
+import { includes } from "lodash";
 
-import APrefStage from './aPrefStage';
-import { EPrefContract, EPrefKontra } from '../util/prefEngine.enums';
-import { TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered } from '../util/prefEngine.types';
+import APrefStage from "./aPrefStage";
+import { EPrefContract, EPrefKontra } from "../util/prefEngine.enums";
+import { TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered } from "../util/prefEngine.types";
 
-const _isEndKontra = (kontra: EPrefKontra): boolean =>
-	includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
+const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
-const _choices = (
-	lastKontra: EPrefKontra,
-	contract: EPrefContract,
-	canInvite: boolean,
-	allowSubAndMortKontras: boolean,
-): EPrefKontra[] => {
+const _choices = (lastKontra: EPrefKontra, contract: EPrefContract, canInvite: boolean, allowSubAndMortKontras: boolean): EPrefKontra[] => {
 	const isContractSpade = EPrefContract.CONTRACT_SPADE === contract;
 
 	const choices: EPrefKontra[] = [];
@@ -99,7 +93,7 @@ export default class PrefStageKontring extends APrefStage {
 	public isKontringStage = (): boolean => true;
 
 	get name(): string {
-		return 'Kontring';
+		return "Kontring";
 	}
 
 	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefStageKontring {
@@ -109,26 +103,22 @@ export default class PrefStageKontring extends APrefStage {
 		this._kontras.push({ id, designation, kontra });
 
 		if (this._kontringCompleted) {
-			this._broadcast({ source: 'kontring', event: 'kontra', data: this._max });
+			this._broadcast({ source: "kontring", event: "kontra", data: this._max });
 
 			let value = _contract2value(this._contract);
 			value *= this.multiplication;
 			if (this._underRefa) value *= 2;
-			this._broadcast({ source: 'kontring', event: 'value', data: value });
+			this._broadcast({ source: "kontring", event: "value", data: value });
 
 			this._complete();
 		} else {
-			this._broadcast({ source: 'kontring', event: 'nextKontringPlayer', data: this._max });
+			this._broadcast({ source: "kontring", event: "nextKontringPlayer", data: this._max });
 		}
 
 		return this;
 	}
 
-	public getKontringChoices(
-		contract: EPrefContract,
-		canInvite: boolean,
-		allowSubAndMortKontras: boolean,
-	): EPrefKontra[] {
+	public getKontringChoices(contract: EPrefContract, canInvite: boolean, allowSubAndMortKontras: boolean): EPrefKontra[] {
 		return _choices(this._max, contract, canInvite, allowSubAndMortKontras);
 	}
 
@@ -177,15 +167,15 @@ export default class PrefStageKontring extends APrefStage {
 		this._last = kontra;
 
 		switch (designation) {
-			case 'p1':
+			case "p1":
 				this._last1 = kontra;
 				if (this._max1 < kontra) this._max1 = kontra;
 				break;
-			case 'p2':
+			case "p2":
 				this._last2 = kontra;
 				if (this._max2 < kontra) this._max2 = kontra;
 				break;
-			case 'p3':
+			case "p3":
 				this._last3 = kontra;
 				if (this._max3 < kontra) this._max3 = kontra;
 				break;

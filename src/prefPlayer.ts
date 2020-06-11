@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { TPrefDesignation } from './util/prefEngine.types';
-import PrefRoundPlayer from './round/prefRoundPlayer';
-import { EPrefPlayerDealRole } from './util/prefEngine.enums';
+import { TPrefDesignation } from "./util/prefEngine.types";
+import PrefRoundPlayer from "./round/prefRoundPlayer";
+import { EPrefPlayerDealRole } from "./util/prefEngine.enums";
 
 export default class PrefPlayer {
 	private readonly _starter: string;

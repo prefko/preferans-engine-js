@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { size } from 'lodash';
-import APrefStage from './aPrefStage';
-import { TPrefDesignation, TPrefPlayerDecision } from '../util/prefEngine.types';
+import { size } from "lodash";
+import APrefStage from "./aPrefStage";
+import { TPrefDesignation, TPrefPlayerDecision } from "../util/prefEngine.types";
 
 export default class PrefStageDeciding extends APrefStage {
 	private readonly _decisions: TPrefPlayerDecision[] = [];
@@ -18,13 +18,13 @@ export default class PrefStageDeciding extends APrefStage {
 		this._decisions.push({ designation, follows });
 
 		if (this._decidingCompleted) this._complete();
-		else this._broadcast({ source: 'bidding', event: 'nextDecidingPlayer' });
+		else this._broadcast({ source: "bidding", event: "nextDecidingPlayer" });
 
 		return this;
 	}
 
 	get name(): string {
-		return 'Deciding';
+		return "Deciding";
 	}
 
 	protected get _decidingCompleted(): boolean {

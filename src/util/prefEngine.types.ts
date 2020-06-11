@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { PrefDeckCard } from 'preferans-deck-js';
-import { EPrefBid, EPrefContract, EPrefKontra } from './prefEngine.enums';
+import { PrefDeckCard } from "preferans-deck-js";
+import { EPrefBid, EPrefContract, EPrefKontra } from "./prefEngine.enums";
 
-export type TPrefDesignation = 'p1' | 'p2' | 'p3';
+export type TPrefDesignation = "p1" | "p2" | "p3";
 export type TPrefEvent = { source: string; event: string; data?: any };
 
 export type TPrefGameOptions = {

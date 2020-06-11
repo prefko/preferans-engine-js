@@ -1,27 +1,22 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import * as _ from 'lodash';
-import APrefStage from './aPrefStage';
-import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from 'preferans-deck-js';
-import { EPrefContract } from '../util/prefEngine.enums';
-import { TPrefDesignation } from '../util/prefEngine.types';
+import * as _ from "lodash";
+import APrefStage from "./aPrefStage";
+import { PrefDeckCard, PrefDeckTrick, PrefDeckSuit } from "preferans-deck-js";
+import { EPrefContract } from "../util/prefEngine.enums";
+import { TPrefDesignation } from "../util/prefEngine.types";
 
 const _contract2suit = (contract: EPrefContract): PrefDeckSuit | undefined => {
-	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract))
-		return PrefDeckSuit.SPADE;
-	if (_.includes([EPrefContract.CONTRACT_DIAMOND, EPrefContract.CONTRACT_GAME_DIAMOND], contract))
-		return PrefDeckSuit.DIAMOND;
-	if (_.includes([EPrefContract.CONTRACT_HEART, EPrefContract.CONTRACT_GAME_HEART], contract))
-		return PrefDeckSuit.HEART;
+	if (_.includes([EPrefContract.CONTRACT_SPADE, EPrefContract.CONTRACT_GAME_SPADE], contract)) return PrefDeckSuit.SPADE;
+	if (_.includes([EPrefContract.CONTRACT_DIAMOND, EPrefContract.CONTRACT_GAME_DIAMOND], contract)) return PrefDeckSuit.DIAMOND;
+	if (_.includes([EPrefContract.CONTRACT_HEART, EPrefContract.CONTRACT_GAME_HEART], contract)) return PrefDeckSuit.HEART;
 	if (_.includes([EPrefContract.CONTRACT_CLUB, EPrefContract.CONTRACT_GAME_CLUB], contract)) return PrefDeckSuit.CLUB;
 	return undefined;
 };
 
-const _isBetl = (contract: EPrefContract): boolean =>
-	_.includes([EPrefContract.CONTRACT_BETL, EPrefContract.CONTRACT_GAME_BETL], contract);
-const _isPreferans = (contract: EPrefContract): boolean =>
-	_.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
+const _isBetl = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_BETL, EPrefContract.CONTRACT_GAME_BETL], contract);
+const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
 
 export default class PrefStagePlaying extends APrefStage {
 	private readonly _tricks: PrefDeckTrick[] = [];
@@ -49,14 +44,14 @@ export default class PrefStagePlaying extends APrefStage {
 			if (this.playingCompleted) this.round.toEnding();
 			else this._trick = new PrefDeckTrick(this._players, this._trump);
 		} else {
-			this._broadcast({ source: 'playing', event: 'nextPlayingPlayer' });
+			this._broadcast({ source: "playing", event: "nextPlayingPlayer" });
 		}
 
 		return this;
 	}
 
 	get name(): string {
-		return 'Playing';
+		return "Playing";
 	}
 
 	get tricks(): PrefDeckTrick[] {
@@ -83,15 +78,11 @@ export default class PrefStagePlaying extends APrefStage {
 	}
 
 	get mainTricks(): number {
-		return _.size(
-			_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner === this.round.mainPlayer.designation),
-		);
+		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner === this.round.mainPlayer.designation));
 	}
 
 	get followersTricks(): number {
-		return _.size(
-			_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner !== this.round.mainPlayer.designation),
-		);
+		return _.size(_.filter(this._tricks, (trick: PrefDeckTrick) => trick.winner !== this.round.mainPlayer.designation));
 	}
 
 	private _getTrickWinner(): PrefPlayer {

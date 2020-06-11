@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from "rxjs";
 
-import { TPrefEvent } from './util/prefEngine.types';
+import { TPrefEvent } from "./util/prefEngine.types";
 
 export default abstract class APrefObservable {
 	protected _subject: Subject<TPrefEvent>;
@@ -12,11 +12,7 @@ export default abstract class APrefObservable {
 		this._subject = new Subject<TPrefEvent>();
 	}
 
-	public subscribe(
-		next?: (value: TPrefEvent) => void,
-		error?: (error: any) => void,
-		complete?: () => void,
-	): Subscription {
+	public subscribe(next?: (value: TPrefEvent) => void, error?: (error: any) => void, complete?: () => void): Subscription {
 		return this._subject.subscribe(next, error, complete);
 	}
 
