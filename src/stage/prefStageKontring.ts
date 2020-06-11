@@ -134,7 +134,7 @@ export default class PrefStageKontring extends APrefStage {
 		return {
 			p1: this._max1,
 			p2: this._max2,
-			p3: this._max3,
+			p3: this._max3
 		};
 	}
 

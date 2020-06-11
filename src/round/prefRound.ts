@@ -117,13 +117,13 @@ export default class PrefRound extends APrefRoundStages {
 			designation: leftFollower.designation,
 			tricks: this._leftFollowerTricks,
 			failed: false,
-			followed: leftFollower.follows,
+			followed: leftFollower.follows
 		};
 		const left: PrefScoreFollower = {
 			designation: rightFollower.designation,
 			tricks: this._rightFollowerTricks,
 			failed: false,
-			followed: rightFollower.follows,
+			followed: rightFollower.follows
 		};
 
 		this._score.addPlayedHand(this._value, main, left, right);
