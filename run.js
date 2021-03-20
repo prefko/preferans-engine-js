@@ -13,14 +13,13 @@ const _validateCard = ajv.compile({
 	properties: {
 		value: {type: "string"},
 		suit: {type: "string"},
-		rank: {type: "integer"},
 		label: {type: "string"},
 		ppn: {type: "string", "maxLength": 1},
 		string: {type: "string"},
 		unicode: {type: "string"}
 	},
 	additionalProperties: false,
-	required: ["value", "suit", "rank", "label", "ppn", "string", "unicode"]
+	required: ["value", "suit", "label", "ppn", "string", "unicode"]
 });
 console.log(_validateCard({newRefa: false}));
 console.log(PrefDeckCard.ppnToCard("P"));
@@ -28,7 +27,6 @@ console.log(_validateCard(PrefDeckCard.ppnToCard("P")));
 console.log(_validateCard({
 	value: '7',
 	suit: 'club',
-	rank: 7,
 	label: '7club',
 	ppn: 'P',
 	string: '7Club',
