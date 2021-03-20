@@ -251,9 +251,11 @@ export default class PrefStageBidding extends APrefStage {
 		if ("p1" === designation) {
 			this._last1 = bid;
 			if (this._max1 < bid) this._max1 = bid;
+
 		} else if ("p2" === designation) {
 			this._last2 = bid;
 			if (this._max2 < bid) this._max2 = bid;
+
 		} else {
 			this._last3 = bid;
 			if (this._max3 < bid) this._max3 = bid;
