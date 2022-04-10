@@ -1,18 +1,17 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
 export enum EPrefPlayerDealRole {
 	NONE = 0,
 	DEALER,
 	FIRST_BIDDER,
-	SECOND_BIDDER,
+	SECOND_BIDDER
 }
 
 export enum EPrefPlayerPlayRole {
 	NONE = 0,
 	MAIN,
 	RIGHT_FOLLOWER,
-	LEFT_FOLLOWER,
+	LEFT_FOLLOWER
 }
 
 export enum EPrefBid {
@@ -40,7 +39,7 @@ export enum EPrefBid {
 	BID_GAME_CLUB = 19,
 	BID_GAME_BETL = 20,
 	BID_GAME_SANS = 21,
-	BID_GAME_PREFERANS = 22,
+	BID_GAME_PREFERANS = 22
 }
 
 export enum EPrefContract {
@@ -61,7 +60,7 @@ export enum EPrefContract {
 
 	CONTRACT_GAME_BETL = EPrefBid.BID_GAME_BETL,
 	CONTRACT_GAME_SANS = EPrefBid.BID_GAME_SANS,
-	CONTRACT_GAME_PREFERANS = EPrefBid.BID_GAME_PREFERANS,
+	CONTRACT_GAME_PREFERANS = EPrefBid.BID_GAME_PREFERANS
 }
 
 export enum EPrefKontra {
@@ -71,5 +70,5 @@ export enum EPrefKontra {
 	KONTRA_KONTRA = 3,
 	KONTRA_REKONTRA = 4,
 	KONTRA_SUBKONTRA = 5,
-	KONTRA_MORTKONTRA = 6,
+	KONTRA_MORTKONTRA = 6
 }

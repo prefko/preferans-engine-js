@@ -1,6 +1,5 @@
-#!/usr/bin/env node
-"use strict";
-import APrefObservable from "../aPrefObservable";
+'use strict';
+import APrefObservable from '../aPrefObservable';
 
 export default abstract class APrefStage extends APrefObservable {
 	protected constructor() {

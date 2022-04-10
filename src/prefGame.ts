@@ -1,17 +1,16 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
-import PrefDeck, { PrefDeckCard } from "preferans-deck-js";
-import { EPrefBid, EPrefContract, EPrefKontra } from "./util/prefEngine.enums";
+import PrefDeck, {PrefDeckCard} from 'preferans-deck-js';
+import {EPrefBid, EPrefContract, EPrefKontra} from './util/prefEngine.enums';
 
-import PrefScore from "preferans-score-js";
-import PrefRound from "./round/prefRound";
-import PrefPlayer from "./prefPlayer";
-import { TPrefDesignation, TPrefEvent, TPrefGameOptions } from "./util/prefEngine.types";
-import APrefObservable from "./aPrefObservable";
-import { Subscription } from "rxjs";
+import PrefScore from 'preferans-score-js';
+import PrefRound from './round/prefRound';
+import PrefPlayer from './prefPlayer';
+import {TPrefDesignation, TPrefEvent, TPrefGameOptions} from './util/prefEngine.types';
+import APrefObservable from './aPrefObservable';
+import {Subscription} from 'rxjs';
 
 const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => {
 	const r: number = _.random(1, 3);
@@ -19,7 +18,7 @@ const _random = (p1: PrefPlayer, p2: PrefPlayer, p3: PrefPlayer): PrefPlayer => 
 };
 
 // TODO... export whats needed:
-export { PrefScore, TPrefGameOptions };
+export {PrefScore, TPrefGameOptions};
 
 export default class PrefGame extends APrefObservable {
 	private readonly _bula: number;
@@ -40,9 +39,9 @@ export default class PrefGame extends APrefObservable {
 	constructor(username1: string, username2: string, username3: string, bula: number, refas: number, options: TPrefGameOptions) {
 		super();
 
-		this._p1 = new PrefPlayer("p1", username1);
-		this._p2 = new PrefPlayer("p2", username2);
-		this._p3 = new PrefPlayer("p3", username3);
+		this._p1 = new PrefPlayer('p1', username1);
+		this._p2 = new PrefPlayer('p2', username2);
+		this._p3 = new PrefPlayer('p3', username3);
 
 		this._p1.nextPlayer = this._p2;
 		this._p2.nextPlayer = this._p3;
@@ -123,16 +122,16 @@ export default class PrefGame extends APrefObservable {
 	}
 
 	private _getPlayerByDesignation(designation: TPrefDesignation): PrefPlayer {
-		if ("p1" === designation) return this._p1;
-		else if ("p2" === designation) return this._p2;
+		if ('p1' === designation) return this._p1;
+		else if ('p2' === designation) return this._p2;
 		else return this._p3;
 	}
 
 	// TODO: split this up?
 	private _roundObserverNext(value: TPrefEvent): void {
-		console.log("roundObserverNext", value);
+		console.log('roundObserverNext', value);
 
-		const { source, event, data } = value;
+		const {source, event, data} = value;
 
 		// TODO: broadcast full game state
 	}

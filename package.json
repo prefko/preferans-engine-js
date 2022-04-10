@@ -15,7 +15,7 @@
 		"clean": "tslint --config tslint-imports.json --fix --project .",
 		"format": "prettier --write \"src/**/*.ts\"",
 		"docs": "typedoc --readme none --out docs src",
-		"test": "nyc mocha -r ts-node/register test/**/*.spec.ts",
+		"test": "nyc mocha -r ts-node/register/transpile-only test/**/*.spec.ts",
 		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
 		"sonar": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**",
 		"up": "yarn upgrade-interactive",
@@ -32,7 +32,7 @@
 			".ts"
 		],
 		"require": [
-			"ts-node/register"
+			"ts-node/register/transpile-only"
 		],
 		"reporter": [
 			"text-summary",

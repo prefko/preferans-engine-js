@@ -1,12 +1,11 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import { includes, cloneDeep } from "lodash";
-import { PrefDeckPile } from "preferans-deck-js";
+import {includes, cloneDeep} from 'lodash';
+import {PrefDeckPile} from 'preferans-deck-js';
 
-import { EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole } from "../util/prefEngine.enums";
-import { TPrefDesignation } from "../util/prefEngine.types";
-import PrefDeckCard from "preferans-deck-js/lib/prefDeckCard";
+import {EPrefBid, EPrefKontra, EPrefPlayerDealRole, EPrefPlayerPlayRole} from '../util/prefEngine.enums';
+import {TPrefDesignation} from '../util/prefEngine.types';
+import PrefDeckCard from 'preferans-deck-js/lib/prefDeckCard';
 
 export default class PrefRoundPlayer {
 	private readonly _designation: TPrefDesignation;

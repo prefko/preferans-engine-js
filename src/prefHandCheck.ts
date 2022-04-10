@@ -1,8 +1,7 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import PrefDeckPile from "preferans-deck-js/lib/prefDeckPile";
-import { TPrefHandSuggestion } from "./util/prefEngine.types";
+import PrefDeckPile from 'preferans-deck-js/lib/prefDeckPile';
+import {TPrefHandSuggestion} from './util/prefEngine.types';
 
 // TODO: dodaj licitaciju...
 const _suggest = (hand: PrefDeckPile, talon: PrefDeckPile): TPrefHandSuggestion[] => {

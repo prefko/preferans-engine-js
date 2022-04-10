@@ -1,9 +1,8 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import { Subject, Subscription } from "rxjs";
+import {Subject, Subscription} from 'rxjs';
 
-import { TPrefEvent } from "./util/prefEngine.types";
+import {TPrefEvent} from './util/prefEngine.types';
 
 export default abstract class APrefObservable {
 	protected _subject: Subject<TPrefEvent>;

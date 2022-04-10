@@ -1,11 +1,10 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import { includes } from "lodash";
+import {includes} from 'lodash';
 
-import APrefStage from "./aPrefStage";
-import { EPrefContract, EPrefKontra } from "../util/prefEngine.enums";
-import { TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered } from "../util/prefEngine.types";
+import APrefStage from './aPrefStage';
+import {EPrefContract, EPrefKontra} from '../util/prefEngine.enums';
+import {TPrefDesignation, TPrefKontras, TPrefPlayerKontra, TPrefPlayerKontraOrdered} from '../util/prefEngine.types';
 
 const _isEndKontra = (kontra: EPrefKontra): boolean => includes([EPrefKontra.KONTRA_READY, EPrefKontra.KONTRA_INVITE], kontra);
 
@@ -93,26 +92,26 @@ export default class PrefStageKontring extends APrefStage {
 	public isKontringStage = (): boolean => true;
 
 	get name(): string {
-		return "Kontring";
+		return 'Kontring';
 	}
 
 	public playerKontred(designation: TPrefDesignation, kontra: EPrefKontra): PrefStageKontring {
-		this._storeKontra({ designation, kontra });
+		this._storeKontra({designation, kontra});
 
 		const id = this._kontras.length + 1;
-		this._kontras.push({ id, designation, kontra });
+		this._kontras.push({id, designation, kontra});
 
 		if (this._kontringCompleted) {
-			this._broadcast({ source: "kontring", event: "kontra", data: this._max });
+			this._broadcast({source: 'kontring', event: 'kontra', data: this._max});
 
 			let value = _contract2value(this._contract);
 			value *= this.multiplication;
 			if (this._underRefa) value *= 2;
-			this._broadcast({ source: "kontring", event: "value", data: value });
+			this._broadcast({source: 'kontring', event: 'value', data: value});
 
 			this._complete();
 		} else {
-			this._broadcast({ source: "kontring", event: "nextKontringPlayer", data: this._max });
+			this._broadcast({source: 'kontring', event: 'nextKontringPlayer', data: this._max});
 		}
 
 		return this;
@@ -161,21 +160,21 @@ export default class PrefStageKontring extends APrefStage {
 	}
 
 	private _storeKontra(playerKontra: TPrefPlayerKontra): PrefStageKontring {
-		const { designation, kontra } = playerKontra;
+		const {designation, kontra} = playerKontra;
 		this._last = kontra;
 		if (this._max < kontra) this._max = kontra;
 		this._last = kontra;
 
 		switch (designation) {
-			case "p1":
+			case 'p1':
 				this._last1 = kontra;
 				if (this._max1 < kontra) this._max1 = kontra;
 				break;
-			case "p2":
+			case 'p2':
 				this._last2 = kontra;
 				if (this._max2 < kontra) this._max2 = kontra;
 				break;
-			case "p3":
+			case 'p3':
 				this._last3 = kontra;
 				if (this._max3 < kontra) this._max3 = kontra;
 				break;

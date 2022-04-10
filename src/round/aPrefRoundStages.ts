@@ -1,25 +1,24 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import * as _ from "lodash";
-import { Subscription } from "rxjs";
+import * as _ from 'lodash';
+import {Subscription} from 'rxjs';
 
-import PrefScore from "preferans-score-js";
-import { TPrefDeckTalon } from "preferans-deck-js";
+import PrefScore from 'preferans-score-js';
+import {TPrefDeckTalon} from 'preferans-deck-js';
 
-import APrefObservable from "../aPrefObservable";
-import APrefStage from "../stage/aPrefStage";
-import PrefStageBidding from "../stage/prefStageBidding";
-import PrefStageDiscarding from "../stage/prefStageDiscarding";
-import PrefStageContracting from "../stage/prefStageContracting";
-import PrefStageDeciding from "../stage/prefStageDeciding";
-import PrefStageKontring from "../stage/prefStageKontring";
-import PrefStagePlaying from "../stage/prefStagePlaying";
-import PrefStageEnding from "../stage/prefStageEnding";
-import PrefRoundPlayer from "./prefRoundPlayer";
-import { TPrefDesignation, TPrefEvent, TPrefRoundDiscarded } from "../util/prefEngine.types";
-import { EPrefContract, EPrefKontra, EPrefPlayerPlayRole } from "../util/prefEngine.enums";
-import PrefRoundStatus from "./prefRoundStatus";
+import APrefObservable from '../aPrefObservable';
+import APrefStage from '../stage/aPrefStage';
+import PrefStageBidding from '../stage/prefStageBidding';
+import PrefStageDiscarding from '../stage/prefStageDiscarding';
+import PrefStageContracting from '../stage/prefStageContracting';
+import PrefStageDeciding from '../stage/prefStageDeciding';
+import PrefStageKontring from '../stage/prefStageKontring';
+import PrefStagePlaying from '../stage/prefStagePlaying';
+import PrefStageEnding from '../stage/prefStageEnding';
+import PrefRoundPlayer from './prefRoundPlayer';
+import {TPrefDesignation, TPrefEvent, TPrefRoundDiscarded} from '../util/prefEngine.types';
+import {EPrefContract, EPrefKontra, EPrefPlayerPlayRole} from '../util/prefEngine.enums';
+import PrefRoundStatus from './prefRoundStatus';
 
 const _isSans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_SANS, EPrefContract.CONTRACT_GAME_SANS], contract);
 const _isPreferans = (contract: EPrefContract): boolean => _.includes([EPrefContract.CONTRACT_PREFERANS, EPrefContract.CONTRACT_GAME_PREFERANS], contract);
@@ -126,7 +125,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 
 	protected _setActivePlayer(designation: TPrefDesignation) {
 		this._player = this._getPlayerByDesignation(designation);
-		this._broadcast({ source: "round", event: "changed" });
+		this._broadcast({source: 'round', event: 'changed'});
 	}
 
 	protected _nextPlayer(): PrefRoundPlayer {
@@ -168,7 +167,7 @@ export default abstract class APrefRoundStages extends APrefObservable {
 	protected abstract _stageObserverNext(value: TPrefEvent): void;
 
 	protected _stageObserverError(error: any) {
-		throw new Error("APrefRound::_stageObserverError:Stage " + this._stage.name + " threw an error: " + JSON.stringify(error));
+		throw new Error('APrefRound::_stageObserverError:Stage ' + this._stage.name + ' threw an error: ' + JSON.stringify(error));
 	}
 
 	protected _stageSubscribe(stageObserverComplete: () => void): void {

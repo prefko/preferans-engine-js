@@ -1,11 +1,10 @@
-#!/usr/bin/env node
-"use strict";
+'use strict';
 
-import { includes } from "lodash";
+import {includes} from 'lodash';
 
-import APrefStage from "./aPrefStage";
-import { EPrefBid } from "../util/prefEngine.enums";
-import { TPrefBids, TPrefDesignation, TPrefPlayerBidOrdered } from "../util/prefEngine.types";
+import APrefStage from './aPrefStage';
+import {EPrefBid} from '../util/prefEngine.enums';
+import {TPrefBids, TPrefDesignation, TPrefPlayerBidOrdered} from '../util/prefEngine.types';
 
 const _addInitialGameChoices = (choices: EPrefBid[]): EPrefBid[] => {
 	choices.push(EPrefBid.BID_GAME);
@@ -185,17 +184,17 @@ export default class PrefStageBidding extends APrefStage {
 	public isBiddingStage = (): boolean => true;
 
 	get name(): string {
-		return "Bidding";
+		return 'Bidding';
 	}
 
 	public playerBid(designation: TPrefDesignation, bid: EPrefBid): PrefStageBidding {
 		this._processBid(designation, bid);
 
 		const id = this._bids.length + 1;
-		this._bids.push({ id, designation, bid });
+		this._bids.push({id, designation, bid});
 
 		if (this._biddingCompleted) this._complete();
-		else this._broadcast({ source: "bidding", event: "nextBiddingPlayer" });
+		else this._broadcast({source: 'bidding', event: 'nextBiddingPlayer'});
 
 		return this;
 	}
@@ -221,9 +220,9 @@ export default class PrefStageBidding extends APrefStage {
 	}
 
 	get highestBidderDesignation(): TPrefDesignation {
-		if (this._max === this._max1) return "p1";
-		if (this._max === this._max2) return "p2";
-		return "p3";
+		if (this._max === this._max1) return 'p1';
+		if (this._max === this._max2) return 'p2';
+		return 'p3';
 	}
 
 	get allPassed(): boolean {
@@ -248,14 +247,12 @@ export default class PrefStageBidding extends APrefStage {
 		this._last = bid;
 		if (this._max < bid) this._max = bid;
 
-		if ("p1" === designation) {
+		if ('p1' === designation) {
 			this._last1 = bid;
 			if (this._max1 < bid) this._max1 = bid;
-
-		} else if ("p2" === designation) {
+		} else if ('p2' === designation) {
 			this._last2 = bid;
 			if (this._max2 < bid) this._max2 = bid;
-
 		} else {
 			this._last3 = bid;
 			if (this._max3 < bid) this._max3 = bid;
