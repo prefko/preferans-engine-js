@@ -1,5 +1,7 @@
+'use strict';
+
 import * as _ from 'lodash';
-import { expect } from 'chai';
+import {expect} from 'chai';
 
 import PrefGame from '../src/prefGame';
 
