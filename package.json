@@ -44,7 +44,7 @@
 		"@types/lodash": "^4.14.181",
 		"lodash": "^4.2.1",
 		"preferans-deck-js": "2.5.7",
-		"preferans-paper-js": "3.1.4",
+		"preferans-paper-js": "3.1.5",
 		"preferans-rating-js": "2.4.5",
 		"preferans-score-js": "1.5.4",
 		"rxjs": "^7.5.5"

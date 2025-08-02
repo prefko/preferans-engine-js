@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
+  - es5-ext
   - unrs-resolver
 
 overrides:
